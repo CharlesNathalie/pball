@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pball", "pball\pball.csproj", "{4DADC090-B469-4B90-A809-673867F32C39}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4DADC090-B469-4B90-A809-673867F32C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DADC090-B469-4B90-A809-673867F32C39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DADC090-B469-4B90-A809-673867F32C39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DADC090-B469-4B90-A809-673867F32C39}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BE9A2D8F-1865-433B-9B8A-AD409C080392}
+	EndGlobalSection
+EndGlobal
