@@ -1,0 +1,11 @@
+C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\pball.exe
+C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\appsettings.Development.json
+C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\appsettings.json
+C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\pball.dll
+C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\pball.deps.json
+C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\pball.runtimeconfig.json
+C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\pball.pdb
+C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Microsoft.OpenApi.dll
+C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Swashbuckle.AspNetCore.Swagger.dll
+C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerUI.dll
