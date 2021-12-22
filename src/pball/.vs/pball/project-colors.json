@@ -10,7 +10,12 @@
       "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
       "DisplayName": "Miscellaneous Files",
       "ColorIndex": -1
+    },
+    "f72fe827-396f-4d0c-807e-ecc8ee92cfec": {
+      "ProjectGuid": "f72fe827-396f-4d0c-807e-ecc8ee92cfec",
+      "DisplayName": "pballtest",
+      "ColorIndex": 1
     }
   },
-  "NextColorIndex": 1
+  "NextColorIndex": 2
 }

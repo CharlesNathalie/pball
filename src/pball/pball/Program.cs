@@ -28,7 +28,7 @@ app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+    pattern: "api/{culture}{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html");
 
