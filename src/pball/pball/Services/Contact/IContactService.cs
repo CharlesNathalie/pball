@@ -5,10 +5,10 @@ public partial interface IContactService
     Task<ActionResult<bool>> ChangePasswordAsync(ChangePasswordModel passwordChangeModel);
     Task<ActionResult<Contact>> DeleteContactAsync(int ContactID);
     Task<ActionResult<bool>> GetFullNameExistAsync(FullNameModel fullNameModel);
-    Task<ActionResult<bool>> GetLoginEmailExistAsync(string loginEmail);
+    Task<ActionResult<bool>> GetLoginEmailExistAsync(LoginEmailModel loginEmailModel);
     Task<ActionResult<Contact>> LoginAsync(LoginModel loginModel);
     Task<ActionResult<Contact>> ModifyContactAsync(Contact contact);
     Task<ActionResult<Contact>> RegisterAsync(RegisterModel registerModel);
-    Task<ActionResult<bool>> SendPasswordResetTempCodeAsync(string LoginEmail);
+    Task<ActionResult<bool>> SendPasswordResetTempCodeAsync(LoginEmailModel loginEmailModel);
 }
 

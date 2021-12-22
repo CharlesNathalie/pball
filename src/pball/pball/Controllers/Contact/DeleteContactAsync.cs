@@ -4,15 +4,15 @@ namespace PBall.Controllers;
 
 public partial class ContactController : ControllerBase, IContactController
 {
-    [Route("Login")]
-    [HttpPost]
-    public async Task<ActionResult<Contact>> LoginAsync(LoginModel loginModel)
+    [Route("{ContactID:int}")]
+    [HttpDelete]
+    public async Task<ActionResult<Contact>> DeleteContactAsync(int ContactID)
     {
         if (!await CheckLoggedIn()) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
 
         if (ContactService != null)
         {
-            return await ContactService.LoginAsync(loginModel);
+            return await ContactService.DeleteContactAsync(ContactID);
         }
 
         return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "ContactService")));

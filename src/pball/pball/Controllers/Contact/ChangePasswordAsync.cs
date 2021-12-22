@@ -4,15 +4,15 @@ namespace PBall.Controllers;
 
 public partial class ContactController : ControllerBase, IContactController
 {
-    [Route("Login")]
+    [Route("ChangePassword")]
     [HttpPost]
-    public async Task<ActionResult<Contact>> LoginAsync(LoginModel loginModel)
+    public async Task<ActionResult<bool>> ChangePasswordAsync(ChangePasswordModel changePasswordModel)
     {
         if (!await CheckLoggedIn()) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
 
         if (ContactService != null)
         {
-            return await ContactService.LoginAsync(loginModel);
+            return await ContactService.ChangePasswordAsync(changePasswordModel);
         }
 
         return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "ContactService")));

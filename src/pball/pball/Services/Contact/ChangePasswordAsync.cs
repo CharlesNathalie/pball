@@ -1,34 +1,32 @@
-using System.Net.Mail;
-
 namespace PBallServices;
 
 public partial class ContactService : ControllerBase, IContactService
 {
-    public async Task<ActionResult<bool>> ChangePasswordAsync(ChangePasswordModel passwordChangeModel)
+    public async Task<ActionResult<bool>> ChangePasswordAsync(ChangePasswordModel changePasswordModel)
     {
-        if (string.IsNullOrWhiteSpace(passwordChangeModel.LoginEmail))
+        if (string.IsNullOrWhiteSpace(changePasswordModel.LoginEmail))
         {
             return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "LoginEmail")));
         }
 
-        if (string.IsNullOrWhiteSpace(passwordChangeModel.Password))
+        if (string.IsNullOrWhiteSpace(changePasswordModel.Password))
         {
             return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "Password")));
         }
 
-        if (string.IsNullOrWhiteSpace(passwordChangeModel.TempCode))
+        if (string.IsNullOrWhiteSpace(changePasswordModel.TempCode))
         {
             return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "TempCode")));
         }
 
         Contact? contact = (from c in db.Contacts
-                            where c.LoginEmail == passwordChangeModel.LoginEmail
-                            && c.ResetPasswordTempCode == passwordChangeModel.TempCode
+                            where c.LoginEmail == changePasswordModel.LoginEmail
+                            && c.ResetPasswordTempCode == changePasswordModel.TempCode
                             select c).FirstOrDefault();
 
         if (contact != null)
         {
-            contact.PasswordHash = ScrambleService.Scramble(passwordChangeModel.Password);
+            contact.PasswordHash = ScrambleService.Scramble(changePasswordModel.Password);
             try
             {
                 db.SaveChanges();

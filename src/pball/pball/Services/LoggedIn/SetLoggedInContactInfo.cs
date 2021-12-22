@@ -8,6 +8,11 @@ public partial class LoggedInService : ILoggedInService
                                                where c.LoginEmail == LoginEmail
                                                select c).FirstOrDefault();
 
+        if (LoggedInContactInfo.LoggedInContact == null)
+        {
+            return false;
+        }
+
         return await Task.FromResult(true);
     }
 }

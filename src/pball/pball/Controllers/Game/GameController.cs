@@ -4,17 +4,17 @@ namespace PBall.Controllers;
 
 [Route("api/{culture}/[controller]")]
 [ApiController]
-public partial class ContactController : ControllerBase, IContactController
+public partial class GameController : ControllerBase, IGameController
 {
     private IConfiguration Configuration { get; }
-    private IContactService? ContactService { get; }
+    private IGameService? GameService { get; }
     private ILoggedInService? LoggedInService { get; }
     private PBallContext db { get; }
 
-    public ContactController(IConfiguration Configuration, IContactService ContactService, ILoggedInService LoggedInService, PBallContext db)
+    public GameController(IConfiguration Configuration, IGameService GameService, ILoggedInService LoggedInService, PBallContext db)
     {
         this.Configuration = Configuration;
-        this.ContactService = ContactService;
+        this.GameService = GameService;
         this.LoggedInService = LoggedInService;
         this.db = db; 
     }
