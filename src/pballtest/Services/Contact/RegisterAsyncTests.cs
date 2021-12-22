@@ -13,8 +13,6 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            int ContactIDToDelete = 0;
-
             RegisterModel registerModel = await FillRegisterModel();
             Assert.NotEmpty(registerModel.FirstName);
             Assert.NotEmpty(registerModel.LastName);
@@ -31,10 +29,6 @@ public partial class ContactServiceTests : BaseServiceTests
                 {
                     Contact? contactRet = (Contact?)((OkObjectResult)actionAddRes.Result).Value;
                     Assert.NotNull(contactRet);
-                    if (contactRet != null)
-                    {
-                        ContactIDToDelete = contactRet.ContactID;
-                    }
                 }
             }
         }

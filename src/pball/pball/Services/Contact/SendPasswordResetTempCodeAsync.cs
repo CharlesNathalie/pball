@@ -51,7 +51,7 @@ public partial class ContactService : ControllerBase, IContactService
 
         mail.Subject = subject;
         mail.Body = msg.ToString();
-        myClient.Send(mail);
+        //myClient.Send(mail);
 
         return await Task.FromResult(Ok(true));
     }

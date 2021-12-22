@@ -13,7 +13,7 @@ public partial class BaseServiceTests
     protected ILoggedInService? LoggedInService { get; set; }
     protected IScrambleService? ScrambleService { get; set; }
     protected PBallContext? db { get; set; }
-    protected Contact? contact { get; set; }
+    //protected Contact? contact { get; set; }
 
     protected async Task<bool> BaseServiceSetup(string culture)
     {

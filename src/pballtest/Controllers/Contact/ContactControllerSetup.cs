@@ -1,14 +1,14 @@
 namespace pball.Tests;
 
 
-public partial class AuthControllerTests : BaseControllerTests
+public partial class ContactControllerTests : BaseControllerTests
 {
-    public AuthControllerTests() : base()
+    public ContactControllerTests() : base()
     {
 
     }
 
-    private async Task<bool> AuthControllerSetup(string culture)
+    private async Task<bool> ContactControllerSetup(string culture)
     {
         await BaseControllerSetup(culture);
 

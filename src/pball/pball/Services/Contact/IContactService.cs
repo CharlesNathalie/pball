@@ -2,7 +2,7 @@ namespace PBallServices;
 
 public partial interface IContactService
 {
-    Task<ActionResult<bool>> ChangePasswordAsync(PasswordChangeModel passwordChangeModel);
+    Task<ActionResult<bool>> ChangePasswordAsync(ChangePasswordModel passwordChangeModel);
     Task<ActionResult<Contact>> DeleteContactAsync(int ContactID);
     Task<ActionResult<bool>> GetFullNameExistAsync(FullNameModel fullNameModel);
     Task<ActionResult<bool>> GetLoginEmailExistAsync(string loginEmail);

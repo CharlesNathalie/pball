@@ -4,7 +4,7 @@ namespace PBallServices;
 
 public partial class ContactService : ControllerBase, IContactService
 {
-    public async Task<ActionResult<bool>> ChangePasswordAsync(PasswordChangeModel passwordChangeModel)
+    public async Task<ActionResult<bool>> ChangePasswordAsync(ChangePasswordModel passwordChangeModel)
     {
         if (string.IsNullOrWhiteSpace(passwordChangeModel.LoginEmail))
         {
@@ -68,7 +68,7 @@ public partial class ContactService : ControllerBase, IContactService
 
         mail.Subject = subject;
         mail.Body = msg.ToString();
-        myClient.Send(mail);
+        //myClient.Send(mail);
 
         return await Task.FromResult(Ok(true));
     }

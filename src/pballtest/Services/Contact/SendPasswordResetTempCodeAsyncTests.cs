@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace pball.Tests;
 
 public partial class ContactServiceTests : BaseServiceTests
@@ -7,9 +5,13 @@ public partial class ContactServiceTests : BaseServiceTests
     [Theory]
     [InlineData("en-CA")]
     [InlineData("fr-CA")]
-    public async Task RegisterAsync_Good_Test(string culture)
+    public async Task SendPasswordResetTempCodeAsync_Good_Test(string culture)
     {
+        Random random = new Random();
+
         Assert.True(await ContactServiceSetup(culture));
+
+        int ContactID = 0;
 
         if (ContactService != null)
         {
@@ -31,7 +33,25 @@ public partial class ContactServiceTests : BaseServiceTests
                     Assert.NotNull(contactRet);
                     if (contactRet != null)
                     {
-                        ContactIDToDelete = contactRet.ContactID;
+                        ContactID = contactRet.ContactID;
+                    }
+                }
+            }
+
+            if (Configuration != null)
+            {
+                var actionRes = await ContactService.SendPasswordResetTempCodeAsync(Configuration["LoginEmail"]);
+                Assert.NotNull(actionRes);
+                Assert.NotNull(actionRes.Result);
+                if (actionRes != null && actionRes.Result != null)
+                {
+                    Assert.Equal(200, ((ObjectResult)actionRes.Result).StatusCode);
+                    Assert.NotNull(((OkObjectResult)actionRes.Result).Value);
+                    if (((OkObjectResult)actionRes.Result).Value != null)
+                    {
+                        bool? boolRet = (bool?)((OkObjectResult)actionRes.Result).Value;
+                        Assert.NotNull(boolRet);
+                        Assert.True(boolRet);
                     }
                 }
             }
