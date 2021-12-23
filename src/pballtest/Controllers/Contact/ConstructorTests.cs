@@ -1,6 +1,6 @@
-namespace pball.Tests;
+namespace pball.Controllers.Tests;
 
-public partial class ContactControllerTests
+public partial class ContactControllerTests : BaseControllerTests
 {
     [Theory]
     [InlineData("en-CA")]

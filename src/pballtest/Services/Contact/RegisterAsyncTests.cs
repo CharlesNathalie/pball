@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-
-namespace pball.Tests;
+namespace pball.Services.Tests;
 
 public partial class ContactServiceTests : BaseServiceTests
 {

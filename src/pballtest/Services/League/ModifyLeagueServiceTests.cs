@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-
-namespace pball.Tests;
+namespace pball.Services.Tests;
 
 public partial class LeagueServiceTests : BaseServiceTests
 {
@@ -33,9 +31,9 @@ public partial class LeagueServiceTests : BaseServiceTests
             }
 
             league.LeagueName = $"League Name { random.Next(1, 1000) }";
-          
 
-            var actionModifyRes = await LeagueService.AddLeagueAsync(league);
+
+            var actionModifyRes = await LeagueService.ModifyLeagueAsync(league);
             Assert.NotNull(actionModifyRes);
             Assert.NotNull(actionModifyRes.Result);
             if (actionModifyRes != null && actionModifyRes.Result != null)

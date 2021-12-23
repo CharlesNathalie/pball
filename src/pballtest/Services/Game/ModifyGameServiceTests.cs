@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-
-namespace pball.Tests;
+namespace pball.Services.Tests;
 
 public partial class GameServiceTests : BaseServiceTests
 {
@@ -42,7 +40,7 @@ public partial class GameServiceTests : BaseServiceTests
             game.Scores1 = random.Next(1, 11);
             game.Scores3 = random.Next(1, 11);
 
-            var actionModifyRes = await GameService.AddGameAsync(game);
+            var actionModifyRes = await GameService.ModifyGameAsync(game);
             Assert.NotNull(actionModifyRes);
             Assert.NotNull(actionModifyRes.Result);
             if (actionModifyRes != null && actionModifyRes.Result != null)

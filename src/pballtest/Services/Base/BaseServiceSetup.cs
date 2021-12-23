@@ -1,4 +1,4 @@
-namespace pball.Tests;
+namespace pball.Services.Tests;
 
 [Collection("Sequential")]
 public partial class BaseServiceTests

@@ -1,4 +1,4 @@
-namespace pball.Tests;
+namespace pball.Services.Tests;
 
 public partial class ContactServiceTests : BaseServiceTests
 {
@@ -40,7 +40,13 @@ public partial class ContactServiceTests : BaseServiceTests
 
             if (Configuration != null)
             {
-                var actionRes = await ContactService.GetLoginEmailExistAsync(Configuration["LoginEmail"]);
+
+                LoginEmailModel loginEmailModel = new LoginEmailModel()
+                {
+                    LoginEmail = registerModel.LoginEmail,
+                };
+
+                var actionRes = await ContactService.GetLoginEmailExistAsync(loginEmailModel);
                 Assert.NotNull(actionRes);
                 Assert.NotNull(actionRes.Result);
                 if (actionRes != null && actionRes.Result != null)
@@ -55,7 +61,9 @@ public partial class ContactServiceTests : BaseServiceTests
                     }
                 }
 
-                var actionRes2 = await ContactService.GetLoginEmailExistAsync($"{ Configuration["LoginEmail"] }Not");
+                loginEmailModel.LoginEmail = $"Not{ registerModel.LoginEmail}";
+
+                var actionRes2 = await ContactService.GetLoginEmailExistAsync(loginEmailModel);
                 Assert.NotNull(actionRes2);
                 Assert.NotNull(actionRes2.Result);
                 if (actionRes2 != null && actionRes2.Result != null)

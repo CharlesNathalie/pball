@@ -27,10 +27,4 @@
     <ProjectReference Include="..\pball\pball\pball.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\LeagueContact\" />
-    <Folder Include="Controllers\League\" />
-    <Folder Include="Controllers\Game\" />
-  </ItemGroup>
-
 </Project>

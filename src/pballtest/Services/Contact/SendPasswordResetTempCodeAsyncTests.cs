@@ -1,4 +1,4 @@
-namespace pball.Tests;
+namespace pball.Services.Tests;
 
 public partial class ContactServiceTests : BaseServiceTests
 {
@@ -40,7 +40,12 @@ public partial class ContactServiceTests : BaseServiceTests
 
             if (Configuration != null)
             {
-                var actionRes = await ContactService.SendPasswordResetTempCodeAsync(Configuration["LoginEmail"]);
+                LoginEmailModel loginEmailModel = new LoginEmailModel()
+                {
+                    LoginEmail = registerModel.LoginEmail,
+                };
+
+                var actionRes = await ContactService.SendPasswordResetTempCodeAsync(loginEmailModel);
                 Assert.NotNull(actionRes);
                 Assert.NotNull(actionRes.Result);
                 if (actionRes != null && actionRes.Result != null)

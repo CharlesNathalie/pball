@@ -1,11 +1,11 @@
-namespace pball.Tests;
+namespace pball.Controllers.Tests;
 
 public partial class ContactControllerTests
 {
     [Theory]
     [InlineData("en-CA")]
     [InlineData("fr-CA")]
-    public async Task Register_Good_Test(string culture)
+    public async Task Login_Good_Test(string culture)
     {
         Assert.True(await ContactControllerSetup(culture));
 
@@ -14,23 +14,30 @@ public partial class ContactControllerTests
             var contentType = new MediaTypeWithQualityHeaderValue("application/json");
             httpClient.DefaultRequestHeaders.Accept.Add(contentType);
 
-            RegisterModel registerModel = await FillRegisterModel();
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = Configuration?["LoginEmail"],
+                Password = Configuration?["Password"],
+            };
 
-            string stringData = JsonSerializer.Serialize(registerModel);
-            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = httpClient.PostAsync($"{ Configuration?["pballurl"] }api/{ culture }/contact/login", contentData).Result;
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            if (Configuration != null)
+            {
+                string stringData = JsonSerializer.Serialize(loginModel);
+                var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/login", contentData).Result;
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            string responseContent = await response.Content.ReadAsStringAsync();
-            Contact? contact = JsonSerializer.Deserialize<Contact>(responseContent);
-            Assert.NotNull(contact);
+                string responseContent = await response.Content.ReadAsStringAsync();
+                Contact? contact = JsonSerializer.Deserialize<Contact>(responseContent);
+                Assert.NotNull(contact);
+            }
         }
     }
 
     [Theory]
     [InlineData("en-CA")]
     [InlineData("fr-CA")]
-    public async Task Register_Error_Test(string culture)
+    public async Task Login_Error_Test(string culture)
     {
         Assert.True(await ContactControllerSetup(culture));
 
@@ -49,12 +56,14 @@ public partial class ContactControllerTests
                 var contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 httpClient.DefaultRequestHeaders.Accept.Add(contentType);
 
-                string stringData = JsonSerializer.Serialize(loginModel);
-                var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = httpClient.PostAsync($"{ Configuration?["pballurl"] }api/{ culture }/contact/login", contentData).Result;
-                Assert.True((int)response.StatusCode == 400);
+                if (Configuration != null)
+                {
+                    string stringData = JsonSerializer.Serialize(loginModel);
+                    var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/login", contentData).Result;
+                    Assert.True((int)response.StatusCode == 400);
+                }
             }
-
         }
     }
 }

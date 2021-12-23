@@ -1,4 +1,4 @@
-namespace pball.Tests;
+namespace pball.Controllers.Tests;
 
 public partial class VersionControllerTests
 {

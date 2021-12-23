@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-
-namespace pball.Tests;
+namespace pball.Services.Tests;
 
 public partial class LeagueServiceTests : BaseServiceTests
 {
@@ -13,6 +11,8 @@ public partial class LeagueServiceTests : BaseServiceTests
 
         if (LeagueService != null)
         {
+            League? leagueRet = new League();
+
             League league = await FillLeague();
             Assert.True(league.CreatorContactID > 0);
 
@@ -25,25 +25,29 @@ public partial class LeagueServiceTests : BaseServiceTests
                 Assert.NotNull(((OkObjectResult)actionAddRes.Result).Value);
                 if (((OkObjectResult)actionAddRes.Result).Value != null)
                 {
-                    League? leagueRet = (League?)((OkObjectResult)actionAddRes.Result).Value;
+                    leagueRet = (League?)((OkObjectResult)actionAddRes.Result).Value;
                     Assert.NotNull(leagueRet);
                 }
             }
 
-            var actionDeleteRes = await LeagueService.DeleteLeagueAsync(league.LeagueID);
-            Assert.NotNull(actionDeleteRes);
-            Assert.NotNull(actionDeleteRes.Result);
-            if (actionDeleteRes != null && actionDeleteRes.Result != null)
+            if (leagueRet != null)
             {
-                Assert.Equal(200, ((ObjectResult)actionDeleteRes.Result).StatusCode);
-                Assert.NotNull(((OkObjectResult)actionDeleteRes.Result).Value);
-                if (((OkObjectResult)actionDeleteRes.Result).Value != null)
+                var actionDeleteRes = await LeagueService.DeleteLeagueAsync(leagueRet.LeagueID);
+                Assert.NotNull(actionDeleteRes);
+                Assert.NotNull(actionDeleteRes.Result);
+                if (actionDeleteRes != null && actionDeleteRes.Result != null)
                 {
-                    bool? boolRet = (bool?)((OkObjectResult)actionDeleteRes.Result).Value;
-                    Assert.NotNull(boolRet);
+                    Assert.Equal(200, ((ObjectResult)actionDeleteRes.Result).StatusCode);
+                    Assert.NotNull(((OkObjectResult)actionDeleteRes.Result).Value);
+                    if (((OkObjectResult)actionDeleteRes.Result).Value != null)
+                    {
+                        bool? boolRet = (bool?)((OkObjectResult)actionDeleteRes.Result).Value;
+                        Assert.NotNull(boolRet);
+                    }
                 }
             }
         }
     }
 }
+
 

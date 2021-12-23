@@ -1,5 +1,4 @@
-namespace pball.Tests;
-
+namespace pball.Services.Tests;
 
 public partial class ScrambleServiceTests : BaseServiceTests
 {
