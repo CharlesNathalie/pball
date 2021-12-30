@@ -4,19 +4,18 @@ public partial class LeagueService : ControllerBase, ILeagueService
 {
     public async Task<ActionResult<League>> AddLeagueAsync(League league)
     {
-        if (LoggedInService.LoggedInContactInfo == null && LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
-        {
-            return await Task.FromResult(BadRequest(PBallRes.YouDoNotHaveAuthorization));
-        }
+        ErrRes errRes = new ErrRes();
 
-        if (league == null)
+        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._ShouldNotBeNullOrEmpty, "league")));
+            errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (string.IsNullOrWhiteSpace(league.LeagueName))
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "LeagueName")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeagueName"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         // PointsToWinners, PointsToLoosers, PlayerLevelFactor, PercentPointsFactor will all default to 0.0D
@@ -27,13 +26,13 @@ public partial class LeagueService : ControllerBase, ILeagueService
 
         if (leagueExist != null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._AlreadyTaken, "LeagueName")));
+            errRes.ErrList.Add(string.Format(PBallRes._AlreadyTaken, "LeagueName"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         League leagueNew = new League()
         {
             LeagueName = league.LeagueName,
-            CreatorContactID = league.CreatorContactID,
             PercentPointsFactor = league.PercentPointsFactor,
             PlayerLevelFactor = league.PlayerLevelFactor,
             PointsToLoosers = league.PointsToLoosers,
@@ -50,7 +49,8 @@ public partial class LeagueService : ControllerBase, ILeagueService
         }
         catch (Exception ex)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.Error_, ex.Message)));
+            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         return await Task.FromResult(Ok(leagueNew));

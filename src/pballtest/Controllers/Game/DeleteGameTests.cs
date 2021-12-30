@@ -12,14 +12,12 @@ public partial class GameControllerTests : BaseControllerTests
         if (GameService != null)
         {
             Game game = await FillGame();
-            Assert.True(game.Player1 > 0);
-            Assert.True(game.Player2 > 0);
-            Assert.True(game.Player3 > 0);
-            Assert.True(game.Player4 > 0);
-            Assert.True(game.Scores1 >= 0);
-            Assert.True(game.Scores2 >= 0);
-            Assert.True(game.Scores3 >= 0);
-            Assert.True(game.Scores4 >= 0);
+            Assert.True(game.Team1Player1 > 0);
+            Assert.True(game.Team1Player2 > 0);
+            Assert.True(game.Team2Player1 > 0);
+            Assert.True(game.Team2Player2 > 0);
+            Assert.True(game.Team1Scores >= 0);
+            Assert.True(game.Team2Scores >= 0);
 
             var actionAddRes = await GameService.AddGameAsync(game);
             Assert.NotNull(actionAddRes);

@@ -4,40 +4,60 @@ public partial class LeagueService : ControllerBase, ILeagueService
 {
     public async Task<ActionResult<League>> ModifyLeagueAsync(League league)
     {
-        if (LoggedInService.LoggedInContactInfo == null && LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
+        ErrRes errRes = new ErrRes();
+
+        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
         {
-            return await Task.FromResult(BadRequest(PBallRes.YouDoNotHaveAuthorization));
+            errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        if (league == null)
+        if (league.LeagueID == 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._ShouldNotBeNullOrEmpty, "league")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeagueID"));
+            return await Task.FromResult(BadRequest(errRes));
+        }
+
+        League? leagueToModify = (from c in db.Leagues
+                                  where c.LeagueID == league.LeagueID
+                                  select c).FirstOrDefault();
+
+        if (leagueToModify == null)
+        {
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "League", "LeagueID", league.LeagueID.ToString()));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (string.IsNullOrWhiteSpace(league.LeagueName))
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "GroupName")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeagueName"));
+            return await Task.FromResult(BadRequest(errRes));
+        }
+
+        League? leagueNameExist = (from c in db.Leagues
+                                  where c.LeagueID != league.LeagueID
+                                  && c.LeagueName == league.LeagueName
+                                  select c).AsNoTracking().FirstOrDefault();
+
+        if (leagueNameExist != null)
+        {
+            errRes.ErrList.Add(string.Format(PBallRes._AlreadyTaken, "LeagueName"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         // almost everything is possible for the values below
         // PointsToWinners, PointsToLoosers, PlayerLevelFactor, PercentPointsFactor will all default to 0.0D
 
-        League? groupExist = (from c in db.Leagues
-                            where c.LeagueName == league.LeagueName
-                            select c).FirstOrDefault();
-
-        League groupNew = new League()
+        if (leagueToModify != null)
         {
-            LeagueName = league.LeagueName,
-            CreatorContactID = league.CreatorContactID,
-            PercentPointsFactor = league.PercentPointsFactor,
-            PlayerLevelFactor = league.PlayerLevelFactor,
-            PointsToLoosers = league.PointsToLoosers,
-            PointsToWinners = league.PointsToWinners,
-            Removed = false,
-            LastUpdateDate_UTC = DateTime.UtcNow,
-            LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact == null ? 0 : LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID,
-        };
+            leagueToModify.LeagueName = league.LeagueName;
+            leagueToModify.PercentPointsFactor = league.PercentPointsFactor;
+            leagueToModify.PlayerLevelFactor = league.PlayerLevelFactor;
+            leagueToModify.PointsToLoosers = league.PointsToLoosers;
+            leagueToModify.PointsToWinners = league.PointsToWinners;
+            leagueToModify.LastUpdateDate_UTC = DateTime.UtcNow;
+            leagueToModify.LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact == null ? 0 : LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID;
+        }
 
         try
         {
@@ -45,10 +65,11 @@ public partial class LeagueService : ControllerBase, ILeagueService
         }
         catch (Exception ex)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.Error_, ex.Message)));
+            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        return await Task.FromResult(Ok(groupNew));
+        return await Task.FromResult(Ok(leagueToModify));
     }
 }
 

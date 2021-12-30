@@ -4,9 +4,12 @@ public partial class ContactService : ControllerBase, IContactService
 {
     public async Task<ActionResult<Contact>> DeleteContactAsync(int contactID)
     {
-        if (LoggedInService.LoggedInContactInfo == null && LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
+        ErrRes errRes = new ErrRes();
+
+        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
         {
-                return await Task.FromResult(BadRequest(PBallRes.YouDoNotHaveAuthorization));
+            errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         Contact? contact = (from c in db.Contacts
@@ -15,7 +18,8 @@ public partial class ContactService : ControllerBase, IContactService
 
         if (contact == null)
         {
-            return await Task.FromResult(BadRequest(String.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", contactID.ToString())));
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", contactID.ToString()));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         contact.Removed = true;
@@ -28,10 +32,11 @@ public partial class ContactService : ControllerBase, IContactService
         }
         catch (Exception ex)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.Error_, ex.Message)));
+            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        return await Task.FromResult(contact);
+        return await Task.FromResult(Ok(contact));
     }
 }
 

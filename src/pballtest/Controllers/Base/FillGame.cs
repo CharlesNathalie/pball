@@ -75,19 +75,17 @@ public partial class BaseControllerTests
 
             if (LoggedInService != null && LoggedInService.LoggedInContactInfo != null && LoggedInService.LoggedInContactInfo.LoggedInContact != null)
             {
-                int Score1 = random.Next(1, 11);
-                int Score2 = random.Next(1, 11);
+                int Team1Score = random.Next(1, 11);
+                int Team2Score = random.Next(1, 11);
 
                 return await Task.FromResult(new Game()
                 {
-                    Player1 = contactList[0].ContactID,
-                    Player2 = contactList[0].ContactID,
-                    Player3 = contactList[0].ContactID,
-                    Player4 = contactList[0].ContactID,
-                    Scores1 = Score1,
-                    Scores2 = Score1,
-                    Scores3 = Score2,
-                    Scores4 = Score2,
+                    Team1Player1 = contactList[0].ContactID,
+                    Team1Player2 = contactList[1].ContactID,
+                    Team2Player1 = contactList[2].ContactID,
+                    Team2Player2 = contactList[3].ContactID,
+                    Team1Scores = Team1Score,
+                    Team2Scores = Team1Score,
                     GameDate = DateTime.Now.AddDays(random.Next(1, 30) * -1),
                     LeagueID = LeagueID,
                     Removed = false,

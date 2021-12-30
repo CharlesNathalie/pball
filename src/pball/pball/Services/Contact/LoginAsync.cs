@@ -4,30 +4,30 @@ public partial class ContactService : ControllerBase, IContactService
 {
     public async Task<ActionResult<Contact>> LoginAsync(LoginModel loginModel)
     {
-        // no need
-        //if (LoggedInService.LoggedInContactInfo == null && LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
-        //{
-        //    return await Task.FromResult(BadRequest(PBallRes.YouDoNotHaveAuthorization));
-        //}
+        ErrRes errRes = new ErrRes();
 
         if (string.IsNullOrWhiteSpace(loginModel.LoginEmail))
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "LoginEmail")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LoginEmail"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        if (!string.IsNullOrWhiteSpace(loginModel.LoginEmail) && (loginModel.LoginEmail.Length < 5 || loginModel.LoginEmail.Length > 100))
+        if (loginModel.LoginEmail.Length < 6 || loginModel.LoginEmail.Length > 100)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._LengthShouldBeBetween_And_, "LoginEmail", "5", "100")));
+            errRes.ErrList.Add(string.Format(PBallRes._LengthShouldBeBetween_And_, "LoginEmail", "6", "100"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (string.IsNullOrWhiteSpace(loginModel.Password))
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "Password")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "Password"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        if (!string.IsNullOrWhiteSpace(loginModel.Password) && (loginModel.Password.Length < 5 || loginModel.Password.Length > 50))
+        if (loginModel.Password.Length > 50)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._LengthShouldBeBetween_And_, "Password", "5", "50")));
+            errRes.ErrList.Add(string.Format(PBallRes._MaxLengthIs_, "Password", "50"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         try
@@ -38,12 +38,12 @@ public partial class ContactService : ControllerBase, IContactService
 
             if (contact == null)
             {
-                return await Task.FromResult(BadRequest(String.Format(PBallRes.UnableToLoginAs_WithProvidedPassword, loginModel.LoginEmail)));
+                errRes.ErrList.Add(string.Format(PBallRes.UnableToLoginAs_WithProvidedPassword, loginModel.LoginEmail));
+                return await Task.FromResult(BadRequest(errRes));
             }
 
             if (loginModel.Password == ScrambleService.Descramble($"{ contact.PasswordHash }"))
             {
-
                 byte[] key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("APISecret"));
 
                 JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
@@ -67,10 +67,12 @@ public partial class ContactService : ControllerBase, IContactService
         }
         catch (Exception ex)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.Error_, ex.Message)));
+            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        return await Task.FromResult(BadRequest(string.Format(PBallRes.UnableToLoginAs_WithProvidedPassword, loginModel.LoginEmail)));
+        errRes.ErrList.Add(string.Format(PBallRes.UnableToLoginAs_WithProvidedPassword, loginModel.LoginEmail));
+        return await Task.FromResult(BadRequest(errRes));
     }
 }
 

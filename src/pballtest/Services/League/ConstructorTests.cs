@@ -7,7 +7,7 @@ public partial class LeagueServiceTests : BaseServiceTests
     [InlineData("fr-CA")]
     public async Task Constructor_Good_Test(string culture)
     {
-        Assert.True(await LeagueServiceSetup(culture));
+        Assert.True(await _LeagueServiceSetupAsync(culture));
     }
 }
 

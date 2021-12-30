@@ -3,4 +3,9 @@
   <PropertyGroup>
     <NameOfLastUsedPublishProfile>C:\pball\src\pball\pball\Properties\PublishProfiles\pball - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\PBallRes.fr.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

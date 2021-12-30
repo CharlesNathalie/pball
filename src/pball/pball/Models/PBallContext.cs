@@ -9,10 +9,12 @@ public partial class PBallContext : DbContext
 
     public PBallContext()
     {
+
     }
 
     public PBallContext(DbContextOptions<PBallContext> options)
         : base(options)
     {
+
     }
 }

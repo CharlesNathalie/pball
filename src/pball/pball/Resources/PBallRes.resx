@@ -120,8 +120,17 @@
   <data name="AutomaticEmail" xml:space="preserve">
     <value>Automatic email</value>
   </data>
+  <data name="CouldNotAdd_Error_" xml:space="preserve">
+    <value>Could not add {0}: Error: {1}</value>
+  </data>
+  <data name="CouldNotDelete_Error_" xml:space="preserve">
+    <value>Could not delete {0}: Error: {1}</value>
+  </data>
   <data name="CouldNotFind_With_Equal_" xml:space="preserve">
     <value>Could not find {0} with {1} equal {2}</value>
+  </data>
+  <data name="CouldNotModify_Error_" xml:space="preserve">
+    <value>Could not modify {0}: Error: {1}</value>
   </data>
   <data name="DateIssued" xml:space="preserve">
     <value>Date issued</value>
@@ -135,17 +144,29 @@
   <data name="UnableToLoginAs_WithProvidedPassword" xml:space="preserve">
     <value>Unable to login as {0} with provided password</value>
   </data>
+  <data name="UnknownServerError" xml:space="preserve">
+    <value>Unknown server error</value>
+  </data>
   <data name="YouDoNotHaveAuthorization" xml:space="preserve">
     <value>You do not have authorization</value>
   </data>
+  <data name="YouNeedToBeLeagueAdminToGenerateTempCode" xml:space="preserve">
+    <value>You need to be a league administrator to generate temp code</value>
+  </data>
   <data name="YourPasswordHasBeenChanged" xml:space="preserve">
     <value>Your password has been changed</value>
+  </data>
+  <data name="_AlreadyExist" xml:space="preserve">
+    <value>{0} already exist</value>
   </data>
   <data name="_AlreadyTaken" xml:space="preserve">
     <value>{0} already taken</value>
   </data>
   <data name="_DateIsBiggerThan_" xml:space="preserve">
     <value>[{0}] date is bigger than [{1}]</value>
+  </data>
+  <data name="_IsNotAValidEmail" xml:space="preserve">
+    <value>{0} is not a valid email</value>
   </data>
   <data name="_IsRequired" xml:space="preserve">
     <value>{0} is required</value>

@@ -14,7 +14,7 @@ public partial class LeagueControllerTests : BaseControllerTests
             League? leagueRet = new League();
 
             League league = await FillLeague();
-            Assert.True(league.CreatorContactID > 0);
+            Assert.NotEmpty(league.LeagueName);
 
             var actionAddRes = await LeagueService.AddLeagueAsync(league);
             Assert.NotNull(actionAddRes);

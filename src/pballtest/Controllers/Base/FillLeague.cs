@@ -50,7 +50,6 @@ public partial class BaseControllerTests
                 return await Task.FromResult(new League()
                 {
                     LeagueName = $"League Name { random.Next(1, 1000) }",
-                    CreatorContactID = CreatorContactID,
                     PercentPointsFactor = 1.1D,
                     PlayerLevelFactor = 1.1D,
                     PointsToLoosers = 1.1D,

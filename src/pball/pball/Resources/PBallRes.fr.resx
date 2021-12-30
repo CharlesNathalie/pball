@@ -120,8 +120,17 @@
   <data name="AutomaticEmail" xml:space="preserve">
     <value>Courriel automatique</value>
   </data>
+  <data name="CouldNotAdd_Error_" xml:space="preserve">
+    <value>Dans l'impossibilité d'ajouter {0}: Erreur: {1}</value>
+  </data>
+  <data name="CouldNotDelete_Error_" xml:space="preserve">
+    <value>Dans l'impossibilité de enlever {0}: Erreur: {1}</value>
+  </data>
   <data name="CouldNotFind_With_Equal_" xml:space="preserve">
     <value>Dans l'impossibilité de trouver {0} avec {1} égal à {2}</value>
+  </data>
+  <data name="CouldNotModify_Error_" xml:space="preserve">
+    <value>Dans l'impossibilité de modifier {0}: Erreur: {1}</value>
   </data>
   <data name="DateIssued" xml:space="preserve">
     <value>Date émis</value>
@@ -135,17 +144,29 @@
   <data name="UnableToLoginAs_WithProvidedPassword" xml:space="preserve">
     <value>Impossible de se connecter en tant que {0} avec le mot de passe fourni</value>
   </data>
+  <data name="UnknownServerError" xml:space="preserve">
+    <value>Erreur au serveur inconnu</value>
+  </data>
   <data name="YouDoNotHaveAuthorization" xml:space="preserve">
     <value>Vous n'avez pas l'authorisation</value>
   </data>
+  <data name="YouNeedToBeLeagueAdminToGenerateTempCode" xml:space="preserve">
+    <value>Vous devez être un administrateur de la league pour générer un code temporaire</value>
+  </data>
   <data name="YourPasswordHasBeenChanged" xml:space="preserve">
     <value>Votre mot de passe a été changé</value>
+  </data>
+  <data name="_AlreadyExist" xml:space="preserve">
+    <value>{0} existe déjà</value>
   </data>
   <data name="_AlreadyTaken" xml:space="preserve">
     <value>{0} déjà pris</value>
   </data>
   <data name="_DateIsBiggerThan_" xml:space="preserve">
     <value>[{0}] date est plus grand que [{1}]</value>
+  </data>
+  <data name="_IsNotAValidEmail" xml:space="preserve">
+    <value>{0} n'est pas un courrier électronique valide</value>
   </data>
   <data name="_IsRequired" xml:space="preserve">
     <value>{0} est nécessaire</value>

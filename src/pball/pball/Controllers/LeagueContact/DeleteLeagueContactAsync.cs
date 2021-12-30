@@ -4,7 +4,7 @@ public partial class LeagueContactController : ControllerBase, ILeagueContactCon
 {
     [Route("{LeagueContactID:int}")]
     [HttpDelete]
-    public async Task<ActionResult<bool>> DeleteLeagueContactAsync(int LeagueContactID)
+    public async Task<ActionResult<LeagueContact>> DeleteLeagueContactAsync(int LeagueContactID)
     {
         if (!await CheckLoggedIn()) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
 

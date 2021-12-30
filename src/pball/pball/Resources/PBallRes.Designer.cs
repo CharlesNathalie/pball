@@ -61,6 +61,15 @@ namespace pball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} already exist.
+        /// </summary>
+        public static string _AlreadyExist {
+            get {
+                return ResourceManager.GetString("_AlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} already taken.
         /// </summary>
         public static string _AlreadyTaken {
@@ -75,6 +84,15 @@ namespace pball.Resources {
         public static string _DateIsBiggerThan_ {
             get {
                 return ResourceManager.GetString("_DateIsBiggerThan_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is not a valid email.
+        /// </summary>
+        public static string _IsNotAValidEmail {
+            get {
+                return ResourceManager.GetString("_IsNotAValidEmail", resourceCulture);
             }
         }
         
@@ -169,11 +187,38 @@ namespace pball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not add {0}: Error: {1}.
+        /// </summary>
+        public static string CouldNotAdd_Error_ {
+            get {
+                return ResourceManager.GetString("CouldNotAdd_Error_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not delete {0}: Error: {1}.
+        /// </summary>
+        public static string CouldNotDelete_Error_ {
+            get {
+                return ResourceManager.GetString("CouldNotDelete_Error_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find {0} with {1} equal {2}.
         /// </summary>
         public static string CouldNotFind_With_Equal_ {
             get {
                 return ResourceManager.GetString("CouldNotFind_With_Equal_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not modify {0}: Error: {1}.
+        /// </summary>
+        public static string CouldNotModify_Error_ {
+            get {
+                return ResourceManager.GetString("CouldNotModify_Error_", resourceCulture);
             }
         }
         
@@ -214,11 +259,29 @@ namespace pball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown server error.
+        /// </summary>
+        public static string UnknownServerError {
+            get {
+                return ResourceManager.GetString("UnknownServerError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You do not have authorization.
         /// </summary>
         public static string YouDoNotHaveAuthorization {
             get {
                 return ResourceManager.GetString("YouDoNotHaveAuthorization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You need to be a league administrator to generate temp code.
+        /// </summary>
+        public static string YouNeedToBeLeagueAdminToGenerateTempCode {
+            get {
+                return ResourceManager.GetString("YouNeedToBeLeagueAdminToGenerateTempCode", resourceCulture);
             }
         }
         

@@ -14,14 +14,12 @@ public partial class GameControllerTests : BaseControllerTests
         if (GameService != null)
         {
             Game game = await FillGame();
-            Assert.True(game.Player1 > 0);
-            Assert.True(game.Player2 > 0);
-            Assert.True(game.Player3 > 0);
-            Assert.True(game.Player4 > 0);
-            Assert.True(game.Scores1 >= 0);
-            Assert.True(game.Scores2 >= 0);
-            Assert.True(game.Scores3 >= 0);
-            Assert.True(game.Scores4 >= 0);
+            Assert.True(game.Team1Player1 > 0);
+            Assert.True(game.Team1Player2 > 0);
+            Assert.True(game.Team2Player1 > 0);
+            Assert.True(game.Team2Player2 > 0);
+            Assert.True(game.Team1Scores >= 0);
+            Assert.True(game.Team2Scores >= 0);
 
             var actionRes = await GameService.AddGameAsync(game);
             Assert.NotNull(actionRes);
@@ -37,8 +35,8 @@ public partial class GameControllerTests : BaseControllerTests
                 }
             }
 
-            game.Scores1 = random.Next(1, 11);
-            game.Scores3 = random.Next(1, 11);
+            game.Team1Scores = random.Next(1, 11);
+            game.Team2Scores = random.Next(1, 11);
 
             using (HttpClient httpClient = new HttpClient())
             {

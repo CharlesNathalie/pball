@@ -4,49 +4,68 @@ public partial class LeagueContactService : ControllerBase, ILeagueContactServic
 {
     public async Task<ActionResult<LeagueContact>> AddLeagueContactAsync(LeagueContact leagueContact)
     {
-        if (LoggedInService.LoggedInContactInfo == null && LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
+        ErrRes errRes = new ErrRes();
+
+        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
         {
-            return await Task.FromResult(BadRequest(PBallRes.YouDoNotHaveAuthorization));
+            errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        if (leagueContact == null)
+        if (leagueContact.LeagueContactID != 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._ShouldNotBeNullOrEmpty, "leagueContact")));
+            errRes.ErrList.Add(string.Format(PBallRes._ShouldBeEqualTo_, "LeagueContactID", "0"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (leagueContact.LeagueID == 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "LeagueID")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeagueID"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         League? leagueExist = (from c in db.Leagues
                                where c.LeagueID == leagueContact.LeagueID
                                select c).FirstOrDefault();
 
-        if (leagueExist != null)
+        if (leagueExist == null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.CouldNotFind_With_Equal_, "League", "LeagueID", leagueContact.LeagueID.ToString())));
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "League", "LeagueID", leagueContact.LeagueID.ToString()));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (leagueContact.ContactID == 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "ContactID")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "ContactID"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         Contact? contactExist = (from c in db.Contacts
                                  where c.ContactID == leagueContact.ContactID
                                  select c).FirstOrDefault();
 
-        if (contactExist != null)
+        if (contactExist == null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", leagueContact.ContactID.ToString())));
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", leagueContact.ContactID.ToString()));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
+        LeagueContact? leagueContactExist = (from c in db.LeagueContacts
+                                             where c.LeagueID == leagueContact.LeagueID
+                                             && c.ContactID == leagueContact.ContactID
+                                             select c).FirstOrDefault();
+
+        if (leagueContactExist != null)
+        {
+            errRes.ErrList.Add(string.Format(PBallRes._AlreadyExist, "LeagueContact"));
+            return await Task.FromResult(BadRequest(errRes));
+        }
 
         LeagueContact leagueContactNew = new LeagueContact()
         {
             LeagueID = leagueContact.LeagueID,
             ContactID = leagueContact.ContactID,
+            IsLeagueAdmin = leagueContact.IsLeagueAdmin,
             Removed = false,
             LastUpdateDate_UTC = DateTime.UtcNow,
             LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact == null ? 0 : LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID,
@@ -59,7 +78,8 @@ public partial class LeagueContactService : ControllerBase, ILeagueContactServic
         }
         catch (Exception ex)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.Error_, ex.Message)));
+            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         return await Task.FromResult(Ok(leagueContactNew));

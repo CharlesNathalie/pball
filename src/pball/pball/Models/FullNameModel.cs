@@ -2,9 +2,9 @@
 
 public partial class FullNameModel
 {
-    public string? FirstName { get; set; }
-    public string? Initial { get; set; }
-    public string? LastName { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string Initial { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
 
     public FullNameModel()
     {

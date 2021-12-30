@@ -4,61 +4,63 @@ public partial class ContactService : ControllerBase, IContactService
 {
     public async Task<ActionResult<Contact>> ModifyContactAsync(Contact contact)
     {
-        if (LoggedInService.LoggedInContactInfo == null && LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
-        {
-            return await Task.FromResult(BadRequest(PBallRes.YouDoNotHaveAuthorization));
-        }
+        ErrRes errRes = new ErrRes();
 
-        if (contact == null)
+        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo.LoggedInContact == null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._ShouldNotBeNullOrEmpty, "contact")));
+            errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (string.IsNullOrWhiteSpace(contact.LoginEmail))
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "LoginEmail")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LoginEmail"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        if (contact.LoginEmail.Length < 5 || contact.LoginEmail.Length > 255)
+        if (contact.LoginEmail.Length < 6 || contact.LoginEmail.Length > 100)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._LengthShouldBeBetween_And_, "LoginEmail", "5", "100")));
+            errRes.ErrList.Add(string.Format(PBallRes._LengthShouldBeBetween_And_, "LoginEmail", "6", "100"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (string.IsNullOrWhiteSpace(contact.FirstName))
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "FirstName")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "FirstName"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (contact.FirstName.Length > 100)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._MaxLengthIs_, "FirstName", "100")));
+            errRes.ErrList.Add(string.Format(PBallRes._MaxLengthIs_, "FirstName", "100"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (string.IsNullOrWhiteSpace(contact.LastName))
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "LastName")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LastName"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (contact.LastName.Length > 100)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._MinLengthIs_, "LastName", "100")));
+            errRes.ErrList.Add(string.Format(PBallRes._MaxLengthIs_, "LastName", "100"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        if (string.IsNullOrWhiteSpace(contact.Initial))
-        {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "Initial")));
-        }
-        else
+        if (!string.IsNullOrWhiteSpace(contact.Initial))
         {
             if (contact.Initial.Length > 50)
             {
-                return await Task.FromResult(BadRequest(string.Format(PBallRes._MaxLengthIs_, "Initial", "50")));
+                errRes.ErrList.Add(string.Format(PBallRes._MaxLengthIs_, "Initial", "50"));
+                return await Task.FromResult(BadRequest(errRes));
             }
         }
 
         if (contact.PlayerLevel < 1.0f || contact.PlayerLevel > 5.0f)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._ValueShouldBeBetween_And_, "PlayerLevel", "1.0", "5.0")));
+            errRes.ErrList.Add(string.Format(PBallRes._ValueShouldBeBetween_And_, "PlayerLevel", "1.0", "5.0"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         Contact? contactToModify = (from c in db.Contacts
@@ -67,7 +69,8 @@ public partial class ContactService : ControllerBase, IContactService
 
         if (contactToModify == null)
         {
-            return await Task.FromResult(BadRequest(String.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", contact.ContactID.ToString())));
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", contact.ContactID.ToString()));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         Contact? contactAlreadyExist = (from c in db.Contacts
@@ -75,9 +78,10 @@ public partial class ContactService : ControllerBase, IContactService
                                         && c.LoginEmail == contact.LoginEmail
                                         select c).FirstOrDefault();
 
-        if (contactAlreadyExist == null)
+        if (contactAlreadyExist != null)
         {
-            return await Task.FromResult(BadRequest(String.Format(PBallRes._AlreadyTaken, "LoginEmail")));
+            errRes.ErrList.Add(string.Format(PBallRes._AlreadyTaken, "LoginEmail"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
 
@@ -89,13 +93,13 @@ public partial class ContactService : ControllerBase, IContactService
                                    && c.LastName == contact.LastName
                                    select c).FirstOrDefault();
 
-            if (contactAlreadyExist == null)
+            if (contactAlreadyExist != null)
             {
                 string FullName = $"{ contact.FirstName } { contact.LastName }";
 
-                return await Task.FromResult(BadRequest(string.Format(PBallRes._AlreadyTaken, FullName)));
+                errRes.ErrList.Add(string.Format(PBallRes._AlreadyTaken, FullName));
+                return await Task.FromResult(BadRequest(errRes));
             }
-
         }
         else
         {
@@ -106,36 +110,60 @@ public partial class ContactService : ControllerBase, IContactService
                                    && c.Initial == contact.Initial
                                    select c).FirstOrDefault();
 
-            if (contactToModify == null)
+            if (contactAlreadyExist != null)
             {
                 string Initial = contact.Initial == null ? "" : contact.Initial.EndsWith(".") ? contact.Initial.Substring(0, contact.Initial.Length - 1) : contact.Initial;
                 string FullName = $"{ contact.FirstName } { Initial } { contact.LastName }";
 
-                return await Task.FromResult(BadRequest(string.Format(PBallRes._AlreadyTaken, FullName)));
+                errRes.ErrList.Add(string.Format(PBallRes._AlreadyTaken, FullName));
+                return await Task.FromResult(BadRequest(errRes));
+            }
+        }
+
+        Contact contactToRet = new Contact();
+
+        if (contactToModify != null)
+        {
+            contactToModify.LoginEmail = contact.LoginEmail;
+            contactToModify.FirstName = contact.FirstName;
+            contactToModify.FirstName = contact.FirstName;
+            contactToModify.LastName = contact.LastName;
+            contactToModify.Initial = contact.Initial;
+            contactToModify.PlayerLevel = contact.PlayerLevel;
+            contactToModify.ResetPasswordTempCode = "";
+            contactToModify.LastUpdateDate_UTC = DateTime.UtcNow;
+            contactToModify.LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact == null ? 0 : LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+                return await Task.FromResult(BadRequest(errRes));
             }
 
+            contactToRet = new Contact()
+            {
+                ContactID = contactToModify.ContactID,
+                FirstName = contactToModify.FirstName,
+                Initial = contactToModify.Initial,
+                IsAdmin = contactToModify.IsAdmin,
+                LastName = contactToModify.LastName,
+                LastUpdateContactID = contactToModify.LastUpdateContactID,
+                LastUpdateDate_UTC = contactToModify.LastUpdateDate_UTC,
+                LoginEmail = contactToModify.LoginEmail,
+                PasswordHash = "",
+                PlayerLevel = contactToModify.PlayerLevel,
+                Removed = contactToModify.Removed,
+                ResetPasswordTempCode = "",
+                Token = "",
+            };
         }
 
-        contactToModify.LoginEmail = contact.LoginEmail;
-        contactToModify.FirstName = contact.FirstName;
-        contactToModify.FirstName = contact.FirstName;
-        contactToModify.LastName = contact.LastName;
-        contactToModify.Initial = contact.Initial;
-        contactToModify.PlayerLevel = contact.PlayerLevel;
-        contactToModify.ResetPasswordTempCode = "";
-        contactToModify.LastUpdateDate_UTC = DateTime.UtcNow;
-        contactToModify.LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact == null ? 0 : LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID;
+        return await Task.FromResult(Ok(contactToRet));
 
-        try
-        {
-            db.SaveChanges();
-        }
-        catch (Exception ex)
-        {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.Error_, ex.Message)));
-        }
-
-        return await Task.FromResult(contact);
     }
 }
 

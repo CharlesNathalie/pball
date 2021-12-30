@@ -8,8 +8,7 @@ public partial class ContactService : ControllerBase, IContactService
     private PBallContext db { get; }
 
     public ContactService(IConfiguration Configuration, IScrambleService ScrambleService, 
-        ILoggedInService LoggedInService, PBallContext db
-       )
+        ILoggedInService LoggedInService, PBallContext db)
     {
         this.Configuration = Configuration;
         this.ScrambleService = ScrambleService;

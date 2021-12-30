@@ -4,15 +4,9 @@ public partial class ContactService : ControllerBase, IContactService
 {
     public async Task<ActionResult<bool>> GetLoginEmailExistAsync(LoginEmailModel loginEmailModel)
     {
-        // no need
-        //if (LoggedInService.LoggedInContactInfo == null && LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
-        //{
-        //    return await Task.FromResult(BadRequest(PBallRes.YouDoNotHaveAuthorization));
-        //}
-
         if (string.IsNullOrWhiteSpace(loginEmailModel.LoginEmail))
         {
-            return await Task.FromResult(false);
+            return await Task.FromResult(Ok(false));
         }
 
         Contact? contact = (from c in db.Contacts
@@ -21,10 +15,10 @@ public partial class ContactService : ControllerBase, IContactService
 
         if (contact != null)
         {
-            return await Task.FromResult(true);
+            return await Task.FromResult(Ok(true));
         }
 
-        return await Task.FromResult(true);
+        return await Task.FromResult(Ok(false));
     }
 }
 

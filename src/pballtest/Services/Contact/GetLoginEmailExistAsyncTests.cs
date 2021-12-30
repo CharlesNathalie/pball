@@ -7,77 +7,47 @@ public partial class ContactServiceTests : BaseServiceTests
     [InlineData("fr-CA")]
     public async Task GetLoginEmailExistAsync_Good_Test(string culture)
     {
-        Random random = new Random();
+        Assert.True(await _ContactServiceSetupAsync(culture));
 
-        Assert.True(await ContactServiceSetup(culture));
-
-        int ContactID = 0;
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
 
         if (ContactService != null)
         {
             RegisterModel registerModel = await FillRegisterModel();
-            Assert.NotEmpty(registerModel.FirstName);
-            Assert.NotEmpty(registerModel.LastName);
-            Assert.NotEmpty(registerModel.LoginEmail);
 
             var actionAddRes = await ContactService.RegisterAsync(registerModel);
-            Assert.NotNull(actionAddRes);
-            Assert.NotNull(actionAddRes.Result);
-            if (actionAddRes != null && actionAddRes.Result != null)
+            Contact? contact = await DoOKTestReturnContactAsync(actionAddRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
             {
-                Assert.Equal(200, ((ObjectResult)actionAddRes.Result).StatusCode);
-                Assert.NotNull(((OkObjectResult)actionAddRes.Result).Value);
-                if (((OkObjectResult)actionAddRes.Result).Value != null)
-                {
-                    Contact? contactRet = (Contact?)((OkObjectResult)actionAddRes.Result).Value;
-                    Assert.NotNull(contactRet);
-                    if (contactRet != null)
-                    {
-                        ContactID = contactRet.ContactID;
-                    }
-                }
+                Assert.True(contact.ContactID > 0);
             }
 
-            if (Configuration != null)
+            LoginEmailModel loginEmailModel = new LoginEmailModel()
             {
+                LoginEmail = registerModel.LoginEmail,
+            };
 
-                LoginEmailModel loginEmailModel = new LoginEmailModel()
-                {
-                    LoginEmail = registerModel.LoginEmail,
-                };
+            var actionRes = await ContactService.GetLoginEmailExistAsync(loginEmailModel);
+            boolRet = await DoOKTestReturnBoolAsync(actionRes);
+            Assert.NotNull(boolRet);
+            Assert.True(boolRet);
 
-                var actionRes = await ContactService.GetLoginEmailExistAsync(loginEmailModel);
-                Assert.NotNull(actionRes);
-                Assert.NotNull(actionRes.Result);
-                if (actionRes != null && actionRes.Result != null)
-                {
-                    Assert.Equal(200, ((ObjectResult)actionRes.Result).StatusCode);
-                    Assert.NotNull(((OkObjectResult)actionRes.Result).Value);
-                    if (((OkObjectResult)actionRes.Result).Value != null)
-                    {
-                        bool? boolRet = (bool?)((OkObjectResult)actionRes.Result).Value;
-                        Assert.NotNull(boolRet);
-                        Assert.True(boolRet);
-                    }
-                }
+            loginEmailModel.LoginEmail = $"Not{ registerModel.LoginEmail}";
 
-                loginEmailModel.LoginEmail = $"Not{ registerModel.LoginEmail}";
+            actionRes = await ContactService.GetLoginEmailExistAsync(loginEmailModel);
+            boolRet = await DoOKTestReturnBoolAsync(actionRes);
+            Assert.NotNull(boolRet);
+            Assert.False(boolRet);
 
-                var actionRes2 = await ContactService.GetLoginEmailExistAsync(loginEmailModel);
-                Assert.NotNull(actionRes2);
-                Assert.NotNull(actionRes2.Result);
-                if (actionRes2 != null && actionRes2.Result != null)
-                {
-                    Assert.Equal(200, ((ObjectResult)actionRes2.Result).StatusCode);
-                    Assert.NotNull(((OkObjectResult)actionRes2.Result).Value);
-                    if (((OkObjectResult)actionRes2.Result).Value != null)
-                    {
-                        bool? boolRet = (bool?)((OkObjectResult)actionRes2.Result).Value;
-                        Assert.NotNull(boolRet);
-                        Assert.False(boolRet);
-                    }
-                }
-            }
+            loginEmailModel.LoginEmail = "";
+
+            actionRes = await ContactService.GetLoginEmailExistAsync(loginEmailModel);
+            boolRet = await DoOKTestReturnBoolAsync(actionRes);
+            Assert.NotNull(boolRet);
+            Assert.False(boolRet);
         }
     }
 }

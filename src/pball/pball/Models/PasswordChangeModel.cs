@@ -2,12 +2,13 @@
 
 public partial class ChangePasswordModel
 {
-    public string? LoginEmail { get; set; }
-    public string? Password { get; set; }
-    public string? TempCode { get; set; }
+    public string LoginEmail { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public string TempCode { get; set; } = string.Empty;
 
     public ChangePasswordModel() 
     {
+
     }
 }
 

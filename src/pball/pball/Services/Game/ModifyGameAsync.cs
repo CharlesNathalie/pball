@@ -4,123 +4,137 @@ public partial class GameService : ControllerBase, IGameService
 {
     public async Task<ActionResult<Game>> ModifyGameAsync(Game game)
     {
-        if (LoggedInService.LoggedInContactInfo == null && LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
-        {
-            return await Task.FromResult(BadRequest(PBallRes.YouDoNotHaveAuthorization));
-        }
+        ErrRes errRes = new ErrRes();
 
-        if (game == null)
+        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._ShouldNotBeNullOrEmpty, "game")));
+            errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (game.GameID == 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "GameID")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "GameID"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         Game? gameToChange = (from c in db.Games
                               where c.GameID == game.GameID
-                              select c).FirstOrDefault();
+                              select c).FirstOrDefault(); ;
 
         if (gameToChange == null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.CouldNotFind_With_Equal_, "Game", "GameID", game.GameID.ToString())));
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "Game", "GameID", game.GameID.ToString()));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        // Player1 -----------------------------------------------------------------------------------------------------
-        if (game.Player1 == 0)
+        if (game.LeagueID == 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "Player1")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeagueID", "0"));
+            return await Task.FromResult(BadRequest(errRes));
+        }
+
+        League? league = (from c in db.Leagues
+                          where c.LeagueID == game.LeagueID
+                          select c).AsNoTracking().FirstOrDefault(); ;
+
+        if (league == null)
+        {
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeagueID"));
+            return await Task.FromResult(BadRequest(errRes));
+        }
+
+        // Team1Player1 -----------------------------------------------------------------------------------------------------
+        if (game.Team1Player1 == 0)
+        {
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "Team1Player1"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         Contact? contact = (from c in db.Contacts
-                            where c.ContactID == game.Player1
-                            select c).FirstOrDefault(); ;
+                            where c.ContactID == game.Team1Player1
+                            select c).AsNoTracking().FirstOrDefault(); ;
 
         if (contact == null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "Player1")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "Team1Player1"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        // Player2 -----------------------------------------------------------------------------------------------------
-        if (game.Player2 == 0)
+        // Team1Player2 -----------------------------------------------------------------------------------------------------
+        if (game.Team1Player2 == 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "Player2")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "Team1Player2"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         contact = (from c in db.Contacts
-                   where c.ContactID == game.Player2
-                   select c).FirstOrDefault(); ;
+                   where c.ContactID == game.Team1Player2
+                   select c).AsNoTracking().FirstOrDefault(); ;
 
         if (contact == null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "Player2")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "Team1Player2"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        // Player3 -----------------------------------------------------------------------------------------------------
-        if (game.Player3 == 0)
+        // Team2Player1 -----------------------------------------------------------------------------------------------------
+        if (game.Team2Player1 == 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "Player3")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "Team2Player1"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         contact = (from c in db.Contacts
-                   where c.ContactID == game.Player3
-                   select c).FirstOrDefault(); ;
+                   where c.ContactID == game.Team2Player1
+                   select c).AsNoTracking().FirstOrDefault(); ;
 
         if (contact == null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "Player3")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "Team2Player1"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        // Player4 -----------------------------------------------------------------------------------------------------
-        if (game.Player4 == 0)
+        // Team2Player2 -----------------------------------------------------------------------------------------------------
+        if (game.Team2Player2 == 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "Player4")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "Team2Player2"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         contact = (from c in db.Contacts
-                   where c.ContactID == game.Player4
-                   select c).FirstOrDefault(); ;
+                   where c.ContactID == game.Team2Player2
+                   select c).AsNoTracking().FirstOrDefault(); ;
 
         if (contact == null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "Player4")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "Team2Player2"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        // Scores1 -----------------------------------------------------------------------------------------------------
-        if (game.Scores1 < 0.0D)
+        // Team1Scores -----------------------------------------------------------------------------------------------------
+        if (game.Team1Scores < 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._MinValueIs_, "Scores1")));
+            errRes.ErrList.Add(string.Format(PBallRes._MinValueIs_, "Team1Scores", "0"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        // Scores2 -----------------------------------------------------------------------------------------------------
-        if (game.Scores2 < 0.0D)
+        // Team2Scores -----------------------------------------------------------------------------------------------------
+        if (game.Team2Scores < 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._MinValueIs_, "Scores2")));
+            errRes.ErrList.Add(string.Format(PBallRes._MinValueIs_, "Team2Scores", "0"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        // Scores3 -----------------------------------------------------------------------------------------------------
-        if (game.Scores3 < 0.0D)
-        {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._MinValueIs_, "Scores3")));
-        }
-
-        // Scores4 -----------------------------------------------------------------------------------------------------
-        if (game.Scores4 < 0.0D)
-        {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._MinValueIs_, "Scores4")));
-        }
-
-        gameToChange.Player1 = game.Player1;
-        gameToChange.Player2 = game.Player2;
-        gameToChange.Player3 = game.Player3;
-        gameToChange.Player4 = game.Player4;
-        gameToChange.Scores1 = game.Scores1;
-        gameToChange.Scores2 = game.Scores2;
-        gameToChange.Scores3 = game.Scores3;
-        gameToChange.Scores4 = game.Scores4;
+        gameToChange.LeagueID = game.LeagueID;
+        gameToChange.Team1Player1 = game.Team1Player1;
+        gameToChange.Team1Player2 = game.Team1Player2;
+        gameToChange.Team2Player1 = game.Team2Player1;
+        gameToChange.Team2Player2 = game.Team2Player2;
+        gameToChange.Team1Scores = game.Team1Scores;
+        gameToChange.Team2Scores = game.Team2Scores;
         gameToChange.GameDate = game.GameDate;
+        gameToChange.Removed = false;
         gameToChange.LastUpdateDate_UTC = DateTime.UtcNow;
         gameToChange.LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact == null ? 0 : LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID;
 
@@ -130,7 +144,8 @@ public partial class GameService : ControllerBase, IGameService
         }
         catch (Exception ex)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.Error_, ex.Message)));
+            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         return await Task.FromResult(Ok(gameToChange));

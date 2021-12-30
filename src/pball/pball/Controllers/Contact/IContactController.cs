@@ -9,5 +9,5 @@ public partial interface IContactController
     Task<ActionResult<Contact>> LoginAsync(LoginModel loginModel);
     Task<ActionResult<Contact>> ModifyContactAsync(Contact contact);
     Task<ActionResult<Contact>> RegisterAsync(RegisterModel registerModel);
-    Task<ActionResult<bool>> SendPasswordResetTempCodeAsync(LoginEmailModel loginEmailModel);
+    Task<ActionResult<string>> GenerateTempCodeAsync(LeagueContactGenerateCodeModel leagueContactGenerateCodeModel);
 }

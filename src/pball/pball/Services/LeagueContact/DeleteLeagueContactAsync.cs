@@ -2,16 +2,20 @@ namespace PBallServices;
 
 public partial class LeagueContactService : ControllerBase, ILeagueContactService
 {
-    public async Task<ActionResult<bool>> DeleteLeagueContactAsync(int LeagueContactID)
+    public async Task<ActionResult<LeagueContact>> DeleteLeagueContactAsync(int LeagueContactID)
     {
-        if (LoggedInService.LoggedInContactInfo == null && LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
+        ErrRes errRes = new ErrRes();
+
+        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
         {
-            return await Task.FromResult(BadRequest(PBallRes.YouDoNotHaveAuthorization));
+            errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (LeagueContactID == 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "LeagueContactID")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeagueContactID"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         LeagueContact? leagueContact = (from c in db.LeagueContacts
@@ -20,7 +24,8 @@ public partial class LeagueContactService : ControllerBase, ILeagueContactServic
 
         if (leagueContact == null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.CouldNotFind_With_Equal_, "LeagueContact", "LeagueContactID", LeagueContactID.ToString())));
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "LeagueContact", "LeagueContactID", LeagueContactID.ToString()));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         leagueContact.Removed = true;
@@ -33,10 +38,11 @@ public partial class LeagueContactService : ControllerBase, ILeagueContactServic
         }
         catch (Exception ex)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.Error_, ex.Message)));
+            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        return await Task.FromResult(Ok(true));
+        return await Task.FromResult(Ok(leagueContact));
     }
 }
 

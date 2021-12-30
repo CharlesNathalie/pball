@@ -2,18 +2,16 @@
 
 public partial class Game : LastUpdate
 {
-    public int GameID { get; set; }
-    public int LeagueID { get; set; }
-    public int Player1 { get; set; }
-    public int Player2 { get; set; }
-    public int Player3 { get; set; }
-    public int Player4 { get; set; }
-    public int Scores1 { get; set; }
-    public int Scores2 { get; set; }
-    public int Scores3 { get; set; }
-    public int Scores4 { get; set; }
-    public DateTime GameDate { get; set; }
-    public bool Removed { get; set; }
+    public int GameID { get; set; } = 0;
+    public int LeagueID { get; set; } = 0;
+    public int Team1Player1 { get; set; } = 0;
+    public int Team1Player2 { get; set; } = 0;
+    public int Team2Player1 { get; set; } = 0;
+    public int Team2Player2 { get; set; } = 0;
+    public int Team1Scores { get; set; } = 0;
+    public int Team2Scores { get; set; } = 0;
+    public DateTime GameDate { get; set; } = new DateTime();
+    public bool Removed { get; set; } = false;
 
     public Game() : base()
     {

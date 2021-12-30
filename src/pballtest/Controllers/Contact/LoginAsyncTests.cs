@@ -14,22 +14,25 @@ public partial class ContactControllerTests
             var contentType = new MediaTypeWithQualityHeaderValue("application/json");
             httpClient.DefaultRequestHeaders.Accept.Add(contentType);
 
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = Configuration?["LoginEmail"],
-                Password = Configuration?["Password"],
-            };
-
             if (Configuration != null)
             {
-                string stringData = JsonSerializer.Serialize(loginModel);
-                var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/login", contentData).Result;
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                LoginModel loginModel = new LoginModel()
+                {
+                    LoginEmail = Configuration["LoginEmail"],
+                    Password = Configuration["Password"],
+                };
 
-                string responseContent = await response.Content.ReadAsStringAsync();
-                Contact? contact = JsonSerializer.Deserialize<Contact>(responseContent);
-                Assert.NotNull(contact);
+                if (Configuration != null)
+                {
+                    string stringData = JsonSerializer.Serialize(loginModel);
+                    var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/login", contentData).Result;
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    Contact? contact = JsonSerializer.Deserialize<Contact>(responseContent);
+                    Assert.NotNull(contact);
+                }
             }
         }
     }
@@ -41,27 +44,30 @@ public partial class ContactControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        List<LoginModel> loginModelList = new List<LoginModel>()
+        if (Configuration != null)
         {
-            new LoginModel() { LoginEmail = "WillError", Password = Configuration?["Password"] },
-            new LoginModel() { LoginEmail = Configuration?["LoginEmail"], Password = "WillError"},
-            new LoginModel() { LoginEmail = "", Password = Configuration?["Password"] },
-            new LoginModel() { LoginEmail = Configuration?["LoginEmail"], Password = ""},
-        };
-
-        foreach (LoginModel loginModel in loginModelList)
-        {
-            using (HttpClient httpClient = new HttpClient())
+            List<LoginModel> loginModelList = new List<LoginModel>()
             {
-                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+                new LoginModel() { LoginEmail = "WillError", Password = Configuration["Password"] },
+                new LoginModel() { LoginEmail = Configuration["LoginEmail"], Password = "WillError"},
+                new LoginModel() { LoginEmail = "", Password = Configuration["Password"] },
+                new LoginModel() { LoginEmail = Configuration["LoginEmail"], Password = ""},
+            };
 
-                if (Configuration != null)
+            foreach (LoginModel loginModel in loginModelList)
+            {
+                using (HttpClient httpClient = new HttpClient())
                 {
-                    string stringData = JsonSerializer.Serialize(loginModel);
-                    var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/login", contentData).Result;
-                    Assert.True((int)response.StatusCode == 400);
+                    var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    if (Configuration != null)
+                    {
+                        string stringData = JsonSerializer.Serialize(loginModel);
+                        var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                        HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/login", contentData).Result;
+                        Assert.True((int)response.StatusCode == 400);
+                    }
                 }
             }
         }

@@ -7,7 +7,7 @@ public partial class ContactServiceTests : BaseServiceTests
     [InlineData("fr-CA")]
     public async Task Constructor_Good_Test(string culture)
     {
-        Assert.True(await ContactServiceSetup(culture));
+        Assert.True(await _ContactServiceSetupAsync(culture));
     }
 }
 

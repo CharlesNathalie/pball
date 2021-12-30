@@ -1,22 +1,45 @@
+using System.Security;
+
 namespace PBallServices;
 
 public partial class ContactService : ControllerBase, IContactService
 {
     public async Task<ActionResult<bool>> ChangePasswordAsync(ChangePasswordModel changePasswordModel)
     {
+        ErrRes errRes = new ErrRes();
+
         if (string.IsNullOrWhiteSpace(changePasswordModel.LoginEmail))
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "LoginEmail")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LoginEmail"));
+            return await Task.FromResult(BadRequest(errRes));
+        }
+
+        Contact? contactExist = (from c in db.Contacts
+                                 where c.LoginEmail == changePasswordModel.LoginEmail
+                                 select c).AsNoTracking().FirstOrDefault();
+
+        if (contactExist == null)
+        {
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "LoginEmail", changePasswordModel.LoginEmail));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (string.IsNullOrWhiteSpace(changePasswordModel.Password))
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "Password")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "Password"));
+            return await Task.FromResult(BadRequest(errRes));
+        }
+
+        if (changePasswordModel.Password.Length > 50)
+        {
+            errRes.ErrList.Add(string.Format(PBallRes._MaxLengthIs_, "Password", "50"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (string.IsNullOrWhiteSpace(changePasswordModel.TempCode))
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "TempCode")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "TempCode"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         Contact? contact = (from c in db.Contacts
@@ -24,49 +47,28 @@ public partial class ContactService : ControllerBase, IContactService
                             && c.ResetPasswordTempCode == changePasswordModel.TempCode
                             select c).FirstOrDefault();
 
+        if (contact == null)
+        {
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "LoginEmail,TempCode", changePasswordModel.LoginEmail + "," + changePasswordModel.TempCode));
+            return await Task.FromResult(BadRequest(errRes));
+        }
+
+
         if (contact != null)
         {
             contact.PasswordHash = ScrambleService.Scramble(changePasswordModel.Password);
+            contact.ResetPasswordTempCode = "";
+
             try
             {
                 db.SaveChanges();
             }
             catch (Exception ex)
             {
-                return await Task.FromResult(BadRequest(string.Format(PBallRes.Error_, ex.Message)));
+                errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+                return await Task.FromResult(BadRequest(errRes));
             }
         }
-
-        MailMessage mail = new MailMessage();
-
-        mail.To.Add(Configuration["LoginEmail"]);
-
-        mail.IsBodyHtml = true;
-
-        SmtpClient myClient = new SmtpClient();
-
-        myClient.Host = Configuration["SmtpHost"];
-        myClient.Port = 587;
-
-        myClient.Credentials = new NetworkCredential(
-            Configuration["NetworkCredentialUserName"],
-            Configuration["NetworkCredentialPassword"]);
-        
-        myClient.EnableSsl = true;
-
-        string subject = $"{ PBallRes.YourPasswordHasBeenChanged }";
-
-        StringBuilder msg = new StringBuilder();
-
-        msg.AppendLine($"<h2>PBallRes.YourPasswordHasBeenChanged</h2>");
-        msg.AppendLine($"<h3>" + DateTime.Now + "</h3>");
-
-        msg.AppendLine($"<br>");
-        msg.AppendLine($"<p>{ PBallRes.AutomaticEmail }</p>");
-
-        mail.Subject = subject;
-        mail.Body = msg.ToString();
-        //myClient.Send(mail);
 
         return await Task.FromResult(Ok(true));
     }

@@ -7,47 +7,105 @@ public partial class ContactServiceTests : BaseServiceTests
     [InlineData("fr-CA")]
     public async Task DeleteContactAsync_Good_Test(string culture)
     {
-        Assert.True(await ContactServiceSetup(culture));
+        Assert.True(await _ContactServiceSetupAsync(culture));
+
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
 
         if (ContactService != null)
         {
-            int ContactIDToDelete = 0;
-
             RegisterModel registerModel = await FillRegisterModel();
-            Assert.NotEmpty(registerModel.FirstName);
-            Assert.NotEmpty(registerModel.LastName);
-            Assert.NotEmpty(registerModel.LoginEmail);
 
-            var actionAddRes = await ContactService.RegisterAsync(registerModel);
-            Assert.NotNull(actionAddRes);
-            Assert.NotNull(actionAddRes.Result);
-            if (actionAddRes != null && actionAddRes.Result != null)
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
             {
-                Assert.Equal(200, ((ObjectResult)actionAddRes.Result).StatusCode);
-                Assert.NotNull(((OkObjectResult)actionAddRes.Result).Value);
-                if (((OkObjectResult)actionAddRes.Result).Value != null)
-                {
-                    Contact? contactRet = (Contact?)((OkObjectResult)actionAddRes.Result).Value;
-                    Assert.NotNull(contactRet);
-                    if (contactRet != null)
-                    {
-                        ContactIDToDelete = contactRet.ContactID;
-                    }
-                }
+                Assert.True(contact.ContactID > 0);
             }
 
-            var actionDeleteRes = await ContactService.DeleteContactAsync(ContactIDToDelete);
-            Assert.NotNull(actionDeleteRes);
-            Assert.NotNull(actionDeleteRes.Result);
-            if (actionDeleteRes != null && actionDeleteRes.Result != null)
+            if (contact != null)
             {
-                Assert.Equal(200, ((ObjectResult)actionDeleteRes.Result).StatusCode);
-                Assert.NotNull(((OkObjectResult)actionDeleteRes.Result).Value);
-                if (((OkObjectResult)actionDeleteRes.Result).Value != null)
+                var actionDeleteRes = await ContactService.DeleteContactAsync(contact.ContactID);
+                Contact? contact2 = await DoOKTestReturnContactAsync(actionDeleteRes);
+                Assert.NotNull(contact2);
+
+                if (contact2 != null)
                 {
-                    bool? boolRet = (bool?)((OkObjectResult)actionDeleteRes.Result).Value;
-                    Assert.NotNull(boolRet);
+                    Assert.True(contact2.ContactID > 0);
                 }
+            }
+        }
+    }
+    [Theory]
+    [InlineData("en-CA")]
+    [InlineData("fr-CA")]
+    public async Task DeleteContactAsync_Authorization_Error_Test(string culture)
+    {
+        Assert.True(await _ContactServiceSetupAsync(culture));
+
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        if (ContactService != null)
+        {
+            RegisterModel registerModel = await FillRegisterModel();
+
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
+
+            if (contact != null)
+            {
+                if (LoggedInService != null)
+                {
+                    LoggedInService.LoggedInContactInfo.LoggedInContact = null;
+                }
+
+                var actionDeleteRes = await ContactService.DeleteContactAsync(contact.ContactID);
+                boolRet = await DoBadRequestContactTestAsync(PBallRes.YouDoNotHaveAuthorization, actionDeleteRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
+        }
+    }
+    [Theory]
+    [InlineData("en-CA")]
+    [InlineData("fr-CA")]
+    public async Task DeleteContactAsync_CouldNotFindContact_Error_Test(string culture)
+    {
+        Assert.True(await _ContactServiceSetupAsync(culture));
+
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        if (ContactService != null)
+        {
+            RegisterModel registerModel = await FillRegisterModel();
+
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
+
+            if (contact != null)
+            {
+                contact.ContactID = 10000;
+
+                var actionDeleteRes = await ContactService.DeleteContactAsync(contact.ContactID);
+                boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", contact.ContactID.ToString()), actionDeleteRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
             }
         }
     }

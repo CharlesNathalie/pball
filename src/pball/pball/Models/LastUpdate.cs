@@ -2,8 +2,8 @@
 
 public partial class LastUpdate
 {
-    public DateTime LastUpdateDate_UTC { get; set; }
-    public int LastUpdateContactID { get; set; }
+    public DateTime LastUpdateDate_UTC { get; set; } = new DateTime();
+    public int LastUpdateContactID { get; set; } = 0;
 
     public LastUpdate()
     {

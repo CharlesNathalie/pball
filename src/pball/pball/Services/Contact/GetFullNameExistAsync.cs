@@ -4,20 +4,14 @@ public partial class ContactService : ControllerBase, IContactService
 {
     public async Task<ActionResult<bool>> GetFullNameExistAsync(FullNameModel fullNameModel)
     {
-        // no need
-        //if (LoggedInService.LoggedInContactInfo == null && LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
-        //{
-        //    return await Task.FromResult(BadRequest(PBallRes.YouDoNotHaveAuthorization));
-        //}
-
         if (string.IsNullOrWhiteSpace(fullNameModel.FirstName))
         {
-            return await Task.FromResult(false);
+            return await Task.FromResult(Ok(false));
         }
 
         if (string.IsNullOrWhiteSpace(fullNameModel.LastName))
         {
-            return await Task.FromResult(false);
+            return await Task.FromResult(Ok(false));
         }
 
         if (!string.IsNullOrWhiteSpace(fullNameModel.Initial))
@@ -30,7 +24,7 @@ public partial class ContactService : ControllerBase, IContactService
 
             if (contact != null)
             {
-                return await Task.FromResult(true);
+                return await Task.FromResult(Ok(true));
             }
         }
         else
@@ -42,11 +36,11 @@ public partial class ContactService : ControllerBase, IContactService
 
             if (contact != null)
             {
-                return await Task.FromResult(true);
+                return await Task.FromResult(Ok(true));
             }
         }
 
-        return await Task.FromResult(true);
+        return await Task.FromResult(Ok(false));
     }
 }
 

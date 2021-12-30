@@ -17,7 +17,7 @@ public partial class LeagueControllerTests : BaseControllerTests
                 httpClient.DefaultRequestHeaders.Accept.Add(contentType);
 
                 League league = await FillLeague();
-                Assert.True(league.CreatorContactID > 0);
+                Assert.NotEmpty(league.LeagueName);
 
                 if (Configuration != null)
                 {

@@ -2,16 +2,20 @@ namespace PBallServices;
 
 public partial class LeagueService : ControllerBase, ILeagueService
 {
-    public async Task<ActionResult<bool>> DeleteLeagueAsync(int LeagueID)
+    public async Task<ActionResult<League>> DeleteLeagueAsync(int LeagueID)
     {
-        if (LoggedInService.LoggedInContactInfo == null && LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
+        ErrRes errRes = new ErrRes();
+
+        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
         {
-            return await Task.FromResult(BadRequest(PBallRes.YouDoNotHaveAuthorization));
+            errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         if (LeagueID == 0)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "LeagueID")));
+            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeagueID"));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         League? league = (from c in db.Leagues
@@ -20,7 +24,8 @@ public partial class LeagueService : ControllerBase, ILeagueService
 
         if (league == null)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.CouldNotFind_With_Equal_, "League", "LeagueID", LeagueID.ToString())));
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "League", "LeagueID", LeagueID.ToString()));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
         league.Removed = true;
@@ -33,10 +38,11 @@ public partial class LeagueService : ControllerBase, ILeagueService
         }
         catch (Exception ex)
         {
-            return await Task.FromResult(BadRequest(string.Format(PBallRes.Error_, ex.Message)));
+            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+            return await Task.FromResult(BadRequest(errRes));
         }
 
-        return await Task.FromResult(Ok(true));
+        return await Task.FromResult(Ok(league));
     }
 }
 
