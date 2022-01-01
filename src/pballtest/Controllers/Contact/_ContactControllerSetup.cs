@@ -1,5 +1,7 @@
 namespace pball.Controllers.Tests;
 
+
+[Collection("Sequential")]
 public partial class ContactControllerTests : BaseControllerTests
 {
     public ContactControllerTests() : base()

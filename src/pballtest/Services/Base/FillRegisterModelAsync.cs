@@ -2,27 +2,26 @@ namespace pball.Services.Tests;
 
 public partial class BaseServiceTests
 {
-    protected async Task<RegisterModel> FillRegisterModel()
+    protected async Task<RegisterModel> FillRegisterModelAsync()
     {
         Random random = new Random();
 
-        if (LoggedInService != null && LoggedInService.LoggedInContactInfo != null && LoggedInService.LoggedInContactInfo.LoggedInContact != null)
+        RegisterModel registerModel = new RegisterModel();
+
+        if (Configuration != null)
         {
-            if (Configuration != null)
+            registerModel = new RegisterModel()
             {
-                return await Task.FromResult(new RegisterModel()
-                {
-                    FirstName = $"Charles{ random.Next(1, 1000)}",
-                    LastName = $"LeBlanc{ random.Next(1, 1000)}",
-                    Initial = $"G{ random.Next(1, 10)}",
-                    Password = Configuration["Password"],
-                    LoginEmail = Configuration["LoginEmail"],
-                    PlayerLevel = random.Next(1, 5),
-                });
-            }
+                FirstName = $"FirstName{ random.Next(10000)}",
+                LastName = $"LastName{ random.Next(10000)}",
+                Initial = $"Init{ random.Next(10000)}",
+                LoginEmail = $"{ random.Next(10000) }{ Configuration["LoginEmail"] }",
+                Password = $"{ random.Next(10000) }{ Configuration["Password"] }",
+                PlayerLevel = 1 + (4 * random.NextDouble()),
+            };
         }
 
-        return await Task.FromResult(new RegisterModel());
+        return await Task.FromResult(registerModel);
     }
 }
 

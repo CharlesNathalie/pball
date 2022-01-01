@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace PBall.Controllers;
+﻿namespace PBall.Controllers;
 
 public partial class ContactController : ControllerBase, IContactController
 {
@@ -9,22 +7,44 @@ public partial class ContactController : ControllerBase, IContactController
         if (RouteData.Values["culture"] != null)
         {
             PBallRes.Culture = new CultureInfo($"{ RouteData.Values["culture"] }");
-            if (User != null)
+
+            if (Configuration != null)
             {
-                if (User.Identity != null)
+                string token = Request.Headers["Authentication"].ToString();
+
+                token = token.Replace("Bearer ", "");
+
+                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+                JwtSecurityToken jwtSecurityToken = tokenHandler.ReadJwtToken(token);
+
+                if (jwtSecurityToken != null)
                 {
-                    if (LoggedInService != null)
+                    if (jwtSecurityToken.Header["alg"].ToString() == "HS256" && jwtSecurityToken.Header["typ"].ToString() == "JWT")
                     {
-                        if (await LoggedInService.SetLoggedInContactInfoAsync($"{ User.Identity.Name }"))
+                        if (LoggedInService != null)
                         {
-                            return true;
+                            string? LoginEmail = jwtSecurityToken.Payload["name"].ToString();
+
+                            Contact? contact = (from c in LoggedInService.LoggedInContactList
+                                                where c.LoginEmail == LoginEmail
+                                                select c).FirstOrDefault();
+
+                            if (contact != null)
+                            {
+                                if (UserService != null)
+                                {
+                                    UserService.User = contact;
+                                }
+
+                                return await Task.FromResult(true);
+                            }
                         }
                     }
                 }
             }
         }
 
-        return false;
+        return await Task.FromResult(false);
     }
 }
 

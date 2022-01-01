@@ -15,7 +15,7 @@ public partial class BaseServiceTests
             {
                 for (int i = 0; i < (4 - contactCount); i++)
                 {
-                    RegisterModel registerModel = await FillRegisterModel();
+                    RegisterModel registerModel = await FillRegisterModelAsync();
                     registerModel.LoginEmail = "a" + i.ToString() + registerModel.LoginEmail;
                     registerModel.FirstName = registerModel.FirstName + i.ToString();
                     registerModel.LastName = registerModel.LastName + i.ToString();
@@ -57,7 +57,7 @@ public partial class BaseServiceTests
                 }
             }
 
-            if (LoggedInService != null && LoggedInService.LoggedInContactInfo != null && LoggedInService.LoggedInContactInfo.LoggedInContact != null)
+            if (LoggedInService != null)
             {
                 int Team1Scores = random.Next(1, 11);
                 int Team2Scores = random.Next(1, 11);
@@ -76,7 +76,7 @@ public partial class BaseServiceTests
                         LeagueID = league.LeagueID,
                         Removed = false,
                         LastUpdateDate_UTC = DateTime.UtcNow,
-                        LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID,
+                        LastUpdateContactID = 0,
                     });
                 }
             };

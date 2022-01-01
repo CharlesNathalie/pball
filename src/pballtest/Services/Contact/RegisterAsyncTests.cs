@@ -12,8 +12,10 @@ public partial class ContactServiceTests : BaseServiceTests
         bool boolRet = await ClearAllContactsFromDBAsync();
         Assert.True(boolRet);
 
-        boolRet = await DoRegisterTestAsync();
-        Assert.True(boolRet);
+        RegisterModel registerModel = await FillRegisterModelAsync();
+
+        Contact? contact = await DoRegisterTestAsync(registerModel);
+        Assert.NotNull(contact);
 
         if (db != null)
         {
@@ -23,27 +25,6 @@ public partial class ContactServiceTests : BaseServiceTests
             Assert.NotNull(contactList);
             Assert.NotEmpty(contactList);
             Assert.Single(contactList);
-        }
-    }
-    [Theory]
-    [InlineData("en-CA")]
-    [InlineData("fr-CA")]
-    public async Task RegisterAsync_registerModel_null_Error_Test(string culture)
-    {
-        Assert.True(await _ContactServiceSetupAsync(culture));
-
-        bool boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        if (ContactService != null)
-        {
-            RegisterModel? registerModel = await FillRegisterModel();
-
-            registerModel = null;
-
-            var actionRes = await ContactService.RegisterAsync(registerModel);
-            boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._ShouldNotBeNullOrEmpty, "registerModel"), actionRes);
-            Assert.True(boolRet);
         }
     }
     [Theory]
@@ -60,7 +41,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModel();
+            RegisterModel? registerModel = await FillRegisterModelAsync();
 
             registerModel.LoginEmail = "";
 
@@ -107,7 +88,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModel();
+            RegisterModel? registerModel = await FillRegisterModelAsync();
 
             registerModel.FirstName = "";
 
@@ -136,7 +117,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModel();
+            RegisterModel? registerModel = await FillRegisterModelAsync();
 
             registerModel.LastName = "";
 
@@ -165,7 +146,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModel();
+            RegisterModel? registerModel = await FillRegisterModelAsync();
 
             registerModel.Initial = "a".PadRight(51);
 
@@ -188,7 +169,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModel();
+            RegisterModel? registerModel = await FillRegisterModelAsync();
 
             registerModel.PlayerLevel = 0.9D;
 
@@ -217,7 +198,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModel();
+            RegisterModel? registerModel = await FillRegisterModelAsync();
 
             registerModel.Password = "";
 
@@ -246,7 +227,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModel();
+            RegisterModel? registerModel = await FillRegisterModelAsync();
 
             var actionRes = await ContactService.RegisterAsync(registerModel);
             Contact? contact = await DoOKTestReturnContactAsync(actionRes);
@@ -276,7 +257,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModel();
+            RegisterModel? registerModel = await FillRegisterModelAsync();
 
             var actionRes = await ContactService.RegisterAsync(registerModel);
             Contact? contact = await DoOKTestReturnContactAsync(actionRes);
@@ -301,7 +282,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModel();
+            RegisterModel? registerModel = await FillRegisterModelAsync();
 
             registerModel.Initial = "";
 

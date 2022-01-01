@@ -14,7 +14,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionAddRes = await ContactService.RegisterAsync(registerModel);
             Contact? contact = await DoOKTestReturnContactAsync(actionAddRes);

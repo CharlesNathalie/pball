@@ -6,7 +6,7 @@ public partial class LeagueService : ControllerBase, ILeagueService
     {
         ErrRes errRes = new ErrRes();
 
-        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
+        if (UserService.User == null)
         {
             errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
             return await Task.FromResult(BadRequest(errRes));
@@ -39,7 +39,7 @@ public partial class LeagueService : ControllerBase, ILeagueService
             PointsToWinners = league.PointsToWinners,
             Removed = false,
             LastUpdateDate_UTC = DateTime.UtcNow,
-            LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact == null ? 0 : LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID,
+            LastUpdateContactID = 0,
         };
 
         db.Leagues?.Add(leagueNew);

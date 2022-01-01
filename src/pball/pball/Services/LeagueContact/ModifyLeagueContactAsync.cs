@@ -6,7 +6,7 @@ public partial class LeagueContactService : ControllerBase, ILeagueContactServic
     {
         ErrRes errRes = new ErrRes();
 
-        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
+        if (UserService.User == null)
         {
             errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
             return await Task.FromResult(BadRequest(errRes));
@@ -32,8 +32,8 @@ public partial class LeagueContactService : ControllerBase, ILeagueContactServic
         if (leagueContactToModify != null)
         {
             leagueContactToModify.IsLeagueAdmin = leagueContact.IsLeagueAdmin;
-            leagueContactToModify.LastUpdateDate_UTC = DateTime.UtcNow;
-            leagueContactToModify.LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact == null ? 0 : LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID;
+            leagueContactToModify.LastUpdateDate_UTC = leagueContact.LastUpdateDate_UTC;
+            leagueContactToModify.LastUpdateContactID = leagueContact.LastUpdateContactID;
         }
 
         try

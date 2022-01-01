@@ -7,22 +7,39 @@ public partial class LeagueController : ControllerBase, ILeagueController
         if (RouteData.Values["culture"] != null)
         {
             PBallRes.Culture = new CultureInfo($"{ RouteData.Values["culture"] }");
-            if (User != null)
+
+            if (Configuration != null)
             {
-                if (User.Identity != null)
+                string token = Request.Headers["Authentication"].ToString();
+
+                token = token.Replace("Bearer ", "");
+
+                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+                JwtSecurityToken jwtSecurityToken = tokenHandler.ReadJwtToken(token);
+
+                if (jwtSecurityToken != null)
                 {
-                    if (LoggedInService != null)
+                    if (jwtSecurityToken.Header["alg"].ToString() == "HS256" && jwtSecurityToken.Header["typ"].ToString() == "JWT")
                     {
-                        if (await LoggedInService.SetLoggedInContactInfoAsync($"{ User.Identity.Name }"))
+                        if (LoggedInService != null)
                         {
-                            return true;
+                            string? LoginEmail = jwtSecurityToken.Payload["name"].ToString();
+
+                            Contact? contact = (from c in LoggedInService.LoggedInContactList
+                                                where c.LoginEmail == LoginEmail
+                                                select c).FirstOrDefault();
+
+                            if (contact != null)
+                            {
+                                return await Task.FromResult(true);
+                            }
                         }
                     }
                 }
             }
         }
 
-        return false;
+        return await Task.FromResult(false);
     }
 }
 

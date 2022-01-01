@@ -44,7 +44,7 @@ public partial class ContactService : ControllerBase, IContactService
 
             if (loginModel.Password == ScrambleService.Descramble($"{ contact.PasswordHash }"))
             {
-                byte[] key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("APISecret"));
+                byte[] key = Encoding.ASCII.GetBytes(Configuration["APISecret"]);
 
                 JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
                 SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
@@ -59,8 +59,20 @@ public partial class ContactService : ControllerBase, IContactService
                 SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
                 contact.Token = tokenHandler.WriteToken(token);
 
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+                    return await Task.FromResult(BadRequest(errRes));
+                }
+
                 contact.PasswordHash = "";
                 contact.ResetPasswordTempCode = "";
+
+                LoggedInService.LoggedInContactList.Add(contact);
 
                 return await Task.FromResult(Ok(contact));
             }

@@ -14,7 +14,7 @@ public partial class GameServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
             Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
@@ -25,7 +25,28 @@ public partial class GameServiceTests : BaseServiceTests
                 Assert.True(contact.ContactID > 0);
             }
 
-            RegisterModel registerModel2 = await FillRegisterModel();
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            RegisterModel registerModel2 = await FillRegisterModelAsync();
 
             registerModel2.LoginEmail = "P" + registerModel.LoginEmail;
             registerModel2.FirstName = "P" + registerModel.FirstName;
@@ -41,7 +62,7 @@ public partial class GameServiceTests : BaseServiceTests
                 Assert.True(contact2.ContactID > 0);
             }
 
-            RegisterModel registerModel3 = await FillRegisterModel();
+            RegisterModel registerModel3 = await FillRegisterModelAsync();
 
             registerModel3.LoginEmail = "w" + registerModel.LoginEmail;
             registerModel3.FirstName = "w" + registerModel.FirstName;
@@ -57,7 +78,7 @@ public partial class GameServiceTests : BaseServiceTests
                 Assert.True(contact3.ContactID > 0);
             }
 
-            RegisterModel registerModel4 = await FillRegisterModel();
+            RegisterModel registerModel4 = await FillRegisterModelAsync();
 
             registerModel4.LoginEmail = "r" + registerModel.LoginEmail;
             registerModel4.FirstName = "r" + registerModel.FirstName;
@@ -214,17 +235,55 @@ public partial class GameServiceTests : BaseServiceTests
     {
         Assert.True(await _GameServiceSetupAsync(culture));
 
-        if (LoggedInService != null)
-        {
-            LoggedInService.LoggedInContactInfo.LoggedInContact = null;
-        }
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
 
-        if (GameService != null)
+        if (ContactService != null)
         {
-            var actionGetAllRes = await GameService.GetAllLeagueGamesBetweenDatesAsync(new LeagueGamesModel());
-            bool? boolRet = await DoBadRequestGameListTestAsync(PBallRes.YouDoNotHaveAuthorization, actionGetAllRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            RegisterModel registerModel = await FillRegisterModelAsync();
+
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (UserService != null)
+            {
+                UserService.User = null;
+            }
+
+            if (GameService != null)
+            {
+                var actionGetAllRes = await GameService.GetAllLeagueGamesBetweenDatesAsync(new LeagueGamesModel());
+                boolRet = await DoBadRequestGameListTestAsync(PBallRes.YouDoNotHaveAuthorization, actionGetAllRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
     [Theory]
@@ -234,19 +293,57 @@ public partial class GameServiceTests : BaseServiceTests
     {
         Assert.True(await _GameServiceSetupAsync(culture));
 
-        if (GameService != null)
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        if (ContactService != null)
         {
-            LeagueGamesModel leagueGamesModel = new LeagueGamesModel()
+            RegisterModel registerModel = await FillRegisterModelAsync();
+
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
             {
-                LeagueID = 0,
-                StartDate = DateTime.Now.AddDays(-1),
-                EndDate = DateTime.Now.AddDays(1),
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
             };
 
-            var actionGetAllRes = await GameService.GetAllLeagueGamesBetweenDatesAsync(leagueGamesModel);
-            bool? boolRet = await DoBadRequestGameListTestAsync(string.Format(PBallRes._IsRequired, "LeagueID"), actionGetAllRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (GameService != null)
+            {
+                LeagueGamesModel leagueGamesModel = new LeagueGamesModel()
+                {
+                    LeagueID = 0,
+                    StartDate = DateTime.Now.AddDays(-1),
+                    EndDate = DateTime.Now.AddDays(1),
+                };
+
+                var actionGetAllRes = await GameService.GetAllLeagueGamesBetweenDatesAsync(leagueGamesModel);
+                boolRet = await DoBadRequestGameListTestAsync(string.Format(PBallRes._IsRequired, "LeagueID"), actionGetAllRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
     [Theory]
@@ -256,19 +353,57 @@ public partial class GameServiceTests : BaseServiceTests
     {
         Assert.True(await _GameServiceSetupAsync(culture));
 
-        if (GameService != null)
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        if (ContactService != null)
         {
-            LeagueGamesModel leagueGamesModel = new LeagueGamesModel()
+            RegisterModel registerModel = await FillRegisterModelAsync();
+
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
             {
-                LeagueID = 1,
-                StartDate = new DateTime(),
-                EndDate = DateTime.Now.AddDays(1),
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
             };
 
-            var actionGetAllRes = await GameService.GetAllLeagueGamesBetweenDatesAsync(leagueGamesModel);
-            bool? boolRet = await DoBadRequestGameListTestAsync(string.Format(PBallRes._IsRequired, "StartDate"), actionGetAllRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (GameService != null)
+            {
+                LeagueGamesModel leagueGamesModel = new LeagueGamesModel()
+                {
+                    LeagueID = 1,
+                    StartDate = new DateTime(),
+                    EndDate = DateTime.Now.AddDays(1),
+                };
+
+                var actionGetAllRes = await GameService.GetAllLeagueGamesBetweenDatesAsync(leagueGamesModel);
+                boolRet = await DoBadRequestGameListTestAsync(string.Format(PBallRes._IsRequired, "StartDate"), actionGetAllRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
     [Theory]
@@ -278,19 +413,57 @@ public partial class GameServiceTests : BaseServiceTests
     {
         Assert.True(await _GameServiceSetupAsync(culture));
 
-        if (GameService != null)
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        if (ContactService != null)
         {
-            LeagueGamesModel leagueGamesModel = new LeagueGamesModel()
+            RegisterModel registerModel = await FillRegisterModelAsync();
+
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
             {
-                LeagueID = 1,
-                StartDate = DateTime.Now.AddDays(-1),
-                EndDate = new DateTime(),
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
             };
 
-            var actionGetAllRes = await GameService.GetAllLeagueGamesBetweenDatesAsync(leagueGamesModel);
-            bool? boolRet = await DoBadRequestGameListTestAsync(string.Format(PBallRes._IsRequired, "EndDate"), actionGetAllRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (GameService != null)
+            {
+                LeagueGamesModel leagueGamesModel = new LeagueGamesModel()
+                {
+                    LeagueID = 1,
+                    StartDate = DateTime.Now.AddDays(-1),
+                    EndDate = new DateTime(),
+                };
+
+                var actionGetAllRes = await GameService.GetAllLeagueGamesBetweenDatesAsync(leagueGamesModel);
+                boolRet = await DoBadRequestGameListTestAsync(string.Format(PBallRes._IsRequired, "EndDate"), actionGetAllRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
     [Theory]
@@ -300,19 +473,57 @@ public partial class GameServiceTests : BaseServiceTests
     {
         Assert.True(await _GameServiceSetupAsync(culture));
 
-        if (GameService != null)
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        if (ContactService != null)
         {
-            LeagueGamesModel leagueGamesModel = new LeagueGamesModel()
+            RegisterModel registerModel = await FillRegisterModelAsync();
+
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
             {
-                LeagueID = 1,
-                StartDate = DateTime.Now.AddDays(-1),
-                EndDate = DateTime.Now.AddDays(-2),
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
             };
 
-            var actionGetAllRes = await GameService.GetAllLeagueGamesBetweenDatesAsync(leagueGamesModel);
-            bool? boolRet = await DoBadRequestGameListTestAsync(string.Format(PBallRes._DateIsBiggerThan_, "StartDate", "EndDate"), actionGetAllRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (GameService != null)
+            {
+                LeagueGamesModel leagueGamesModel = new LeagueGamesModel()
+                {
+                    LeagueID = 1,
+                    StartDate = DateTime.Now.AddDays(-1),
+                    EndDate = DateTime.Now.AddDays(-2),
+                };
+
+                var actionGetAllRes = await GameService.GetAllLeagueGamesBetweenDatesAsync(leagueGamesModel);
+                boolRet = await DoBadRequestGameListTestAsync(string.Format(PBallRes._DateIsBiggerThan_, "StartDate", "EndDate"), actionGetAllRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
 }

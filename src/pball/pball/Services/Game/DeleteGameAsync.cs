@@ -6,7 +6,7 @@ public partial class GameService : ControllerBase, IGameService
     {
         ErrRes errRes = new ErrRes();
 
-        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
+        if (UserService.User == null)
         {
             errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
             return await Task.FromResult(BadRequest(errRes));
@@ -30,7 +30,7 @@ public partial class GameService : ControllerBase, IGameService
 
         game.Removed = true;
         game.LastUpdateDate_UTC = DateTime.UtcNow;
-        game.LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact == null ? 0 : LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID;
+        game.LastUpdateContactID = 0;
 
         try
         {

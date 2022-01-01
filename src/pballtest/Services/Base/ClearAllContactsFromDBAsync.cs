@@ -20,6 +20,11 @@ public partial class BaseServiceTests
             }
         }
 
+        if (LoggedInService != null)
+        {
+            LoggedInService.LoggedInContactList = new List<Contact>();
+        }
+
         return await Task.FromResult(true);
     }
 }

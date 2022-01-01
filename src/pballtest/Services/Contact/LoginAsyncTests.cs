@@ -9,24 +9,29 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
+        bool boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
         if (ContactService != null)
         {
-            if (Configuration != null)
-            {
-                LoginModel loginModel = new LoginModel()
-                {
-                    LoginEmail = Configuration["LoginEmail"],
-                    Password = Configuration["Password"],
-                };
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
-                var actionRes = await ContactService.LoginAsync(loginModel);
-                Contact? contact = await DoOKTestReturnContactAsync(actionRes);
-                Assert.NotNull(contact);
-                if (contact != null)
-                {
-                    Assert.Empty(contact.PasswordHash);
-                    Assert.NotEmpty(contact.Token);
-                }
+            Contact? contact = await DoRegisterTestAsync(registerModel);
+            Assert.NotNull(contact);
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionRes);
+            Assert.NotNull(contact2);
+            if (contact2 != null)
+            {
+                Assert.Empty(contact2.PasswordHash);
+                Assert.NotEmpty(contact2.Token);
             }
         }
 

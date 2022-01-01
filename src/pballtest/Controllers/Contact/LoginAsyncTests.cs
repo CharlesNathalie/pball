@@ -5,71 +5,62 @@ public partial class ContactControllerTests
     [Theory]
     [InlineData("en-CA")]
     [InlineData("fr-CA")]
-    public async Task Login_Good_Test(string culture)
+    public async Task LoginAsync_Good_Test(string culture)
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        using (HttpClient httpClient = new HttpClient())
+        RegisterModel registerModel = await FillRegisterModel();
+
+        Contact? contact = await DoOkRegister(registerModel, culture);
+        Assert.NotNull(contact);
+        if (contact != null)
         {
-            var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-            httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+            Assert.True(contact.ContactID > 0);
+        }
 
-            if (Configuration != null)
-            {
-                LoginModel loginModel = new LoginModel()
-                {
-                    LoginEmail = Configuration["LoginEmail"],
-                    Password = Configuration["Password"],
-                };
+        LoginModel loginModel = new LoginModel()
+        {
+            LoginEmail = registerModel.LoginEmail,
+            Password = registerModel.Password,
+        };
 
-                if (Configuration != null)
-                {
-                    string stringData = JsonSerializer.Serialize(loginModel);
-                    var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/login", contentData).Result;
-                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                    Contact? contact = JsonSerializer.Deserialize<Contact>(responseContent);
-                    Assert.NotNull(contact);
-                }
-            }
+        contact = await DoOkLogin(loginModel, culture);
+        Assert.NotNull(contact);
+        if (contact != null)
+        {
+            Assert.True(contact.ContactID > 0);
+            Assert.NotEmpty(contact.Token);
         }
     }
-
     [Theory]
     [InlineData("en-CA")]
     [InlineData("fr-CA")]
-    public async Task Login_Error_Test(string culture)
+    public async Task LoginAsync_Error_Test(string culture)
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        if (Configuration != null)
+        RegisterModel registerModel = await FillRegisterModel();
+
+        Contact? contact = await DoOkRegister(registerModel, culture);
+        Assert.NotNull(contact);
+        if (contact != null)
         {
-            List<LoginModel> loginModelList = new List<LoginModel>()
-            {
-                new LoginModel() { LoginEmail = "WillError", Password = Configuration["Password"] },
-                new LoginModel() { LoginEmail = Configuration["LoginEmail"], Password = "WillError"},
-                new LoginModel() { LoginEmail = "", Password = Configuration["Password"] },
-                new LoginModel() { LoginEmail = Configuration["LoginEmail"], Password = ""},
-            };
+            Assert.True(contact.ContactID > 0);
+        }
 
-            foreach (LoginModel loginModel in loginModelList)
-            {
-                using (HttpClient httpClient = new HttpClient())
-                {
-                    var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                    httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+        LoginModel loginModel = new LoginModel()
+        {
+            LoginEmail = registerModel.LoginEmail,
+            Password = registerModel.Password,
+        };
 
-                    if (Configuration != null)
-                    {
-                        string stringData = JsonSerializer.Serialize(loginModel);
-                        var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
-                        HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/login", contentData).Result;
-                        Assert.True((int)response.StatusCode == 400);
-                    }
-                }
-            }
+        loginModel.LoginEmail = "";
+
+        ErrRes? errRes = await DoBadRequestLogin(loginModel, culture);
+        Assert.NotNull(errRes);
+        if (errRes != null)
+        {
+            Assert.NotEmpty(errRes.ErrList);
         }
     }
 }

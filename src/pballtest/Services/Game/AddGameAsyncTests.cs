@@ -14,7 +14,7 @@ public partial class GameServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
             Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
@@ -25,7 +25,28 @@ public partial class GameServiceTests : BaseServiceTests
                 Assert.True(contact.ContactID > 0);
             }
 
-            RegisterModel registerModel2 = await FillRegisterModel();
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            RegisterModel registerModel2 = await FillRegisterModelAsync();
 
             registerModel2.LoginEmail = "P" + registerModel.LoginEmail;
             registerModel2.FirstName = "P" + registerModel.FirstName;
@@ -41,7 +62,7 @@ public partial class GameServiceTests : BaseServiceTests
                 Assert.True(contact2.ContactID > 0);
             }
 
-            RegisterModel registerModel3 = await FillRegisterModel();
+            RegisterModel registerModel3 = await FillRegisterModelAsync();
 
             registerModel3.LoginEmail = "w" + registerModel.LoginEmail;
             registerModel3.FirstName = "w" + registerModel.FirstName;
@@ -57,7 +78,7 @@ public partial class GameServiceTests : BaseServiceTests
                 Assert.True(contact3.ContactID > 0);
             }
 
-            RegisterModel registerModel4 = await FillRegisterModel();
+            RegisterModel registerModel4 = await FillRegisterModelAsync();
 
             registerModel4.LoginEmail = "r" + registerModel.LoginEmail;
             registerModel4.FirstName = "r" + registerModel.FirstName;
@@ -192,17 +213,55 @@ public partial class GameServiceTests : BaseServiceTests
     {
         Assert.True(await _GameServiceSetupAsync(culture));
 
-        if (LoggedInService != null)
-        {
-            LoggedInService.LoggedInContactInfo.LoggedInContact = null;
-        }
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
 
-        if (GameService != null)
+        if (ContactService != null)
         {
-            var actionRes = await GameService.AddGameAsync(new Game());
-            bool? boolRet = await DoBadRequestGameTestAsync(PBallRes.YouDoNotHaveAuthorization, actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            RegisterModel registerModel = await FillRegisterModelAsync();
+
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (UserService != null)
+            {
+                UserService.User = null;
+            }
+
+            if (GameService != null)
+            {
+                var actionRes = await GameService.AddGameAsync(new Game());
+                boolRet = await DoBadRequestGameTestAsync(PBallRes.YouDoNotHaveAuthorization, actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
     [Theory]
@@ -212,17 +271,55 @@ public partial class GameServiceTests : BaseServiceTests
     {
         Assert.True(await _GameServiceSetupAsync(culture));
 
-        if (GameService != null)
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        if (ContactService != null)
         {
-            Game game = new Game()
+            RegisterModel registerModel = await FillRegisterModelAsync();
+
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
             {
-                GameID = 1,
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
             };
 
-            var actionRes = await GameService.AddGameAsync(game);
-            bool? boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._ShouldBeEqualTo_, "GameID", "0"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (GameService != null)
+            {
+                Game game = new Game()
+                {
+                    GameID = 1,
+                };
+
+                var actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._ShouldBeEqualTo_, "GameID", "0"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
     [Theory]
@@ -232,25 +329,63 @@ public partial class GameServiceTests : BaseServiceTests
     {
         Assert.True(await _GameServiceSetupAsync(culture));
 
-        if (GameService != null)
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        if (ContactService != null)
         {
-            Game game = new Game()
+            RegisterModel registerModel = await FillRegisterModelAsync();
+
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
             {
-                GameID = 0,
-                LeagueID = 0,
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
             };
 
-            var actionRes = await GameService.AddGameAsync(game);
-            bool? boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "LeagueID", "0"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
 
-            game.LeagueID = 10000;
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
 
-            actionRes = await GameService.AddGameAsync(game);
-            boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "LeagueID", "0"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            if (GameService != null)
+            {
+                Game game = new Game()
+                {
+                    GameID = 0,
+                    LeagueID = 0,
+                };
+
+                var actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "LeagueID", "0"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+
+                game.LeagueID = 10000;
+
+                actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "LeagueID", "0"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
     [Theory]
@@ -263,23 +398,58 @@ public partial class GameServiceTests : BaseServiceTests
         bool? boolRet = await ClearAllContactsFromDBAsync();
         Assert.True(boolRet);
 
-        if (GameService != null)
+        if (ContactService != null)
         {
-            Game game = await FillGame();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
-            game.Team1Player1 = 0;
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            var actionRes = await GameService.AddGameAsync(game);
-            boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team1Player1"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
 
-            game.Team1Player1 = 10000;
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
 
-            actionRes = await GameService.AddGameAsync(game);
-            boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team1Player1"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (GameService != null)
+            {
+                Game game = await FillGame();
+
+                game.Team1Player1 = 0;
+
+                var actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team1Player1"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+
+                game.Team1Player1 = 10000;
+
+                actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team1Player1"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
     [Theory]
@@ -292,23 +462,58 @@ public partial class GameServiceTests : BaseServiceTests
         bool? boolRet = await ClearAllContactsFromDBAsync();
         Assert.True(boolRet);
 
-        if (GameService != null)
+        if (ContactService != null)
         {
-            Game game = await FillGame();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
-            game.Team1Player2 = 0;
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            var actionRes = await GameService.AddGameAsync(game);
-            boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team1Player2"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
 
-            game.Team1Player2 = 10000;
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
 
-            actionRes = await GameService.AddGameAsync(game);
-            boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team1Player2"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (GameService != null)
+            {
+                Game game = await FillGame();
+
+                game.Team1Player2 = 0;
+
+                var actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team1Player2"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+
+                game.Team1Player2 = 10000;
+
+                actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team1Player2"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
     [Theory]
@@ -321,23 +526,58 @@ public partial class GameServiceTests : BaseServiceTests
         bool? boolRet = await ClearAllContactsFromDBAsync();
         Assert.True(boolRet);
 
-        if (GameService != null)
+        if (ContactService != null)
         {
-            Game game = await FillGame();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
-            game.Team2Player1 = 0;
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            var actionRes = await GameService.AddGameAsync(game);
-            boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team2Player1"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
 
-            game.Team2Player1 = 10000;
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
 
-            actionRes = await GameService.AddGameAsync(game);
-            boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team2Player1"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (GameService != null)
+            {
+                Game game = await FillGame();
+
+                game.Team2Player1 = 0;
+
+                var actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team2Player1"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+
+                game.Team2Player1 = 10000;
+
+                actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team2Player1"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
     [Theory]
@@ -350,23 +590,58 @@ public partial class GameServiceTests : BaseServiceTests
         bool? boolRet = await ClearAllContactsFromDBAsync();
         Assert.True(boolRet);
 
-        if (GameService != null)
+        if (ContactService != null)
         {
-            Game game = await FillGame();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
-            game.Team2Player2 = 0;
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            var actionRes = await GameService.AddGameAsync(game);
-            boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team2Player2"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
 
-            game.Team2Player2 = 10000;
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
 
-            actionRes = await GameService.AddGameAsync(game);
-            boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team2Player2"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (GameService != null)
+            {
+                Game game = await FillGame();
+
+                game.Team2Player2 = 0;
+
+                var actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team2Player2"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+
+                game.Team2Player2 = 10000;
+
+                actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._IsRequired, "Team2Player2"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
     [Theory]
@@ -379,16 +654,51 @@ public partial class GameServiceTests : BaseServiceTests
         bool? boolRet = await ClearAllContactsFromDBAsync();
         Assert.True(boolRet);
 
-        if (GameService != null)
+        if (ContactService != null)
         {
-            Game game = await FillGame();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
-            game.Team1Scores = -1;
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            var actionRes = await GameService.AddGameAsync(game);
-            boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._MinValueIs_, "Team1Scores", "0"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (GameService != null)
+            {
+                Game game = await FillGame();
+
+                game.Team1Scores = -1;
+
+                var actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._MinValueIs_, "Team1Scores", "0"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
     [Theory]
@@ -401,16 +711,51 @@ public partial class GameServiceTests : BaseServiceTests
         bool? boolRet = await ClearAllContactsFromDBAsync();
         Assert.True(boolRet);
 
-        if (GameService != null)
+        if (ContactService != null)
         {
-            Game game = await FillGame();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
-            game.Team2Scores = -1;
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            var actionRes = await GameService.AddGameAsync(game);
-            boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._MinValueIs_, "Team2Scores", "0"), actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            contact = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact;
+                }
+                Assert.True(contact.ContactID > 0);
+                Assert.Empty(contact.PasswordHash);
+                Assert.NotEmpty(contact.Token);
+            }
+
+            if (GameService != null)
+            {
+                Game game = await FillGame();
+
+                game.Team2Scores = -1;
+
+                var actionRes = await GameService.AddGameAsync(game);
+                boolRet = await DoBadRequestGameTestAsync(string.Format(PBallRes._MinValueIs_, "Team2Scores", "0"), actionRes);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
+            }
         }
     }
 }

@@ -8,7 +8,8 @@ public partial interface IContactService
     Task<ActionResult<bool>> GetFullNameExistAsync(FullNameModel fullNameModel);
     Task<ActionResult<bool>> GetLoginEmailExistAsync(LoginEmailModel loginEmailModel);
     Task<ActionResult<Contact>> LoginAsync(LoginModel loginModel);
+    Task<ActionResult<bool>> LogoffAsync(int ContactID);
     Task<ActionResult<Contact>> ModifyContactAsync(Contact contact);
-    Task<ActionResult<Contact>> RegisterAsync(RegisterModel? registerModel);
+    Task<ActionResult<Contact>> RegisterAsync(RegisterModel registerModel);
 }
 

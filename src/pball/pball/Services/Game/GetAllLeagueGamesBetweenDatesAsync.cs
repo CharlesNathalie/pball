@@ -6,7 +6,7 @@ public partial class GameService : ControllerBase, IGameService
     {
         ErrRes errRes = new ErrRes();
 
-        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
+        if (UserService.User == null)
         {
             errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
             return await Task.FromResult(BadRequest(errRes));

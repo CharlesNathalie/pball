@@ -1,68 +1,93 @@
 namespace pball.Controllers.Tests;
 
-public partial class ContactControllerTests : BaseControllerTests
+public partial class ContactControllerTests
 {
     [Theory]
     [InlineData("en-CA")]
     [InlineData("fr-CA")]
     public async Task ModifyContactAsync_Good_Test(string culture)
     {
-        Random random = new Random();
-
         Assert.True(await ContactControllerSetup(culture));
 
-        if (ContactService != null)
+        RegisterModel registerModel = await FillRegisterModel();
+
+        Contact? contact = await DoOkRegister(registerModel, culture);
+        Assert.NotNull(contact);
+        if (contact != null)
         {
-            Contact? contactRet = new Contact();
+            Assert.True(contact.ContactID > 0);
+        }
 
-            RegisterModel registerModel = await FillRegisterModel();
-            Assert.NotEmpty(registerModel.FirstName);
-            Assert.NotEmpty(registerModel.LastName);
-            Assert.NotEmpty(registerModel.LoginEmail);
+        LoginModel loginModel = new LoginModel()
+        {
+            LoginEmail = registerModel.LoginEmail,
+            Password = registerModel.Password,
+        };
 
-            var actionAddRes = await ContactService.RegisterAsync(registerModel);
-            Assert.NotNull(actionAddRes);
-            Assert.NotNull(actionAddRes.Result);
-            if (actionAddRes != null && actionAddRes.Result != null)
+        contact = await DoOkLogin(loginModel, culture);
+        Assert.NotNull(contact);
+        if (contact != null)
+        {
+            Assert.True(contact.ContactID > 0);
+            Assert.NotEmpty(contact.Token);
+        }
+
+        if (contact != null)
+        {
+            contact.FirstName = "new" + contact.FirstName;
+
+            using (HttpClient httpClient = new HttpClient())
             {
-                Assert.Equal(200, ((ObjectResult)actionAddRes.Result).StatusCode);
-                Assert.NotNull(((OkObjectResult)actionAddRes.Result).Value);
-                if (((OkObjectResult)actionAddRes.Result).Value != null)
+                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
+
+                string stringData = JsonSerializer.Serialize(contact);
+                var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = httpClient.PutAsync($"{ Configuration?["pballurl"] }api/{ culture }/contact", contentData).Result;
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                string responseContent = await response.Content.ReadAsStringAsync();
+                Contact? contactRet = JsonSerializer.Deserialize<Contact>(responseContent);
+                Assert.NotNull(contactRet);
+                if (contactRet != null)
                 {
-                    contactRet = (Contact?)((OkObjectResult)actionAddRes.Result).Value;
-                    Assert.NotNull(contactRet);
+                    Assert.True(contactRet.ContactID > 0);
+                    Assert.Equal(contact.FirstName, contactRet.FirstName);
                 }
             }
+        }
+    }
+    [Theory]
+    [InlineData("en-CA")]
+    [InlineData("fr-CA")]
+    public async Task ModifyContactAsync_Error_Test(string culture)
+    {
+        Assert.True(await ContactControllerSetup(culture));
 
-            if (contactRet != null)
-            {
-                contactRet.FirstName = "CharlesNew";
-                contactRet.FirstName = "LeBlancNew";
-                contactRet.FirstName = "GNew";
+        RegisterModel registerModel = await FillRegisterModel();
 
-                if (Configuration != null)
-                {
-                    var actionRes = await ContactService.ModifyContactAsync(contactRet);
-                    Assert.NotNull(actionRes);
-                    Assert.NotNull(actionRes.Result);
-                    if (actionRes != null && actionRes.Result != null)
-                    {
-                        Assert.Equal(200, ((ObjectResult)actionRes.Result).StatusCode);
-                        Assert.NotNull(((OkObjectResult)actionRes.Result).Value);
-                        if (((OkObjectResult)actionRes.Result).Value != null)
-                        {
-                            Contact? contactRet2 = (Contact?)((OkObjectResult)actionRes.Result).Value;
-                            Assert.NotNull(contactRet2);
-                            if (contactRet2 != null)
-                            {
-                                Assert.Equal(contactRet.FirstName, contactRet2.FirstName);
-                                Assert.Equal(contactRet.LastName, contactRet2.LastName);
-                                Assert.Equal(contactRet.Initial, contactRet2.Initial);
-                            }
-                        }
-                    }
-                }
-            }
+        Contact? contact = await DoOkRegister(registerModel, culture);
+        Assert.NotNull(contact);
+        if (contact != null)
+        {
+            Assert.True(contact.ContactID > 0);
+        }
+
+        LoginModel loginModel = new LoginModel()
+        {
+            LoginEmail = registerModel.LoginEmail,
+            Password = registerModel.Password,
+        };
+
+        loginModel.LoginEmail = "";
+
+        ErrRes? errRes = await DoBadRequestLogin(loginModel, culture);
+        Assert.NotNull(errRes);
+        if (errRes != null)
+        {
+            Assert.NotEmpty(errRes.ErrList);
         }
     }
 }

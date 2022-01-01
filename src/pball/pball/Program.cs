@@ -11,32 +11,13 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
 
-string APISecret = builder.Configuration["APISecret"];
-byte[] key = Encoding.ASCII.GetBytes(APISecret);
-
-builder.Services.AddAuthentication(x =>
-{
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(x =>
-{
-    x.RequireHttpsMetadata = false;
-    x.SaveToken = true;
-    x.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false,
-        ValidateAudience = false
-    };
-});
-
 builder.Services.AddDbContext<PBallContext>(options =>
     options.UseSqlServer(builder.Configuration["pballDB"]));
 
-builder.Services.AddScoped<IScrambleService, ScrambleService>();
-builder.Services.AddScoped<ILoggedInService, LoggedInService>();
+builder.Services.AddSingleton<IScrambleService, ScrambleService>();
+builder.Services.AddSingleton<ILoggedInService, LoggedInService>();
+
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<ILeagueService, LeagueService>();

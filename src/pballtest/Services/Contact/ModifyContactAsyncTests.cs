@@ -14,30 +14,54 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
-            Assert.NotEmpty(registerModel.FirstName);
-            Assert.NotEmpty(registerModel.LastName);
-            Assert.NotEmpty(registerModel.LoginEmail);
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contactRet = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            if (contactRet != null)
+            if (contact != null)
             {
-                contactRet.FirstName = "CharlesNew";
-                contactRet.FirstName = "LeBlancNew";
-                contactRet.FirstName = "GNew";
-                contactRet.PlayerLevel = contactRet.PlayerLevel + 0.01D;
+                Assert.True(contact.ContactID > 0);
+            }
 
-                var actionRes = await ContactService.ModifyContactAsync(contactRet);
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+                Assert.Empty(contact2.PasswordHash);
+                Assert.NotEmpty(contact2.Token);
+            }
+
+            if (contact2 != null)
+            {
+                contact2.FirstName = "CharlesNew";
+                contact2.FirstName = "LeBlancNew";
+                contact2.FirstName = "GNew";
+                contact2.PlayerLevel = contact2.PlayerLevel + 0.01D;
+
+                var actionRes = await ContactService.ModifyContactAsync(contact2);
                 Contact? contactRet2 = await DoOKTestReturnContactAsync(actionRes);
                 if (contactRet2 != null)
                 {
-                    Assert.Equal(contactRet.ContactID, contactRet2.ContactID);
-                    Assert.Equal(contactRet.FirstName, contactRet2.FirstName);
-                    Assert.Equal(contactRet.LastName, contactRet2.LastName);
-                    Assert.Equal(contactRet.Initial, contactRet2.Initial);
-                    Assert.Equal(contactRet.PlayerLevel, contactRet2.PlayerLevel);
+                    Assert.Equal(contact2.ContactID, contactRet2.ContactID);
+                    Assert.Equal(contact2.FirstName, contactRet2.FirstName);
+                    Assert.Equal(contact2.LastName, contactRet2.LastName);
+                    Assert.Equal(contact2.Initial, contactRet2.Initial);
+                    Assert.Equal(contact2.PlayerLevel, contactRet2.PlayerLevel);
                     Assert.Empty(contactRet2.PasswordHash);
                     Assert.Empty(contactRet2.Token);
                     Assert.Empty(contactRet2.ResetPasswordTempCode);
@@ -58,40 +82,62 @@ public partial class ContactServiceTests : BaseServiceTests
     [Theory]
     [InlineData("en-CA")]
     [InlineData("fr-CA")]
-    public async Task ModifyContactAsync_Authorized_Error_Test(string culture)
+    public async Task ModifyContactAsync_Authorization_Error_Test(string culture)
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool boolRet = await ClearAllContactsFromDBAsync();
+        bool? boolRet = await ClearAllContactsFromDBAsync();
         Assert.True(boolRet);
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
-            Assert.NotEmpty(registerModel.FirstName);
-            Assert.NotEmpty(registerModel.LastName);
-            Assert.NotEmpty(registerModel.LoginEmail);
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contactRet = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            if (contactRet != null)
+            if (contact != null)
             {
-                contactRet.FirstName = "CharlesNew";
-                contactRet.LastName = "LeBlancNew";
-                contactRet.Initial = "GNew";
-                contactRet.PlayerLevel = contactRet.PlayerLevel + 0.01D;
+                Assert.True(contact.ContactID > 0);
+            }
 
-                if (LoggedInService != null)
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
                 {
-                    if (LoggedInService.LoggedInContactInfo != null)
-                    {
-                        LoggedInService.LoggedInContactInfo.LoggedInContact = null;
-                    }
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+                Assert.Empty(contact2.PasswordHash);
+                Assert.NotEmpty(contact2.Token);
+            }
+
+            if (contact2 != null)
+            {
+                contact2.FirstName = "CharlesNew";
+                contact2.FirstName = "LeBlancNew";
+                contact2.FirstName = "GNew";
+                contact2.PlayerLevel = contact2.PlayerLevel + 0.01D;
+
+                if (UserService != null)
+                {
+                    UserService.User = null;
                 }
 
-                var actionRes = await ContactService.ModifyContactAsync(contactRet);
+                var actionRes = await ContactService.ModifyContactAsync(contact2);
                 boolRet = await DoBadRequestContactTestAsync(PBallRes.YouDoNotHaveAuthorization, actionRes);
+                Assert.NotNull(boolRet);
                 Assert.True(boolRet);
             }
         }
@@ -108,36 +154,60 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
-            Assert.NotEmpty(registerModel.FirstName);
-            Assert.NotEmpty(registerModel.LastName);
-            Assert.NotEmpty(registerModel.LoginEmail);
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contactRet = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            if (contactRet != null)
+            if (contact != null)
             {
-                contactRet.FirstName = "CharlesNew";
-                contactRet.LastName = "LeBlancNew";
-                contactRet.Initial = "GNew";
-                contactRet.PlayerLevel = contactRet.PlayerLevel + 0.01D;
+                Assert.True(contact.ContactID > 0);
+            }
 
-                contactRet.LoginEmail = "";
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
 
-                var actionRes = await ContactService.ModifyContactAsync(contactRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+                Assert.Empty(contact2.PasswordHash);
+                Assert.NotEmpty(contact2.Token);
+            }
+
+            if (contact2 != null)
+            {
+                contact2.FirstName = "CharlesNew";
+                contact2.LastName = "LeBlancNew";
+                contact2.Initial = "GNew";
+                contact2.PlayerLevel = contact2.PlayerLevel + 0.01D;
+
+                contact2.LoginEmail = "";
+
+                var actionRes = await ContactService.ModifyContactAsync(contact2);
                 boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "LoginEmail"), actionRes);
                 Assert.True(boolRet);
 
-                contactRet.LoginEmail = "a@b.c";
+                contact2.LoginEmail = "a@b.c";
 
-                actionRes = await ContactService.ModifyContactAsync(contactRet);
+                actionRes = await ContactService.ModifyContactAsync(contact2);
                 boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._LengthShouldBeBetween_And_, "LoginEmail", "6", "100"), actionRes);
                 Assert.True(boolRet);
 
-                contactRet.LoginEmail = "a".PadRight(101) + "@b.c";
+                contact2.LoginEmail = "a".PadRight(101) + "@b.c";
 
-                actionRes = await ContactService.ModifyContactAsync(contactRet);
+                actionRes = await ContactService.ModifyContactAsync(contact2);
                 boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._LengthShouldBeBetween_And_, "LoginEmail", "6", "100"), actionRes);
                 Assert.True(boolRet);
             }
@@ -155,30 +225,55 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
-            Assert.NotEmpty(registerModel.FirstName);
-            Assert.NotEmpty(registerModel.LastName);
-            Assert.NotEmpty(registerModel.LoginEmail);
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contactRet = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            if (contactRet != null)
+            if (contact != null)
             {
-                contactRet.FirstName = "CharlesNew";
-                contactRet.LastName = "LeBlancNew";
-                contactRet.Initial = "GNew";
-                contactRet.PlayerLevel = contactRet.PlayerLevel + 0.01D;
+                Assert.True(contact.ContactID > 0);
+            }
 
-                contactRet.FirstName = "";
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
 
-                var actionRes = await ContactService.ModifyContactAsync(contactRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+                Assert.Empty(contact2.PasswordHash);
+                Assert.NotEmpty(contact2.Token);
+            }
+
+
+            if (contact2 != null)
+            {
+                contact2.FirstName = "CharlesNew";
+                contact2.LastName = "LeBlancNew";
+                contact2.Initial = "GNew";
+                contact2.PlayerLevel = contact2.PlayerLevel + 0.01D;
+
+                contact2.FirstName = "";
+
+                var actionRes = await ContactService.ModifyContactAsync(contact2);
                 boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "FirstName"), actionRes);
                 Assert.True(boolRet);
 
-                contactRet.FirstName = "a".PadRight(101);
+                contact2.FirstName = "a".PadRight(101);
 
-                actionRes = await ContactService.ModifyContactAsync(contactRet);
+                actionRes = await ContactService.ModifyContactAsync(contact2);
                 boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._MaxLengthIs_, "FirstName", "100"), actionRes);
                 Assert.True(boolRet);
             }
@@ -196,30 +291,54 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
-            Assert.NotEmpty(registerModel.FirstName);
-            Assert.NotEmpty(registerModel.LastName);
-            Assert.NotEmpty(registerModel.LoginEmail);
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contactRet = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            if (contactRet != null)
+            if (contact != null)
             {
-                contactRet.FirstName = "CharlesNew";
-                contactRet.LastName = "LeBlancNew";
-                contactRet.Initial = "GNew";
-                contactRet.PlayerLevel = contactRet.PlayerLevel + 0.01D;
+                Assert.True(contact.ContactID > 0);
+            }
 
-                contactRet.LastName = "";
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
 
-                var actionRes = await ContactService.ModifyContactAsync(contactRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+                Assert.Empty(contact2.PasswordHash);
+                Assert.NotEmpty(contact2.Token);
+            }
+
+            if (contact2 != null)
+            {
+                contact2.FirstName = "CharlesNew";
+                contact2.LastName = "LeBlancNew";
+                contact2.Initial = "GNew";
+                contact2.PlayerLevel = contact2.PlayerLevel + 0.01D;
+
+                contact2.LastName = "";
+
+                var actionRes = await ContactService.ModifyContactAsync(contact2);
                 boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "LastName"), actionRes);
                 Assert.True(boolRet);
 
-                contactRet.LastName = "a".PadRight(101);
+                contact2.LastName = "a".PadRight(101);
 
-                actionRes = await ContactService.ModifyContactAsync(contactRet);
+                actionRes = await ContactService.ModifyContactAsync(contact2);
                 boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._MaxLengthIs_, "LastName", "100"), actionRes);
                 Assert.True(boolRet);
             }
@@ -237,24 +356,49 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
-            Assert.NotEmpty(registerModel.FirstName);
-            Assert.NotEmpty(registerModel.LastName);
-            Assert.NotEmpty(registerModel.LoginEmail);
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contactRet = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            if (contactRet != null)
+            if (contact != null)
             {
-                contactRet.FirstName = "CharlesNew";
-                contactRet.LastName = "LeBlancNew";
-                contactRet.Initial = "GNew";
-                contactRet.PlayerLevel = contactRet.PlayerLevel + 0.01D;
+                Assert.True(contact.ContactID > 0);
+            }
 
-                contactRet.Initial = "a".PadRight(51);
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
 
-                var actionRes = await ContactService.ModifyContactAsync(contactRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+                Assert.Empty(contact2.PasswordHash);
+                Assert.NotEmpty(contact2.Token);
+            }
+
+
+            if (contact2 != null)
+            {
+                contact2.FirstName = "CharlesNew";
+                contact2.LastName = "LeBlancNew";
+                contact2.Initial = "GNew";
+                contact2.PlayerLevel = contact2.PlayerLevel + 0.01D;
+
+                contact2.Initial = "a".PadRight(51);
+
+                var actionRes = await ContactService.ModifyContactAsync(contact2);
                 boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._MaxLengthIs_, "Initial", "50"), actionRes);
                 Assert.True(boolRet);
             }
@@ -272,30 +416,54 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
-            Assert.NotEmpty(registerModel.FirstName);
-            Assert.NotEmpty(registerModel.LastName);
-            Assert.NotEmpty(registerModel.LoginEmail);
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contactRet = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            if (contactRet != null)
+            if (contact != null)
             {
-                contactRet.FirstName = "CharlesNew";
-                contactRet.LastName = "LeBlancNew";
-                contactRet.Initial = "GNew";
-                contactRet.PlayerLevel = contactRet.PlayerLevel + 0.01D;
+                Assert.True(contact.ContactID > 0);
+            }
 
-                contactRet.PlayerLevel = 0.99D;
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
 
-                var actionRes = await ContactService.ModifyContactAsync(contactRet);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+                Assert.Empty(contact2.PasswordHash);
+                Assert.NotEmpty(contact2.Token);
+            }
+
+            if (contact2 != null)
+            {
+                contact2.FirstName = "CharlesNew";
+                contact2.LastName = "LeBlancNew";
+                contact2.Initial = "GNew";
+                contact2.PlayerLevel = contact2.PlayerLevel + 0.01D;
+
+                contact2.PlayerLevel = 0.99D;
+
+                var actionRes = await ContactService.ModifyContactAsync(contact2);
                 boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._ValueShouldBeBetween_And_, "PlayerLevel", "1.0", "5.0"), actionRes);
                 Assert.True(boolRet);
 
-                contactRet.PlayerLevel = 5.1D;
+                contact2.PlayerLevel = 5.1D;
 
-                actionRes = await ContactService.ModifyContactAsync(contactRet);
+                actionRes = await ContactService.ModifyContactAsync(contact2);
                 boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._ValueShouldBeBetween_And_, "PlayerLevel", "1.0", "5.0"), actionRes);
                 Assert.True(boolRet);
             }
@@ -313,25 +481,49 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
-            Assert.NotEmpty(registerModel.FirstName);
-            Assert.NotEmpty(registerModel.LastName);
-            Assert.NotEmpty(registerModel.LoginEmail);
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contactRet = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            if (contactRet != null)
+            if (contact != null)
             {
-                contactRet.FirstName = "CharlesNew";
-                contactRet.LastName = "LeBlancNew";
-                contactRet.Initial = "GNew";
-                contactRet.PlayerLevel = contactRet.PlayerLevel + 0.01D;
+                Assert.True(contact.ContactID > 0);
+            }
 
-                contactRet.ContactID = 10000;
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
 
-                var actionRes = await ContactService.ModifyContactAsync(contactRet);
-                boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", contactRet.ContactID.ToString()), actionRes);
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+                Assert.Empty(contact2.PasswordHash);
+                Assert.NotEmpty(contact2.Token);
+            }
+
+            if (contact2 != null)
+            {
+                contact2.FirstName = "CharlesNew";
+                contact2.LastName = "LeBlancNew";
+                contact2.Initial = "GNew";
+                contact2.PlayerLevel = contact2.PlayerLevel + 0.01D;
+
+                contact2.ContactID = 10000;
+
+                var actionRes = await ContactService.ModifyContactAsync(contact2);
+                boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", contact2.ContactID.ToString()), actionRes);
                 Assert.True(boolRet);
             }
         }
@@ -348,29 +540,56 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contactRet = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            registerModel = await FillRegisterModel();
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+                Assert.Empty(contact2.PasswordHash);
+                Assert.NotEmpty(contact2.Token);
+            }
+
+            registerModel = await FillRegisterModelAsync();
             registerModel.FirstName = registerModel.FirstName + "New";
             registerModel.LoginEmail = "New" + registerModel.LoginEmail;
             actionRegisterRes = await ContactService.RegisterAsync(registerModel);
             Contact? contactRet2 = await DoOKTestReturnContactAsync(actionRegisterRes);
 
-            if (contactRet != null)
+            if (contact2 != null)
             {
                 if (contactRet2 != null)
                 {
-                    contactRet.FirstName = "CharlesNew";
-                    contactRet.LastName = "LeBlancNew";
-                    contactRet.Initial = "GNew";
-                    contactRet.PlayerLevel = contactRet.PlayerLevel + 0.01D;
+                    contact2.FirstName = "CharlesNew";
+                    contact2.LastName = "LeBlancNew";
+                    contact2.Initial = "GNew";
+                    contact2.PlayerLevel = contact2.PlayerLevel + 0.01D;
 
-                    contactRet.LoginEmail = contactRet2.LoginEmail;
+                    contact2.LoginEmail = contactRet2.LoginEmail;
 
-                    var actionRes = await ContactService.ModifyContactAsync(contactRet);
+                    var actionRes = await ContactService.ModifyContactAsync(contact2);
                     boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._AlreadyTaken, "LoginEmail"), actionRes);
                     Assert.True(boolRet);
                 }
@@ -389,30 +608,57 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contactRet = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            registerModel = await FillRegisterModel();
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+                Assert.Empty(contact2.PasswordHash);
+                Assert.NotEmpty(contact2.Token);
+            }
+
+            registerModel = await FillRegisterModelAsync();
             registerModel.FirstName = "New" + registerModel.FirstName;
             registerModel.LoginEmail = "New" + registerModel.LoginEmail;
             actionRegisterRes = await ContactService.RegisterAsync(registerModel);
             Contact? contactRet2 = await DoOKTestReturnContactAsync(actionRegisterRes);
 
-            if (contactRet != null)
+            if (contact2 != null)
             {
                 if (contactRet2 != null)
                 {
-                    contactRet.FirstName = contactRet2.FirstName;
-                    contactRet.LastName = contactRet2.LastName;
-                    contactRet.Initial = contactRet2.Initial;
-                    contactRet.PlayerLevel = contactRet.PlayerLevel + 0.01D;
+                    contact2.FirstName = contactRet2.FirstName;
+                    contact2.LastName = contactRet2.LastName;
+                    contact2.Initial = contactRet2.Initial;
+                    contact2.PlayerLevel = contact2.PlayerLevel + 0.01D;
 
-                    string Initial = contactRet.Initial == null ? "" : contactRet.Initial.EndsWith(".") ? contactRet.Initial.Substring(0, contactRet.Initial.Length - 1) : contactRet.Initial;
-                    string FullName = $"{ contactRet.FirstName } { Initial } { contactRet.LastName }";
+                    string Initial = contact2.Initial == null ? "" : contact2.Initial.EndsWith(".") ? contact2.Initial.Substring(0, contact2.Initial.Length - 1) : contact2.Initial;
+                    string FullName = $"{ contact2.FirstName } { Initial } { contact2.LastName }";
 
-                    var actionRes = await ContactService.ModifyContactAsync(contactRet);
+                    var actionRes = await ContactService.ModifyContactAsync(contact2);
                     boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._AlreadyTaken, FullName), actionRes);
                     Assert.True(boolRet);
                 }
@@ -431,34 +677,61 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             registerModel.Initial = "";
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contactRet = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
 
-            registerModel = await FillRegisterModel();
+            if (contact != null)
+            {
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+                Assert.Empty(contact2.PasswordHash);
+                Assert.NotEmpty(contact2.Token);
+            }
+
+            registerModel = await FillRegisterModelAsync();
             registerModel.Initial = "";
             registerModel.FirstName = "New" + registerModel.FirstName;
             registerModel.LoginEmail = "New" + registerModel.LoginEmail;
             actionRegisterRes = await ContactService.RegisterAsync(registerModel);
             Contact? contactRet2 = await DoOKTestReturnContactAsync(actionRegisterRes);
 
-            if (contactRet != null)
+            if (contact2 != null)
             {
                 if (contactRet2 != null)
                 {
-                    contactRet.FirstName = contactRet2.FirstName;
-                    contactRet.LastName = contactRet2.LastName;
-                    contactRet.Initial = contactRet2.Initial;
-                    contactRet.PlayerLevel = contactRet.PlayerLevel + 0.01D;
+                    contact2.FirstName = contactRet2.FirstName;
+                    contact2.LastName = contactRet2.LastName;
+                    contact2.Initial = contactRet2.Initial;
+                    contact2.PlayerLevel = contact2.PlayerLevel + 0.01D;
 
-                    contactRet.Initial = "";
+                    contact2.Initial = "";
 
-                    string FullName = $"{ contactRet.FirstName } { contactRet.LastName }";
+                    string FullName = $"{ contact2.FirstName } { contact2.LastName }";
 
-                    var actionRes = await ContactService.ModifyContactAsync(contactRet);
+                    var actionRes = await ContactService.ModifyContactAsync(contact2);
                     boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._AlreadyTaken, FullName), actionRes);
                     Assert.True(boolRet);
                 }

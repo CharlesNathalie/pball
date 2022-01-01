@@ -8,8 +8,6 @@ public partial class ContactController : ControllerBase, IContactController
     [HttpPost]
     public async Task<ActionResult<Contact>> LoginAsync(LoginModel loginModel)
     {
-        if (!await CheckLoggedIn()) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
-
         if (ContactService != null)
         {
             return await ContactService.LoginAsync(loginModel);

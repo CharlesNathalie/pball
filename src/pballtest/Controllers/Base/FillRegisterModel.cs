@@ -6,20 +6,17 @@ public partial class BaseControllerTests
     {
         Random random = new Random();
 
-        if (LoggedInService != null && LoggedInService.LoggedInContactInfo != null && LoggedInService.LoggedInContactInfo.LoggedInContact != null)
+        if (Configuration != null)
         {
-            if (Configuration != null)
+            return await Task.FromResult(new RegisterModel()
             {
-                return await Task.FromResult(new RegisterModel()
-                {
-                    FirstName = $"Charles{ random.Next(1, 1000)}",
-                    LastName = $"LeBlanc{ random.Next(1, 1000)}",
-                    Initial = $"G{ random.Next(1, 10)}",
-                    Password = Configuration["Password"],
-                    LoginEmail = Configuration["LoginEmail"],
-                    PlayerLevel = random.Next(1, 5),
-                });
-            }
+                FirstName = $"Charles{ random.Next(1, 10000)}",
+                LastName = $"LeBlanc{ random.Next(1, 10000)}",
+                Initial = $"G{ random.Next(1, 10000) }",
+                Password = $"{ random.Next(1, 10000) }{ Configuration["Password"] }",
+                LoginEmail = $"{ random.Next(1, 10000) }{ Configuration["LoginEmail"] }",
+                PlayerLevel = random.Next(1, 5),
+            });
         }
 
         return await Task.FromResult(new RegisterModel());

@@ -10,6 +10,7 @@ public partial class BaseServiceTests
     protected IGameService? GameService { get; set; }
     protected ILeagueService? LeagueService { get; set; }
     protected ILeagueContactService? LeagueContactService { get; set; }
+    protected IUserService? UserService { get; set; }
     protected ILoggedInService? LoggedInService { get; set; }
     protected IScrambleService? ScrambleService { get; set; }
     protected PBallContext? db { get; set; }
@@ -31,14 +32,12 @@ public partial class BaseServiceTests
         Assert.NotNull(Configuration["pballDB"]);
         Assert.NotNull(Configuration["LoginEmail"]);
         Assert.NotNull(Configuration["Password"]);
-        Assert.NotNull(Configuration["SmtpHost"]);
-        Assert.NotNull(Configuration["NetworkCredentialUserName"]);
-        Assert.NotNull(Configuration["NetworkCredentialPassword"]);
 
         Services.AddSingleton<IContactService, ContactService>();
         Services.AddSingleton<IGameService, GameService>();
         Services.AddSingleton<ILeagueService, LeagueService>();
         Services.AddSingleton<ILeagueContactService, LeagueContactService>();
+        Services.AddSingleton<IUserService, UserService>();
         Services.AddSingleton<ILoggedInService, LoggedInService>();
         Services.AddSingleton<IScrambleService, ScrambleService>();
 
@@ -65,6 +64,9 @@ public partial class BaseServiceTests
         LoggedInService = Provider.GetService<ILoggedInService>();
         Assert.NotNull(LoggedInService);
 
+        UserService = Provider.GetService<IUserService>();
+        Assert.NotNull(UserService);
+
         ScrambleService = Provider.GetService<IScrambleService>();
         Assert.NotNull(ScrambleService);
 
@@ -76,13 +78,28 @@ public partial class BaseServiceTests
         await ClearAllLeaguesFromDBAsync();
         await ClearAllContactsFromDBAsync();
 
-        await DoRegisterTestAsync();
+        RegisterModel registerModel = await FillRegisterModelAsync();
 
-        if (LoggedInService != null)
+        Contact? contact = await DoRegisterTestAsync(registerModel);
+        Assert.NotNull(contact);
+
+        if (contact != null)
         {
-            await LoggedInService.SetLoggedInContactInfoAsync(Configuration["LoginEmail"]);
-            Assert.NotNull(LoggedInService.LoggedInContactInfo);
-            Assert.NotNull(LoggedInService.LoggedInContactInfo.LoggedInContact);
+            Assert.True(contact.ContactID > 0);
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            Contact? contact2 = await DoLoginTestAsync(loginModel);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                Assert.True(contact2.ContactID > 0);
+            }
         }
 
         return await Task.FromResult(true);

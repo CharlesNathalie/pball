@@ -2,15 +2,10 @@ namespace PBallServices;
 
 public partial class ContactService : ControllerBase, IContactService
 {
-    public async Task<ActionResult<Contact>> RegisterAsync(RegisterModel? registerModel)
+    public async Task<ActionResult<Contact>> RegisterAsync(RegisterModel registerModel)
     {
         ErrRes errRes = new ErrRes();
 
-        if (registerModel == null)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes._ShouldNotBeNullOrEmpty, "registerModel"));
-            return await Task.FromResult(BadRequest(errRes));
-        }
 
         if (string.IsNullOrWhiteSpace(registerModel.LoginEmail))
         {

@@ -2,100 +2,24 @@ namespace pball.Controllers.Tests;
 
 public partial class BaseControllerTests
 {
-    protected async Task<Game> FillGame()
+    protected async Task<Game> FillGame(int Team1Player1, int Team1Player2, int Team2Player1, int Team2Player2, int LeagueID)
     {
         Random random = new Random();
 
-        if (db != null)
+        Game game = new Game()
         {
-            int contactCount = (from c in db.Contacts
-                                select c).Count();
-
-            if (ContactService != null)
-            {
-                for (int i = 0; i < (4 - contactCount); i++)
-                {
-                    RegisterModel registerModel = await FillRegisterModel();
-                    Assert.NotEmpty(registerModel.FirstName);
-                    Assert.NotEmpty(registerModel.LastName);
-                    Assert.NotEmpty(registerModel.LoginEmail);
-
-                    var actionRes = await ContactService.RegisterAsync(registerModel);
-                    Assert.NotNull(actionRes);
-                    Assert.NotNull(actionRes.Result);
-                    if (actionRes != null && actionRes.Result != null)
-                    {
-                        Assert.Equal(200, ((ObjectResult)actionRes.Result).StatusCode);
-                        Assert.NotNull(((OkObjectResult)actionRes.Result).Value);
-                        if (((OkObjectResult)actionRes.Result).Value != null)
-                        {
-                            Contact? contactRet = (Contact?)((OkObjectResult)actionRes.Result).Value;
-                            Assert.NotNull(contactRet);
-                        }
-                    }
-                }
-            }
-
-            List<Contact> contactList = (from c in db.Contacts
-                                         select c).Take(4).ToList();
-
-            Assert.NotEmpty(contactList);
-            Assert.Equal(4, contactList.Count());
-
-            League? league = (from c in db.Leagues
-                              select c).FirstOrDefault();
-
-            int LeagueID = 0;
-
-            if (league == null)
-            {
-                League? leagueNew = await FillLeague();
-
-                if (LeagueService != null)
-                {
-                    var actionRes = await LeagueService.AddLeagueAsync(leagueNew);
-                    Assert.NotNull(actionRes);
-                    Assert.NotNull(actionRes.Result);
-                    if (actionRes != null && actionRes.Result != null)
-                    {
-                        Assert.Equal(200, ((ObjectResult)actionRes.Result).StatusCode);
-                        Assert.NotNull(((OkObjectResult)actionRes.Result).Value);
-                        if (((OkObjectResult)actionRes.Result).Value != null)
-                        {
-                            League? leagueRet = (League?)((OkObjectResult)actionRes.Result).Value;
-                            Assert.NotNull(leagueRet);
-                            if (leagueRet != null)
-                            {
-                                LeagueID = leagueRet.LeagueID;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (LoggedInService != null && LoggedInService.LoggedInContactInfo != null && LoggedInService.LoggedInContactInfo.LoggedInContact != null)
-            {
-                int Team1Score = random.Next(1, 11);
-                int Team2Score = random.Next(1, 11);
-
-                return await Task.FromResult(new Game()
-                {
-                    Team1Player1 = contactList[0].ContactID,
-                    Team1Player2 = contactList[1].ContactID,
-                    Team2Player1 = contactList[2].ContactID,
-                    Team2Player2 = contactList[3].ContactID,
-                    Team1Scores = Team1Score,
-                    Team2Scores = Team1Score,
-                    GameDate = DateTime.Now.AddDays(random.Next(1, 30) * -1),
-                    LeagueID = LeagueID,
-                    Removed = false,
-                    LastUpdateDate_UTC = DateTime.UtcNow,
-                    LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID,
-                });
-            };
-        }
-
-        return await Task.FromResult(new Game());
+            Team1Player1 = Team1Player1,
+            Team1Player2 = Team1Player2,
+            Team2Player1 = Team2Player1,
+            Team2Player2 = Team2Player2,
+            Team1Scores = random.Next(1, 9),
+            Team2Scores = 11,
+            GameDate = DateTime.Now.AddDays(random.Next(1, 30) * -1),
+            LeagueID = LeagueID,
+            Removed = false,
+        };
+        
+        return await Task.FromResult(game);
     }
 }
 

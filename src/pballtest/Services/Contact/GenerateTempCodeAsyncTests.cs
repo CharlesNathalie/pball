@@ -14,7 +14,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
             Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
@@ -25,7 +25,26 @@ public partial class ContactServiceTests : BaseServiceTests
                 Assert.True(contact.ContactID > 0);
             }
 
-            RegisterModel registerModel2 = await FillRegisterModel();
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+            }
+
+            RegisterModel registerModel2 = await FillRegisterModelAsync();
 
             registerModel2.LoginEmail = "P" + registerModel.LoginEmail;
             registerModel2.FirstName = "P" + registerModel.FirstName;
@@ -33,12 +52,12 @@ public partial class ContactServiceTests : BaseServiceTests
             registerModel2.Initial = "P" + registerModel.Initial;
 
             var actionRegisterRes2 = await ContactService.RegisterAsync(registerModel2);
-            Contact? contact2 = await DoOKTestReturnContactAsync(actionRegisterRes2);
-            Assert.NotNull(contact2);
+            Contact? contact3 = await DoOKTestReturnContactAsync(actionRegisterRes2);
+            Assert.NotNull(contact3);
 
-            if (contact2 != null)
+            if (contact3 != null)
             {
-                Assert.True(contact2.ContactID > 0);
+                Assert.True(contact3.ContactID > 0);
             }
 
             if (LeagueService != null)
@@ -56,7 +75,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
                 if (LeagueContactService != null)
                 {
-                    if (contact != null && contact2 != null && league != null)
+                    if (contact != null && contact2 != null && contact3 != null && league != null)
                     {
                         LeagueContact leagueContactNew = new LeagueContact()
                         {
@@ -76,7 +95,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
                         LeagueContact leagueContactNew2 = new LeagueContact()
                         {
-                            ContactID = contact2.ContactID,
+                            ContactID = contact3.ContactID,
                             IsLeagueAdmin = false,
                             LeagueID = league.LeagueID,
                         };
@@ -93,7 +112,7 @@ public partial class ContactServiceTests : BaseServiceTests
                         LeagueContactGenerateCodeModel leagueContactGenerateCodeModel = new LeagueContactGenerateCodeModel()
                         {
                             LeagueAdminContactID = contact.ContactID,
-                            LeaguePlayerContactID = contact2.ContactID,
+                            LeaguePlayerContactID = contact3.ContactID,
                             LeagueID = league.LeagueID,
                         };
 
@@ -118,9 +137,39 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            if (LoggedInService != null)
+            RegisterModel registerModel = await FillRegisterModelAsync();
+
+            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
+            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
+            Assert.NotNull(contact);
+
+            if (contact != null)
             {
-                LoggedInService.LoggedInContactInfo.LoggedInContact = null;
+                Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+            }
+
+            if (UserService != null)
+            {
+                UserService.User = null;
             }
 
             var actionRes = await ContactService.GenerateTempCodeAsync(new LeagueContactGenerateCodeModel());
@@ -141,7 +190,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
             Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
@@ -150,6 +199,30 @@ public partial class ContactServiceTests : BaseServiceTests
             if (contact != null)
             {
                 Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+            }
+
+            if (contact2 != null)
+            {
+                Assert.True(contact2.ContactID > 0);
 
                 LeagueContactGenerateCodeModel leagueContactGenerateCodeModel = new LeagueContactGenerateCodeModel()
                 {
@@ -184,7 +257,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
             Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
@@ -193,10 +266,34 @@ public partial class ContactServiceTests : BaseServiceTests
             if (contact != null)
             {
                 Assert.True(contact.ContactID > 0);
+            }
+
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+            }
+
+            if (contact2 != null)
+            {
+                Assert.True(contact2.ContactID > 0);
 
                 LeagueContactGenerateCodeModel leagueContactGenerateCodeModel = new LeagueContactGenerateCodeModel()
                 {
-                    LeagueAdminContactID = contact.ContactID,
+                    LeagueAdminContactID = contact2.ContactID,
                     LeaguePlayerContactID = 0,
                     LeagueID = 0,
                 };
@@ -227,7 +324,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
             Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
@@ -238,7 +335,26 @@ public partial class ContactServiceTests : BaseServiceTests
                 Assert.True(contact.ContactID > 0);
             }
 
-            RegisterModel registerModel2 = await FillRegisterModel();
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+            }
+
+            RegisterModel registerModel2 = await FillRegisterModelAsync();
 
             registerModel2.LoginEmail = "P" + registerModel.LoginEmail;
             registerModel2.FirstName = "P" + registerModel.FirstName;
@@ -246,24 +362,24 @@ public partial class ContactServiceTests : BaseServiceTests
             registerModel2.Initial = "P" + registerModel.Initial;
 
             var actionRegisterRes2 = await ContactService.RegisterAsync(registerModel2);
-            Contact? contact2 = await DoOKTestReturnContactAsync(actionRegisterRes2);
-            Assert.NotNull(contact2);
+            Contact? contact3 = await DoOKTestReturnContactAsync(actionRegisterRes2);
+            Assert.NotNull(contact3);
 
-            if (contact2 != null)
+            if (contact3 != null)
             {
-                Assert.True(contact2.ContactID > 0);
+                Assert.True(contact3.ContactID > 0);
             }
 
             if (LeagueService != null)
             {
                 if (LeagueContactService != null)
                 {
-                    if (contact != null && contact2 != null)
+                    if (contact != null && contact2 != null && contact3 != null)
                     {
                         LeagueContactGenerateCodeModel leagueContactGenerateCodeModel = new LeagueContactGenerateCodeModel()
                         {
                             LeagueAdminContactID = contact.ContactID,
-                            LeaguePlayerContactID = contact2.ContactID,
+                            LeaguePlayerContactID = contact3.ContactID,
                             LeagueID = 0,
                         };
 
@@ -295,7 +411,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
             Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
@@ -306,7 +422,26 @@ public partial class ContactServiceTests : BaseServiceTests
                 Assert.True(contact.ContactID > 0);
             }
 
-            RegisterModel registerModel2 = await FillRegisterModel();
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+            }
+
+            RegisterModel registerModel2 = await FillRegisterModelAsync();
 
             registerModel2.LoginEmail = "P" + registerModel.LoginEmail;
             registerModel2.FirstName = "P" + registerModel.FirstName;
@@ -314,12 +449,12 @@ public partial class ContactServiceTests : BaseServiceTests
             registerModel2.Initial = "P" + registerModel.Initial;
 
             var actionRegisterRes2 = await ContactService.RegisterAsync(registerModel2);
-            Contact? contact2 = await DoOKTestReturnContactAsync(actionRegisterRes2);
-            Assert.NotNull(contact2);
+            Contact? contact3 = await DoOKTestReturnContactAsync(actionRegisterRes2);
+            Assert.NotNull(contact3);
 
-            if (contact2 != null)
+            if (contact3 != null)
             {
-                Assert.True(contact2.ContactID > 0);
+                Assert.True(contact3.ContactID > 0);
             }
 
             if (LeagueService != null)
@@ -353,7 +488,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
                 if (LeagueContactService != null)
                 {
-                    if (contact != null && contact2 != null && league != null && league2 != null)
+                    if (contact != null && contact2 != null && contact3 != null && league != null && league2 != null)
                     {
                         LeagueContact leagueContactNew = new LeagueContact()
                         {
@@ -373,7 +508,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
                         LeagueContact leagueContactNew2 = new LeagueContact()
                         {
-                            ContactID = contact2.ContactID,
+                            ContactID = contact3.ContactID,
                             IsLeagueAdmin = false,
                             LeagueID = league.LeagueID,
                         };
@@ -390,7 +525,7 @@ public partial class ContactServiceTests : BaseServiceTests
                         LeagueContactGenerateCodeModel leagueContactGenerateCodeModel = new LeagueContactGenerateCodeModel()
                         {
                             LeagueAdminContactID = contact.ContactID,
-                            LeaguePlayerContactID = contact2.ContactID,
+                            LeaguePlayerContactID = contact3.ContactID,
                             LeagueID = league2.LeagueID,
                         };
 
@@ -417,7 +552,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModel();
+            RegisterModel registerModel = await FillRegisterModelAsync();
 
             var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
             Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
@@ -428,7 +563,26 @@ public partial class ContactServiceTests : BaseServiceTests
                 Assert.True(contact.ContactID > 0);
             }
 
-            RegisterModel registerModel2 = await FillRegisterModel();
+            LoginModel loginModel = new LoginModel()
+            {
+                LoginEmail = registerModel.LoginEmail,
+                Password = registerModel.Password,
+            };
+
+            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
+            Assert.NotNull(contact2);
+
+            if (contact2 != null)
+            {
+                if (UserService != null)
+                {
+                    UserService.User = contact2;
+                }
+                Assert.True(contact2.ContactID > 0);
+            }
+
+            RegisterModel registerModel2 = await FillRegisterModelAsync();
 
             registerModel2.LoginEmail = "P" + registerModel.LoginEmail;
             registerModel2.FirstName = "P" + registerModel.FirstName;
@@ -436,12 +590,12 @@ public partial class ContactServiceTests : BaseServiceTests
             registerModel2.Initial = "P" + registerModel.Initial;
 
             var actionRegisterRes2 = await ContactService.RegisterAsync(registerModel2);
-            Contact? contact2 = await DoOKTestReturnContactAsync(actionRegisterRes2);
-            Assert.NotNull(contact2);
+            Contact? contact3 = await DoOKTestReturnContactAsync(actionRegisterRes2);
+            Assert.NotNull(contact3);
 
-            if (contact2 != null)
+            if (contact3 != null)
             {
-                Assert.True(contact2.ContactID > 0);
+                Assert.True(contact.ContactID > 0);
             }
 
             if (LeagueService != null)
@@ -459,7 +613,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
                 if (LeagueContactService != null)
                 {
-                    if (contact != null && contact2 != null && league != null)
+                    if (contact != null && contact2 != null && contact3 != null && league != null)
                     {
                         LeagueContact leagueContactNew = new LeagueContact()
                         {
@@ -479,7 +633,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
                         LeagueContact leagueContactNew2 = new LeagueContact()
                         {
-                            ContactID = contact2.ContactID,
+                            ContactID = contact3.ContactID,
                             IsLeagueAdmin = false,
                             LeagueID = league.LeagueID,
                         };
@@ -496,7 +650,7 @@ public partial class ContactServiceTests : BaseServiceTests
                         LeagueContactGenerateCodeModel leagueContactGenerateCodeModel = new LeagueContactGenerateCodeModel()
                         {
                             LeagueAdminContactID = contact.ContactID,
-                            LeaguePlayerContactID = contact2.ContactID,
+                            LeaguePlayerContactID = contact3.ContactID,
                             LeagueID = league.LeagueID,
                         };
 

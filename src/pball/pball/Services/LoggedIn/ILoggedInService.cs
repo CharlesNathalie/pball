@@ -2,6 +2,6 @@
 
 public interface ILoggedInService
 {
-    LoggedInContactInfo LoggedInContactInfo { get; set; }
-    Task<bool> SetLoggedInContactInfoAsync(string LoginEmail);
+    Task<bool> IsLoggedIn(string LoginEmail);
+    List<Contact> LoggedInContactList { get; set; }
 }

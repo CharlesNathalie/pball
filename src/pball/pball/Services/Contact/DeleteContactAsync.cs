@@ -6,7 +6,7 @@ public partial class ContactService : ControllerBase, IContactService
     {
         ErrRes errRes = new ErrRes();
 
-        if (LoggedInService.LoggedInContactInfo == null || LoggedInService.LoggedInContactInfo?.LoggedInContact == null)
+        if (UserService.User == null)
         {
             errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
             return await Task.FromResult(BadRequest(errRes));
@@ -24,7 +24,7 @@ public partial class ContactService : ControllerBase, IContactService
 
         contact.Removed = true;
         contact.LastUpdateDate_UTC = DateTime.UtcNow;
-        contact.LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact == null ? 0 : LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID;
+        contact.LastUpdateContactID = 0;
 
         try
         {

@@ -2,15 +2,12 @@ namespace PBallServices;
 
 public partial class LeagueService : ControllerBase, ILeagueService
 {
-    private IConfiguration Configuration { get; }
-    private ILoggedInService LoggedInService { get;  }
+    private IUserService UserService { get; }
     private PBallContext db { get; }
 
-    public LeagueService(IConfiguration Configuration, ILoggedInService LoggedInService, PBallContext db
-       )
+    public LeagueService(IUserService UserService, PBallContext db)
     {
-        this.Configuration = Configuration;
-        this.LoggedInService = LoggedInService;
+        this.UserService = UserService;
         this.db = db;
     }
 }

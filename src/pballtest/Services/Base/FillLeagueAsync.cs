@@ -14,7 +14,7 @@ public partial class BaseServiceTests
 
             if (contact == null)
             {
-                RegisterModel registerModel = await FillRegisterModel();
+                RegisterModel registerModel = await FillRegisterModelAsync();
                 Assert.NotEmpty(registerModel.FirstName);
                 Assert.NotEmpty(registerModel.LastName);
                 Assert.NotEmpty(registerModel.LoginEmail);
@@ -45,7 +45,7 @@ public partial class BaseServiceTests
                 CreatorContactID = contact.ContactID;
             }
 
-            if (LoggedInService != null && LoggedInService.LoggedInContactInfo != null && LoggedInService.LoggedInContactInfo.LoggedInContact != null)
+            if (LoggedInService != null)
             {
                 return await Task.FromResult(new League()
                 {
@@ -56,7 +56,7 @@ public partial class BaseServiceTests
                     PointsToWinners = 1.1D,
                     Removed = false,
                     LastUpdateDate_UTC = DateTime.UtcNow,
-                    LastUpdateContactID = LoggedInService.LoggedInContactInfo.LoggedInContact.ContactID,
+                    LastUpdateContactID = 0,
                 });
             }
         }
