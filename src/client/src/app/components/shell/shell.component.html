@@ -1,0 +1,39 @@
+<mat-toolbar class="header">
+    <span class="toolbar">
+        <button mat-button [matMenuTriggerFor]="shellMenu">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <mat-menu #shellMenu="matMenu">
+            <div class="menuWidth">
+                <button mat-menu-item>
+                    one
+                </button>
+                <button mat-menu-item>
+                    two
+                </button>
+                <button mat-menu-item>
+                    three
+                </button>
+            </div>
+        </mat-menu>
+
+        <a href="/" mat-button>
+            {{ appLanguageService.ShellApplicationName[appLanguageService.LangID ?? 0] }}
+        </a>
+
+        <a mat-button href="en-CA" *ngIf="appLanguageService.Language != languageEnum.en">
+            {{ appLanguageService.English[appLanguageService.LangID ?? 0] }}
+        </a>
+        <a mat-button href="fr-CA"  *ngIf="appLanguageService.Language != languageEnum.fr">
+            {{ appLanguageService.Francais[appLanguageService.LangID ?? 0] }}
+        </a>
+    </span>
+</mat-toolbar>
+
+<router-outlet></router-outlet>
+
+<hr>
+<mat-toolbar class="footer">
+    <span>{{ year }} - {{ appLanguageService.ShellApplicationName[appLanguageService.LangID ?? 0] }}
+    </span>
+</mat-toolbar>

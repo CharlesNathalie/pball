@@ -2,16 +2,13 @@ C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\pball.exe
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\appsettings.Development.json
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\appsettings.json
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\pball.dll
-C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\pball.deps.json
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\pball.runtimeconfig.json
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\pball.pdb
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\fr\pball.resources.dll
-C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Humanizer.dll
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Microsoft.Data.SqlClient.dll
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.dll
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.Abstractions.dll
-C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.Design.dll
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.Relational.dll
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\Microsoft.Identity.Client.dll
@@ -44,3 +41,4 @@ C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\netcorea
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+C:\pball\src\pball\pball\obj\Release\net6.0\PubTmp\Out\pball.deps.json

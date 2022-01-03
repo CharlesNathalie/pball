@@ -2,7 +2,6 @@ C:\pball\src\pball\pball\bin\Release\net6.0\appsettings.Development.json
 C:\pball\src\pball\pball\bin\Release\net6.0\appsettings.json
 C:\pball\src\pball\pball\bin\Release\net6.0\pball.staticwebassets.runtime.json
 C:\pball\src\pball\pball\bin\Release\net6.0\pball.exe
-C:\pball\src\pball\pball\bin\Release\net6.0\wwwroot\index.html
 C:\pball\src\pball\pball\bin\Release\net6.0\pball.deps.json
 C:\pball\src\pball\pball\bin\Release\net6.0\pball.runtimeconfig.json
 C:\pball\src\pball\pball\bin\Release\net6.0\pball.dll
