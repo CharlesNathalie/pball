@@ -31,8 +31,6 @@ public partial class BaseServiceTests
         Assert.NotNull(Configuration["pballurl"]);
         Assert.NotNull(Configuration["APISecret"]);
         Assert.NotNull(Configuration["pballDB"]);
-        Assert.NotNull(Configuration["LoginEmail"]);
-        Assert.NotNull(Configuration["Password"]);
 
         Services.AddSingleton<IContactService, ContactService>();
         Services.AddSingleton<IGameService, GameService>();

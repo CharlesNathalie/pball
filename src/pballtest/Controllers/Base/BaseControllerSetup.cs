@@ -23,8 +23,6 @@ public partial class BaseControllerTests
         Assert.NotNull(Configuration["pballurl"]);
         Assert.NotNull(Configuration["APISecret"]);
         Assert.NotNull(Configuration["pballDB"]);
-        Assert.NotNull(Configuration["LoginEmail"]);
-        Assert.NotNull(Configuration["Password"]);
 
         Services.AddDbContext<PBallContext>(options =>
         {

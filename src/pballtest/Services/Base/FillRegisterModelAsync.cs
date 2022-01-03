@@ -15,8 +15,8 @@ public partial class BaseServiceTests
                 FirstName = $"FirstName{ random.Next(10000)}",
                 LastName = $"LastName{ random.Next(10000)}",
                 Initial = $"Init{ random.Next(10000)}",
-                LoginEmail = $"{ random.Next(10000) }{ Configuration["LoginEmail"] }",
-                Password = $"{ random.Next(10000) }{ Configuration["Password"] }",
+                LoginEmail = $"{ random.Next(10000) }a@gmail.com",
+                Password = $"{ random.Next(10000) }a",
                 PlayerLevel = 1 + (4 * random.NextDouble()),
             };
         }

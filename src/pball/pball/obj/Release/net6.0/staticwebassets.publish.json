@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "AmcoDnyhCjeRYX4HLejf6m0Dl4JKJLUX0cS9fqmLuCY=",
+  "Hash": "7MX823yV3pA/tGjhiPFw4inMZikO7ib9YfTsjQTpVMM=",
   "Source": "pball",
   "BasePath": "_content/pball",
   "Mode": "Default",
@@ -68,12 +68,12 @@
       "OriginalItemSpec": "wwwroot\\index.html"
     },
     {
-      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\main.dc954cdd597797b6.js",
+      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\main.7090e05af32afc3a.js",
       "SourceId": "pball",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\pball\\src\\pball\\pball\\wwwroot\\",
       "BasePath": "_content/pball",
-      "RelativePath": "main.dc954cdd597797b6.js",
+      "RelativePath": "main.7090e05af32afc3a.js",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -82,7 +82,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\main.dc954cdd597797b6.js"
+      "OriginalItemSpec": "wwwroot\\main.7090e05af32afc3a.js"
     },
     {
       "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\polyfills.7e4ec7cbb472459f.js",

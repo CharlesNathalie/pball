@@ -13,6 +13,7 @@ public partial class ContactController : ControllerBase, IContactController
 
         if (ContactService != null)
         {
+            //return await Task.FromResult(BadRequest("ContactService is not null"));
             return await ContactService.RegisterAsync(registerModel);
         }
 

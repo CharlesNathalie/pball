@@ -57,10 +57,15 @@ public partial class ContactServiceTests : BaseServiceTests
         {
             if (Configuration != null)
             {
+                RegisterModel registerModel = await FillRegisterModelAsync();
+
+                Contact? contact = await DoRegisterTestAsync(registerModel);
+                Assert.NotNull(contact);
+
                 LoginModel loginModel = new LoginModel()
                 {
                     LoginEmail = "",
-                    Password = Configuration["Password"],
+                    Password = registerModel.Password,
                 };
 
                 var actionRes = await ContactService.LoginAsync(loginModel);
@@ -92,9 +97,14 @@ public partial class ContactServiceTests : BaseServiceTests
         {
             if (Configuration != null)
             {
+                RegisterModel registerModel = await FillRegisterModelAsync();
+
+                Contact? contact = await DoRegisterTestAsync(registerModel);
+                Assert.NotNull(contact);
+
                 LoginModel loginModel = new LoginModel()
                 {
-                    LoginEmail = Configuration["LoginEmail"],
+                    LoginEmail = registerModel.LoginEmail,
                     Password = "",
                 };
 
@@ -121,10 +131,15 @@ public partial class ContactServiceTests : BaseServiceTests
         {
             if (Configuration != null)
             {
+                RegisterModel registerModel = await FillRegisterModelAsync();
+
+                Contact? contact = await DoRegisterTestAsync(registerModel);
+                Assert.NotNull(contact);
+
                 LoginModel loginModel = new LoginModel()
                 {
-                    LoginEmail = "NotFound" + Configuration["LoginEmail"],
-                    Password = Configuration["LoginEmail"],
+                    LoginEmail = "NotFound@gmail.com",
+                    Password = registerModel.Password,
                 };
 
                 var actionRes = await ContactService.LoginAsync(loginModel);
@@ -144,10 +159,15 @@ public partial class ContactServiceTests : BaseServiceTests
         {
             if (Configuration != null)
             {
+                RegisterModel registerModel = await FillRegisterModelAsync();
+
+                Contact? contact = await DoRegisterTestAsync(registerModel);
+                Assert.NotNull(contact);
+
                 LoginModel loginModel = new LoginModel()
                 {
-                    LoginEmail = Configuration["LoginEmail"],
-                    Password = "NotFound" + Configuration["LoginEmail"],
+                    LoginEmail = registerModel.LoginEmail,
+                    Password = "NotFoundPassword",
                 };
 
                 var actionRes = await ContactService.LoginAsync(loginModel);

@@ -13,8 +13,8 @@ public partial class BaseControllerTests
                 FirstName = $"Charles{ random.Next(1, 10000)}",
                 LastName = $"LeBlanc{ random.Next(1, 10000)}",
                 Initial = $"G{ random.Next(1, 10000) }",
-                Password = $"{ random.Next(1, 10000) }{ Configuration["Password"] }",
-                LoginEmail = $"{ random.Next(1, 10000) }{ Configuration["LoginEmail"] }",
+                Password = $"{ random.Next(1, 10000) }a",
+                LoginEmail = $"{ random.Next(1, 10000) }a@gmail.com",
                 PlayerLevel = random.Next(1, 5),
             });
         }
