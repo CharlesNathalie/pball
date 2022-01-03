@@ -5,7 +5,7 @@ public partial class LeagueContactControllerTests : BaseControllerTests
     [Theory]
     [InlineData("en-CA")]
     [InlineData("fr-CA")]
-    public async Task DeleteLeagueContactAsync_Good_Test(string culture)
+    public async Task ModifyLeagueContactAsync_Good_Test(string culture)
     {
         Assert.True(await LeagueContactControllerSetup(culture));
 
@@ -67,18 +67,22 @@ public partial class LeagueContactControllerTests : BaseControllerTests
                         Assert.True(leagueContact.LeagueContactID > 0);
                     }
 
-                    using (HttpClient httpClient = new HttpClient())
+                    if (leagueContact != null)
                     {
-                        var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                        httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+                        leagueContact.IsLeagueAdmin = !leagueContact.IsLeagueAdmin;
 
-                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
-
-                        if (leagueContact != null)
+                        if (Configuration != null)
                         {
-                            if (Configuration != null)
+                            using (HttpClient httpClient = new HttpClient())
                             {
-                                HttpResponseMessage response = httpClient.DeleteAsync($"{ Configuration["pballurl"] }api/{ culture }/leaguecontact/{ leagueContact.LeagueContactID }").Result;
+                                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+
+                                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
+
+                                string stringData = JsonSerializer.Serialize(leagueContact);
+                                var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                                HttpResponseMessage response = httpClient.PutAsync($"{ Configuration["pballurl"] }api/{ culture }/leaguecontact", contentData).Result;
                                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
                                 string responseContent = await response.Content.ReadAsStringAsync();
@@ -98,7 +102,7 @@ public partial class LeagueContactControllerTests : BaseControllerTests
     [Theory]
     [InlineData("en-CA")]
     [InlineData("fr-CA")]
-    public async Task DeleteLeagueContactAsync_Error_Test(string culture)
+    public async Task ModifyLeagueContactAsync_Error_Test(string culture)
     {
         Assert.True(await LeagueContactControllerSetup(culture));
 
@@ -160,18 +164,22 @@ public partial class LeagueContactControllerTests : BaseControllerTests
                         Assert.True(leagueContact.LeagueContactID > 0);
                     }
 
-                    using (HttpClient httpClient = new HttpClient())
+                    if (leagueContact != null)
                     {
-                        var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                        httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+                        leagueContact.LeagueID = 0;
 
-                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
-
-                        if (leagueContact != null)
+                        if (Configuration != null)
                         {
-                            if (Configuration != null)
+                            using (HttpClient httpClient = new HttpClient())
                             {
-                                HttpResponseMessage response = httpClient.DeleteAsync($"{ Configuration["pballurl"] }api/{ culture }/leaguecontact/{ leagueContact.LeagueContactID + 10000 }").Result;
+                                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+
+                                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
+
+                                string stringData = JsonSerializer.Serialize(leagueContact);
+                                var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                                HttpResponseMessage response = httpClient.PutAsync($"{ Configuration["pballurl"] }api/{ culture }/leaguecontact", contentData).Result;
                                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                                 string responseContent = await response.Content.ReadAsStringAsync();

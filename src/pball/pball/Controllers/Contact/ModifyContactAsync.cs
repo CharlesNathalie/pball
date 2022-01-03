@@ -5,7 +5,11 @@ public partial class ContactController : ControllerBase, IContactController
     [HttpPut]
     public async Task<ActionResult<Contact>> ModifyContactAsync(Contact contact)
     {
-        if (!await CheckLoggedIn()) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
+        if (HelperService != null)
+        {
+            if (!await HelperService.SetCultureAsync(RouteData)) return await Task.FromResult(BadRequest(string.Format(PBallRes.LanguageNotSelected)));
+            if (!await HelperService.CheckLoggedInAsync(RouteData, Request)) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
+        }
 
         if (ContactService != null)
         {

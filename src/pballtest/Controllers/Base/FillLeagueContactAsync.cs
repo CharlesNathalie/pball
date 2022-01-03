@@ -2,7 +2,7 @@ namespace pball.Controllers.Tests;
 
 public partial class BaseControllerTests
 {
-    protected async Task<LeagueContact> FillLeagueContact(int LeagueID, int ContactID, bool IsLeagueAdmin)
+    protected async Task<LeagueContact> FillLeagueContactAsync(int LeagueID, int ContactID, bool IsLeagueAdmin)
     {
 
         LeagueContact leagueContact = new LeagueContact()

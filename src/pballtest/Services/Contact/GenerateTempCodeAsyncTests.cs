@@ -595,7 +595,7 @@ public partial class ContactServiceTests : BaseServiceTests
 
             if (contact3 != null)
             {
-                Assert.True(contact.ContactID > 0);
+                Assert.True(contact3.ContactID > 0);
             }
 
             if (LeagueService != null)

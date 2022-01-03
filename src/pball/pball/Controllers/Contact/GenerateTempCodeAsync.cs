@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace PBall.Controllers;
+﻿namespace PBall.Controllers;
 
 public partial class ContactController : ControllerBase, IContactController
 {
@@ -8,7 +6,11 @@ public partial class ContactController : ControllerBase, IContactController
     [HttpPost]
     public async Task<ActionResult<string>> GenerateTempCodeAsync(LeagueContactGenerateCodeModel lagueContactGenerateCodeModel)
     {
-        if (!await CheckLoggedIn()) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
+        if (HelperService != null)
+        {
+            if (!await HelperService.SetCultureAsync(RouteData)) return await Task.FromResult(BadRequest(string.Format(PBallRes.LanguageNotSelected)));
+            if (!await HelperService.CheckLoggedInAsync(RouteData, Request)) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
+        }
 
         if (ContactService != null)
         {

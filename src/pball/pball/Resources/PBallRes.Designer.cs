@@ -241,6 +241,15 @@ namespace pball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language not selected.
+        /// </summary>
+        public static string LanguageNotSelected {
+            get {
+                return ResourceManager.GetString("LanguageNotSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Temporary code to change your password.
         /// </summary>
         public static string TemporaryCodeToChangeYourPassword {

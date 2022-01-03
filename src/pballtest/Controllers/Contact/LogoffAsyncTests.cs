@@ -9,7 +9,13 @@ public partial class ContactControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        RegisterModel registerModel = await FillRegisterModel();
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        boolRet = await ClearServerLoggedInListAsync(culture);
+        Assert.True(boolRet);
+
+        RegisterModel registerModel = await FillRegisterModelAsync();
 
         Contact? contact = await DoOkRegister(registerModel, culture);
         Assert.NotNull(contact);
@@ -34,21 +40,9 @@ public partial class ContactControllerTests
 
         if (contact != null)
         {
-            using (HttpClient httpClient = new HttpClient())
-            {
-                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
-
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
-
-                HttpResponseMessage response = httpClient.GetAsync($"{ Configuration?["pballurl"] }api/{ culture }/contact/logoff/{ contact.ContactID }").Result;
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-                string responseContent = await response.Content.ReadAsStringAsync();
-                bool? boolRet = JsonSerializer.Deserialize<bool>(responseContent);
-                Assert.NotNull(boolRet);
-                Assert.True(boolRet);
-            }
+            boolRet = await DoOkLogoff(contact, culture);
+            Assert.NotNull(boolRet);
+            Assert.True(boolRet);
         }
     }
     [Theory]
@@ -58,7 +52,13 @@ public partial class ContactControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        RegisterModel registerModel = await FillRegisterModel();
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        boolRet = await ClearServerLoggedInListAsync(culture);
+        Assert.True(boolRet);
+
+        RegisterModel registerModel = await FillRegisterModelAsync();
 
         Contact? contact = await DoOkRegister(registerModel, culture);
         Assert.NotNull(contact);
@@ -83,39 +83,9 @@ public partial class ContactControllerTests
 
         if (contact != null)
         {
-            using (HttpClient httpClient = new HttpClient())
-            {
-                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
-
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
-
-                contact.ContactID = 0;
-
-                HttpResponseMessage response = httpClient.GetAsync($"{ Configuration?["pballurl"] }api/{ culture }/contact/logoff/{ contact.ContactID }").Result;
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-                string responseContent = await response.Content.ReadAsStringAsync();
-                ErrRes? errRes = JsonSerializer.Deserialize<ErrRes>(responseContent);
-                Assert.NotNull(errRes);
-                if (errRes != null)
-                {
-                    Assert.NotEmpty(errRes.ErrList);
-                }
-
-                contact.ContactID = 10000;
-
-                response = httpClient.GetAsync($"{ Configuration?["pballurl"] }api/{ culture }/contact/logoff/{ contact.ContactID }").Result;
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-                responseContent = await response.Content.ReadAsStringAsync();
-                errRes = JsonSerializer.Deserialize<ErrRes>(responseContent);
-                Assert.NotNull(errRes);
-                if (errRes != null)
-                {
-                    Assert.NotEmpty(errRes.ErrList);
-                }
-            }
+            contact.ContactID = 100000;
+            ErrRes? errRes = await DoBadRequestLogoff(contact, culture);
+            Assert.NotNull(errRes);
         }
     }
 }

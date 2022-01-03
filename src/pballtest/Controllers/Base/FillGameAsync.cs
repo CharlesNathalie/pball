@@ -2,7 +2,7 @@ namespace pball.Controllers.Tests;
 
 public partial class BaseControllerTests
 {
-    protected async Task<Game> FillGame(int Team1Player1, int Team1Player2, int Team2Player1, int Team2Player2, int LeagueID)
+    protected async Task<Game> FillGameAsync(int Team1Player1, int Team1Player2, int Team2Player1, int Team2Player2, int LeagueID)
     {
         Random random = new Random();
 

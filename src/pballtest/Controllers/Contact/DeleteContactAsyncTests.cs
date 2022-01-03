@@ -1,57 +1,119 @@
-//namespace pball.Controllers.Tests;
+namespace pball.Controllers.Tests;
 
-//public partial class ContactControllerTests : BaseControllerTests
-//{
-//    [Theory]
-//    [InlineData("en-CA")]
-//    [InlineData("fr-CA")]
-//    public async Task DeleteContactAsync_Good_Test(string culture)
-//    {
-//        Assert.True(await ContactControllerSetup(culture));
+public partial class ContactControllerTests : BaseControllerTests
+{
+    [Theory]
+    [InlineData("en-CA")]
+    [InlineData("fr-CA")]
+    public async Task DeleteContactAsync_Good_Test(string culture)
+    {
+        Assert.True(await ContactControllerSetup(culture));
 
-//        if (ContactService != null)
-//        {
-//            int ContactIDToDelete = 0;
+        bool boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
 
-//            RegisterModel registerModel = await FillRegisterModel();
-//            Assert.NotEmpty(registerModel.FirstName);
-//            Assert.NotEmpty(registerModel.LastName);
-//            Assert.NotEmpty(registerModel.LoginEmail);
+        boolRet = await ClearServerLoggedInListAsync(culture);
+        Assert.True(boolRet);
 
-//            var actionAddRes = await ContactService.RegisterAsync(registerModel);
-//            Assert.NotNull(actionAddRes);
-//            Assert.NotNull(actionAddRes.Result);
-//            if (actionAddRes != null && actionAddRes.Result != null)
-//            {
-//                Assert.Equal(200, ((ObjectResult)actionAddRes.Result).StatusCode);
-//                Assert.NotNull(((OkObjectResult)actionAddRes.Result).Value);
-//                if (((OkObjectResult)actionAddRes.Result).Value != null)
-//                {
-//                    Contact? contactRet = (Contact?)((OkObjectResult)actionAddRes.Result).Value;
-//                    Assert.NotNull(contactRet);
-//                    if (contactRet != null)
-//                    {
-//                        ContactIDToDelete = contactRet.ContactID;
-//                    }
-//                }
-//            }
+        RegisterModel registerModel = await FillRegisterModelAsync();
 
-//            using (HttpClient httpClient = new HttpClient())
-//            {
-//                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-//                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+        Contact? contact = await DoOkRegister(registerModel, culture);
+        Assert.NotNull(contact);
+        if (contact != null)
+        {
+            Assert.True(contact.ContactID > 0);
+        }
 
-//                if (Configuration != null)
-//                {
-//                    HttpResponseMessage response = httpClient.DeleteAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/{ ContactIDToDelete }").Result;
-//                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        LoginModel loginModel = new LoginModel()
+        {
+            LoginEmail = registerModel.LoginEmail,
+            Password = registerModel.Password,
+        };
 
-//                    string responseContent = await response.Content.ReadAsStringAsync();
-//                    Contact? contact = JsonSerializer.Deserialize<Contact>(responseContent);
-//                    Assert.NotNull(contact);
-//                }
-//            }
-//        }
-//    }
-//}
+        contact = await DoOkLogin(loginModel, culture);
+        Assert.NotNull(contact);
+        if (contact != null)
+        {
+            Assert.True(contact.ContactID > 0);
+            Assert.NotEmpty(contact.Token);
+        }
 
+        if (contact != null)
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
+
+                if (Configuration != null)
+                {
+                    HttpResponseMessage response = httpClient.DeleteAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/{ contact.ContactID }").Result;
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    contact = JsonSerializer.Deserialize<Contact>(responseContent);
+                    Assert.NotNull(contact);
+                }
+            }
+        }
+    }
+    [Theory]
+    [InlineData("en-CA")]
+    [InlineData("fr-CA")]
+    public async Task DeleteContactAsync_Error_Test(string culture)
+    {
+        Assert.True(await ContactControllerSetup(culture));
+
+        bool boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        boolRet = await ClearServerLoggedInListAsync(culture);
+        Assert.True(boolRet);
+
+        RegisterModel registerModel = await FillRegisterModelAsync();
+
+        Contact? contact = await DoOkRegister(registerModel, culture);
+        Assert.NotNull(contact);
+        if (contact != null)
+        {
+            Assert.True(contact.ContactID > 0);
+        }
+
+        LoginModel loginModel = new LoginModel()
+        {
+            LoginEmail = registerModel.LoginEmail,
+            Password = registerModel.Password,
+        };
+
+        contact = await DoOkLogin(loginModel, culture);
+        Assert.NotNull(contact);
+        if (contact != null)
+        {
+            Assert.True(contact.ContactID > 0);
+            Assert.NotEmpty(contact.Token);
+        }
+
+        if (contact != null)
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
+
+                if (Configuration != null)
+                {
+                    HttpResponseMessage response = httpClient.DeleteAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/{ contact.ContactID + 100000 }").Result;
+                    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    ErrRes? errRes = JsonSerializer.Deserialize<ErrRes>(responseContent);
+                    Assert.NotNull(errRes);
+                }
+            }
+        }
+    }
+}

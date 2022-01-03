@@ -7,7 +7,11 @@ public partial class GameController : ControllerBase, IGameController
     [HttpPut]
     public async Task<ActionResult<Game>> ModifyGameAsync(Game game)
     {
-        if (!await CheckLoggedIn()) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
+        if (HelperService != null)
+        {
+            if (!await HelperService.SetCultureAsync(RouteData)) return await Task.FromResult(BadRequest(string.Format(PBallRes.LanguageNotSelected)));
+            if (!await HelperService.CheckLoggedInAsync(RouteData, Request)) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
+        }
 
         if (GameService != null)
         {

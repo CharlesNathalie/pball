@@ -10,6 +10,7 @@ public partial class BaseServiceTests
     protected IGameService? GameService { get; set; }
     protected ILeagueService? LeagueService { get; set; }
     protected ILeagueContactService? LeagueContactService { get; set; }
+    protected IHelperService? HelperService { get; set; }
     protected IUserService? UserService { get; set; }
     protected ILoggedInService? LoggedInService { get; set; }
     protected IScrambleService? ScrambleService { get; set; }
@@ -37,6 +38,7 @@ public partial class BaseServiceTests
         Services.AddSingleton<IGameService, GameService>();
         Services.AddSingleton<ILeagueService, LeagueService>();
         Services.AddSingleton<ILeagueContactService, LeagueContactService>();
+        Services.AddSingleton<IHelperService, HelperService>();
         Services.AddSingleton<IUserService, UserService>();
         Services.AddSingleton<ILoggedInService, LoggedInService>();
         Services.AddSingleton<IScrambleService, ScrambleService>();
@@ -63,6 +65,9 @@ public partial class BaseServiceTests
 
         LoggedInService = Provider.GetService<ILoggedInService>();
         Assert.NotNull(LoggedInService);
+
+        HelperService = Provider.GetService<IHelperService>();
+        Assert.NotNull(HelperService);
 
         UserService = Provider.GetService<IUserService>();
         Assert.NotNull(UserService);

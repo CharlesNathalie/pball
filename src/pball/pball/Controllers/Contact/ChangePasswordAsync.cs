@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace PBall.Controllers;
+﻿namespace PBall.Controllers;
 
 public partial class ContactController : ControllerBase, IContactController
 {
@@ -8,7 +6,10 @@ public partial class ContactController : ControllerBase, IContactController
     [HttpPost]
     public async Task<ActionResult<bool>> ChangePasswordAsync(ChangePasswordModel changePasswordModel)
     {
-        if (!await CheckLoggedIn()) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
+        if (HelperService != null)
+        {
+            if (!await HelperService.SetCultureAsync(RouteData)) return await Task.FromResult(BadRequest(string.Format(PBallRes.LanguageNotSelected)));
+        }
 
         if (ContactService != null)
         {

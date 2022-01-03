@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace PBall.Controllers;
+﻿namespace PBall.Controllers;
 
 public partial class ContactController : ControllerBase, IContactController
 {
@@ -8,6 +6,11 @@ public partial class ContactController : ControllerBase, IContactController
     [HttpPost]
     public async Task<ActionResult<Contact>> LoginAsync(LoginModel loginModel)
     {
+        if (HelperService != null)
+        {
+            if (!await HelperService.SetCultureAsync(RouteData)) return await Task.FromResult(BadRequest(string.Format(PBallRes.LanguageNotSelected)));
+        }
+
         if (ContactService != null)
         {
             return await ContactService.LoginAsync(loginModel);

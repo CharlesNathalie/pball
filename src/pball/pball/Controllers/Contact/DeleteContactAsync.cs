@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace PBall.Controllers;
+﻿namespace PBall.Controllers;
 
 public partial class ContactController : ControllerBase, IContactController
 {
@@ -8,7 +6,11 @@ public partial class ContactController : ControllerBase, IContactController
     [HttpDelete]
     public async Task<ActionResult<Contact>> DeleteContactAsync(int ContactID)
     {
-        if (!await CheckLoggedIn()) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
+        if (HelperService != null)
+        {
+            if (!await HelperService.SetCultureAsync(RouteData)) return await Task.FromResult(BadRequest(string.Format(PBallRes.LanguageNotSelected)));
+            if (!await HelperService.CheckLoggedInAsync(RouteData, Request)) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
+        }
 
         if (ContactService != null)
         {

@@ -2,7 +2,7 @@ namespace pball.Controllers.Tests;
 
 public partial class BaseControllerTests
 {
-    protected async Task<ErrRes?> DoBadRequestRegister(RegisterModel registerModel, string culture)
+    protected async Task<ErrRes?> DoBadRequestLogoff(Contact contact, string culture)
     {
         ErrRes? errRes = new ErrRes();
 
@@ -13,9 +13,9 @@ public partial class BaseControllerTests
                 var contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 httpClient.DefaultRequestHeaders.Accept.Add(contentType);
 
-                string stringData = JsonSerializer.Serialize(registerModel);
-                var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/register", contentData).Result;
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
+
+                HttpResponseMessage response = httpClient.GetAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/logoff/{ contact.ContactID }").Result;
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 string responseContent = await response.Content.ReadAsStringAsync();

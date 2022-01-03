@@ -138,6 +138,9 @@
   <data name="Error_" xml:space="preserve">
     <value>Erreur: {0}</value>
   </data>
+  <data name="LanguageNotSelected" xml:space="preserve">
+    <value>Langage n'est pas choisi</value>
+  </data>
   <data name="TemporaryCodeToChangeYourPassword" xml:space="preserve">
     <value>Code temporaire pour changer votre mot de passe</value>
   </data>

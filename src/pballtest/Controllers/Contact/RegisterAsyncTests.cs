@@ -9,13 +9,23 @@ public partial class ContactControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        RegisterModel registerModel = await FillRegisterModel();
+        RegisterModel registerModel = await FillRegisterModelAsync();
 
         Contact? contact = await DoOkRegister(registerModel, culture);
         Assert.NotNull(contact);
         if (contact != null)
         {
             Assert.True(contact.ContactID > 0);
+        }
+
+        if (db != null)
+        {
+            List<Contact> contactList = (from c in db.Contacts
+                                         select c).ToList();
+
+            Assert.NotNull(contactList);
+            Assert.True(contactList.Any());
+            Assert.Single(contactList);
         }
     }
     [Theory]
@@ -25,7 +35,7 @@ public partial class ContactControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        RegisterModel registerModel = await FillRegisterModel();
+        RegisterModel registerModel = await FillRegisterModelAsync();
 
         registerModel.LoginEmail = "";
 

@@ -9,14 +9,15 @@ public partial class LeagueContactController : ControllerBase, ILeagueContactCon
     private IConfiguration Configuration { get; }
     private ILeagueContactService? LeagueContactService { get; }
     private ILoggedInService? LoggedInService { get; }
-    private PBallContext db { get; }
+    private IHelperService? HelperService { get; }
 
-    public LeagueContactController(IConfiguration Configuration, ILeagueContactService LeagueContactService, ILoggedInService LoggedInService, PBallContext db)
+    public LeagueContactController(IConfiguration Configuration, ILeagueContactService LeagueContactService, 
+        ILoggedInService LoggedInService, IHelperService HelperService, PBallContext db)
     {
         this.Configuration = Configuration;
         this.LeagueContactService = LeagueContactService;
         this.LoggedInService = LoggedInService;
-        this.db = db; 
+        this.HelperService = HelperService;
     }
 }
 

@@ -2,7 +2,7 @@ namespace pball.Controllers.Tests;
 
 public partial class BaseControllerTests
 {
-    protected async Task<RegisterModel> FillRegisterModel()
+    protected async Task<RegisterModel> FillRegisterModelAsync()
     {
         Random random = new Random();
 

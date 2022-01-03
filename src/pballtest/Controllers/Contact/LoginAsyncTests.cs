@@ -9,7 +9,13 @@ public partial class ContactControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        RegisterModel registerModel = await FillRegisterModel();
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        boolRet = await ClearServerLoggedInListAsync(culture);
+        Assert.True(boolRet);
+
+        RegisterModel registerModel = await FillRegisterModelAsync();
 
         Contact? contact = await DoOkRegister(registerModel, culture);
         Assert.NotNull(contact);
@@ -31,6 +37,7 @@ public partial class ContactControllerTests
             Assert.True(contact.ContactID > 0);
             Assert.NotEmpty(contact.Token);
         }
+
     }
     [Theory]
     [InlineData("en-CA")]
@@ -39,7 +46,13 @@ public partial class ContactControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        RegisterModel registerModel = await FillRegisterModel();
+        bool? boolRet = await ClearAllContactsFromDBAsync();
+        Assert.True(boolRet);
+
+        boolRet = await ClearServerLoggedInListAsync(culture);
+        Assert.True(boolRet);
+
+        RegisterModel registerModel = await FillRegisterModelAsync();
 
         Contact? contact = await DoOkRegister(registerModel, culture);
         Assert.NotNull(contact);

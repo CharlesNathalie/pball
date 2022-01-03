@@ -7,16 +7,19 @@ namespace PBall.Controllers;
 public partial class GameController : ControllerBase, IGameController
 {
     private IConfiguration Configuration { get; }
-    private IGameService? GameService { get; }
+     private IGameService? GameService { get; }
+    private IUserService? UserService { get; }
     private ILoggedInService? LoggedInService { get; }
-    private PBallContext db { get; }
+    private IHelperService? HelperService { get; }
 
-    public GameController(IConfiguration Configuration, IGameService GameService, ILoggedInService LoggedInService, PBallContext db)
+    public GameController(IConfiguration Configuration, IUserService UserService, IGameService GameService, 
+        ILoggedInService LoggedInService, IHelperService HelperService, PBallContext db)
     {
         this.Configuration = Configuration;
+        this.UserService = UserService;
         this.GameService = GameService;
         this.LoggedInService = LoggedInService;
-        this.db = db; 
+        this.HelperService = HelperService;
     }
 }
 

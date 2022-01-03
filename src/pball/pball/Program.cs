@@ -17,6 +17,7 @@ builder.Services.AddDbContext<PBallContext>(options =>
 builder.Services.AddSingleton<IScrambleService, ScrambleService>();
 builder.Services.AddSingleton<ILoggedInService, LoggedInService>();
 
+builder.Services.AddScoped<IHelperService, HelperService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IGameService, GameService>();

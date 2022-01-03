@@ -3,6 +3,7 @@
 public partial interface IContactController
 {
     Task<ActionResult<bool>> ChangePasswordAsync(ChangePasswordModel passwordChangeModel);
+    Task<ActionResult<bool>> ClearServerLoggedInListAsync();
     Task<ActionResult<Contact>> DeleteContactAsync(int ContactID);
     Task<ActionResult<bool>> GetFullNameExistAsync(FullNameModel fullNameModel);
     Task<ActionResult<bool>> GetLoginEmailExistAsync(LoginEmailModel loginEmailModel);
