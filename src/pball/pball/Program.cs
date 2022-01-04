@@ -1,5 +1,7 @@
 using PBallServices;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -10,6 +12,21 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: MyAllowSpecificOrigins,
+                         builder =>
+                         {
+                             builder.WithOrigins("*")
+                             .AllowAnyMethod()
+                             .AllowAnyHeader()
+                             .AllowAnyOrigin();
+                         });
+    });
+}
 
 builder.Services.AddDbContext<PBallContext>(options =>
     options.UseSqlServer(builder.Configuration["pballDB"]));
@@ -34,6 +51,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseCors(MyAllowSpecificOrigins);
 }
 
 app.UseHttpsRedirection();

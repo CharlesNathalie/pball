@@ -21,10 +21,10 @@
             {{ appLanguageService.ShellApplicationName[appLanguageService.LangID ?? 0] }}
         </a>
 
-        <a mat-button href="en-CA" *ngIf="appLanguageService.Language != languageEnum.en">
+        <a mat-raised-button href="en-CA" *ngIf="appLanguageService.Language != languageEnum.en">
             {{ appLanguageService.English[appLanguageService.LangID ?? 0] }}
         </a>
-        <a mat-button href="fr-CA"  *ngIf="appLanguageService.Language != languageEnum.fr">
+        <a mat-raised-button href="fr-CA"  *ngIf="appLanguageService.Language != languageEnum.fr">
             {{ appLanguageService.Francais[appLanguageService.LangID ?? 0] }}
         </a>
     </span>
@@ -34,6 +34,6 @@
 
 <hr>
 <mat-toolbar class="footer">
-    <span>{{ year }} - {{ appLanguageService.ShellApplicationName[appLanguageService.LangID ?? 0] }}
+    <span>{{ year | json }} - {{ appLanguageService.ShellApplicationName[appLanguageService.LangID ?? 0] }}
     </span>
 </mat-toolbar>

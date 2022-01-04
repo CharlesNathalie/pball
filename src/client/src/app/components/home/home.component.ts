@@ -9,7 +9,6 @@ import { AppStateService } from 'src/app/services/app/app-state.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  year: number = new Date().getFullYear();
 
   constructor(public appStateService: AppStateService,
     public appLanguageService: AppLanguageService,

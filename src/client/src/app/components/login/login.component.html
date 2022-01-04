@@ -1,5 +1,10 @@
 <h1>Login Component</h1>
 
-<a href="{{ appLanguageService.Culture }}">Home</a>
+<a mat-raised-button routerLink="/{{ appLanguageService.Culture }}/home">Home</a>
 <br>
-<a href="{{ appLanguageService.Culture }}/register">Register</a>
+<a mat-raised-button routerLink="/{{ appLanguageService.Culture }}/register">Register</a>
+<br>
+<button mat-raised-button (click)="Login()">Test Login</button>
+<br>
+<br>
+<p *ngIf="(appStateService.appState$ | async)?.Contact?.ContactID">{{ (appStateService.appState$ | async)?.Contact | json }}</p>

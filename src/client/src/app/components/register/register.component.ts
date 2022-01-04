@@ -9,7 +9,6 @@ import { AppStateService } from 'src/app/services/app/app-state.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-  year: number = new Date().getFullYear();
 
   constructor(public appStateService: AppStateService,
     public appLanguageService: AppLanguageService,

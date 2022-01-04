@@ -1,6 +1,6 @@
 <h1>Home Component</h1>
 <span>{{ appLanguageService.ShellMenu[appLanguageService.LangID ?? 0] }}</span>
 <br>
-<a href="{{ appLanguageService.Culture }}/login">Login</a>
+<a mat-raised-button routerLink="/{{ appLanguageService.Culture }}/login">Login</a>
 <br>
-<a href="{{ appLanguageService.Culture }}/register">Register</a>
+<a mat-raised-button routerLink="/{{ appLanguageService.Culture }}/register">Register</a>

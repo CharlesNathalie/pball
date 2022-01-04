@@ -8,8 +8,8 @@ import { WebContact } from 'src/app/models/WebContact.model';
   providedIn: 'root'
 })
 export class AppLoadedService {
-  BaseApiUrl = 'https://pball.azurewebsites.net/'; 
-  //BaseApiUrl = 'https://localhost:44341/api/';
+  //BaseApiUrl = 'https://pball.azurewebsites.net/'; 
+  BaseApiUrl = 'https://localhost:7072/api/';
 
   LoggedInContact?: Contact;
   WebContact?: WebContact;

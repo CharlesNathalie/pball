@@ -31,7 +31,8 @@ export class AppLanguageService {
   Culture?: string = 'en-CA';
 
   English: string[] = ['English', "English"];
-  Francais: string[]  = ['Français', 'Français'];
+  Francais: string[] = ['Français', 'Français'];
+  LoggingIn: string[] = ['Logging in', 'Logging in (fr)'];
   ShellMenu: string[] = ['Shell Menu', 'Menu Shell'];
   ShellApplicationName: string[] = ['Pickleball Participation', 'Pickleball Participation (FR)'];
 }
