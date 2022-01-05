@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
 import { LoginModel } from 'src/app/models/LoginModel.model';
-import { AppLanguageService } from 'src/app/services/app/app-language.service';
-import { AppLoadedService } from 'src/app/services/app/app-loaded.service';
-import { AppStateService } from 'src/app/services/app/app-state.service';
-import { LoginService } from 'src/app/services/login/login.service';
+import { AppStateService } from 'src/app/app-state.service';
+import { LoginService } from './login.service';
 
 @Component({
   selector: 'app-login',
@@ -12,10 +12,16 @@ import { LoginService } from 'src/app/services/login/login.service';
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
-  constructor(public appStateService: AppStateService,
-    public appLanguageService: AppLanguageService,
-    public appLoadedService: AppLoadedService,
-    private loginService: LoginService) {
+  languageEnum = GetLanguageEnum();
+
+  loginForm = this.formBuilder.group({
+    LoginEmail: ['', Validators.required],
+    Password: ['', Validators.required],
+  });
+
+  constructor(public state: AppStateService,
+    public formBuilder: FormBuilder,
+    public loginService: LoginService) {
   }
 
   ngOnInit(): void {
@@ -28,4 +34,25 @@ export class LoginComponent implements OnInit, OnDestroy {
     let loginModel: LoginModel = <LoginModel>{ LoginEmail: '3785a@gmail.com', Password: '494a' };
     this.loginService.Login(loginModel);
   }
+
+  LoginError() {
+    let loginModel: LoginModel = <LoginModel>{ LoginEmail: '3785a@gmail.com', Password: '494aaaa' };
+    this.loginService.Login(loginModel);
+  }
+
+  getHasError(fieldName: string): boolean {
+    return this.loginService.getHasError(fieldName, this.loginForm);
+  }
+
+  getErrorMessage(fieldName: string): string {
+    return this.loginService.getErrorMessage(fieldName, this.loginForm);
+  }
+
+  getFormValid(): boolean {
+    return this.loginService.getFormValid(this.loginForm);
+  }
+
+  onSubmit(): void {
+    this.loginService.submitForm(this.loginForm);
+    }
 }

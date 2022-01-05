@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { AppLanguageService } from 'src/app/services/app/app-language.service';
-import { AppLoadedService } from 'src/app/services/app/app-loaded.service';
-import { AppStateService } from 'src/app/services/app/app-state.service';
+import { FormBuilder, Validators } from '@angular/forms';
+import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
+import { AppStateService } from 'src/app/app-state.service';
+import { RegisterService } from './register.service';
 
 @Component({
   selector: 'app-register',
@@ -10,15 +11,42 @@ import { AppStateService } from 'src/app/services/app/app-state.service';
 })
 export class RegisterComponent implements OnInit, OnDestroy {
 
-  constructor(public appStateService: AppStateService,
-    public appLanguageService: AppLanguageService,
-    public appLoadedService: AppLoadedService) {
+  languageEnum = GetLanguageEnum();
+
+  registerForm = this.formBuilder.group({
+    LoginEmail: ['', Validators.required],
+    FirstName: ['', Validators.required],
+    Initial: [''],
+    LastName: ['', Validators.required],
+    Password: ['', Validators.required],
+    ConfirmPassword: ['', Validators.required],
+    PlayerLevel: ['', Validators.required],
+  });
+
+  constructor(public state: AppStateService,
+    public formBuilder: FormBuilder,
+    public registerService: RegisterService) {
   }
 
   ngOnInit(): void {
- }
+  }
 
   ngOnDestroy(): void {
   }
 
+  getHasError(fieldName: string): boolean {
+    return this.registerService.getHasError(fieldName, this.registerForm);
+  }
+
+  getErrorMessage(fieldName: string): string {
+    return this.registerService.getErrorMessage(fieldName, this.registerForm);
+  }
+
+  getFormValid(): boolean {
+    return this.registerService.getFormValid(this.registerForm);
+  }
+
+  onSubmit(): void {
+    this.registerService.submitForm(this.registerForm);
+    }
 }

@@ -1,5 +1,70 @@
-<h1>Register Component</h1>
+<div class="formcenter">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ registerService.Register[state.LangID ?? languageEnum.en]}}
+            </mat-card-title>
+        </mat-card-header>
 
-<a mat-raised-button routerLink="/{{ appLanguageService.Culture }}/home">Home</a>
+        <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
+            <mat-card-content>
+                <mat-form-field>
+                    <mat-label>Login email</mat-label>
+                    <input matInput placeholder="john@gmail.com" formControlName="LoginEmail">
+                    <mat-error *ngIf="getHasError('LoginEmail')">{{getErrorMessage("LoginEmail")}}</mat-error>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>First name</mat-label>
+                    <input matInput placeholder="john" formControlName="FirstName">
+                    <mat-error *ngIf="getHasError('FirstName')">{{getErrorMessage("FirstName")}}</mat-error>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>Initial</mat-label>
+                    <input matInput placeholder="j" formControlName="Initial">
+                    <mat-error *ngIf="getHasError('Initial')">{{getErrorMessage("Initial")}}</mat-error>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>Last name</mat-label>
+                    <input matInput placeholder="Doe" formControlName="LastName">
+                    <mat-error *ngIf="getHasError('LastName')">{{getErrorMessage("LastName")}}</mat-error>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" formControlName="Password">
+                    <mat-error *ngIf="getHasError('Password')">{{getErrorMessage("Password")}}</mat-error>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>Confirm password</mat-label>
+                    <input matInput type="password" formControlName="ConfirmPassword">
+                    <mat-error *ngIf="getHasError('ConfirmPassword')">{{getErrorMessage("ConfirmPassword")}}</mat-error>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>Player level</mat-label>
+                    <input matInput type="number" step="0.1" max="5" min="1" formControlName="PlayerLevel">
+                    <mat-error *ngIf="getHasError('PlayerLevel')">{{getErrorMessage("PlayerLevel")}}</mat-error>
+                </mat-form-field>
+                <br>
+
+            </mat-card-content>
+
+            <mat-error>* required</mat-error>
+
+            <button mat-raised-button *ngIf="getFormValid()">Register</button>
+            <button mat-raised-button disabled="disabled" *ngIf="!getFormValid()">Please enter required information</button>
+
+        </form>
+    </mat-card>
+</div>
+<div>
+    <p>{{ registerForm.value | json }}</p>
+
+</div>
+
+<a mat-raised-button routerLink="/{{ state.Culture }}/home">Home</a>
 <br>
-<a mat-raised-button routerLink="/{{ appLanguageService.Culture }}/login">Login</a>
+<a mat-raised-button routerLink="/{{ state.Culture }}/login">Login</a>

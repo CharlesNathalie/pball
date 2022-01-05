@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
-import { AppLanguageService } from 'src/app/services/app/app-language.service';
-import { AppLoadedService } from 'src/app/services/app/app-loaded.service';
-import { AppStateService } from 'src/app/services/app/app-state.service';
 import { Router } from '@angular/router';
+import { AppStateService } from 'src/app/app-state.service';
+import { ShellService } from './shell.service';
 
 @Component({
   selector: 'app-shell',
@@ -16,26 +15,20 @@ export class ShellComponent implements OnInit, OnDestroy {
 
   languageEnum = GetLanguageEnum();
 
-  constructor(public appStateService: AppStateService,
-    public appLanguageService: AppLanguageService,
-    public appLoadedService: AppLoadedService,
+  constructor(public state: AppStateService,
     private title: Title,
-    private router: Router) {
+    private router: Router,
+    public shellService: ShellService) {
   }
 
   ngOnInit(): void {
-    this.title.setTitle(this.appLanguageService.ShellApplicationName[this.appLanguageService.LangID ?? 0]);
-    if (this.router.url.startsWith("/fr-CA"))
-    {
-      this.appLanguageService.SetLanguage(this.languageEnum.fr);
-    }
-    else
-    {
-      this.appLanguageService.SetLanguage(this.languageEnum.en);
-    }
- }
+    this.shellService.init(this.title, this.router);
+  }
 
   ngOnDestroy(): void {
   }
 
+  getLastPartOfUrl(): string {
+    return this.shellService.getLastPartOfUrl(this.router);
+  }
 }

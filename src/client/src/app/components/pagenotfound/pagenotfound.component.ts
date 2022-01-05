@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { AppLanguageService } from 'src/app/services/app/app-language.service';
-import { AppLoadedService } from 'src/app/services/app/app-loaded.service';
-import { AppStateService } from 'src/app/services/app/app-state.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AppStateService } from 'src/app/app-state.service';
+import { PageNotFoundService } from './pagenotfound.service';
 
 @Component({
   selector: 'app-pagenotfound',
@@ -10,9 +9,8 @@ import { AppStateService } from 'src/app/services/app/app-state.service';
 })
 export class PageNotFoundComponent implements OnInit, OnDestroy {
 
-  constructor(public appStateService: AppStateService,
-    public appLanguageService: AppLanguageService,
-    public appLoadedService: AppLoadedService) {
+  constructor(public state: AppStateService,
+    public pageNotFoundService: PageNotFoundService) {
   }
 
   ngOnInit(): void {

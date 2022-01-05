@@ -1,10 +1,46 @@
-<h1>Login Component</h1>
+<div class="formcenter">
+  <mat-card>
+      <mat-card-header>
+          <mat-card-title>{{ loginService.LoginTxt[state.LangID]}}
+          </mat-card-title>
+      </mat-card-header>
 
-<a mat-raised-button routerLink="/{{ appLanguageService.Culture }}/home">Home</a>
+      <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+          <mat-card-content>
+              <mat-form-field>
+                  <mat-label>Login email</mat-label>
+                  <input matInput placeholder="john@gmail.com" formControlName="LoginEmail">
+                  <mat-error *ngIf="getHasError('LoginEmail')">{{getErrorMessage("LoginEmail")}}</mat-error>
+              </mat-form-field>
+              <br>
+              <mat-form-field>
+                  <mat-label>Password</mat-label>
+                  <input matInput type="password" formControlName="Password">
+                  <mat-error *ngIf="getHasError('Password')">{{getErrorMessage("Password")}}</mat-error>
+              </mat-form-field>
+
+          </mat-card-content>
+
+          <mat-error>* required</mat-error>
+
+          <button mat-raised-button *ngIf="getFormValid()">Register</button>
+          <button mat-raised-button disabled="disabled" *ngIf="!getFormValid()">Please enter required information</button>
+
+      </form>
+  </mat-card>
+</div>
+<div>
+  <p>{{ loginForm.value | json }}</p>
+
+</div>
+
+
+<a mat-raised-button routerLink="/{{ state.Culture }}/home">Home</a>
 <br>
-<a mat-raised-button routerLink="/{{ appLanguageService.Culture }}/register">Register</a>
+<a mat-raised-button routerLink="/{{ state.Culture }}/login">Login</a>
 <br>
-<button mat-raised-button (click)="Login()">Test Login</button>
+<button mat-raised-button (click)="Login()">Test Login OK</button>
+<p>{{ state.Contact | json }}</p>
 <br>
-<br>
-<p *ngIf="(appStateService.appState$ | async)?.Contact?.ContactID">{{ (appStateService.appState$ | async)?.Contact | json }}</p>
+<button mat-raised-button (click)="LoginError()">Test Login Error</button>
+<p>{{ state.Error | json }}</p>

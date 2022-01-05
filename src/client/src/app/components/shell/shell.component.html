@@ -1,32 +1,54 @@
-<mat-toolbar class="header">
-    <span class="toolbar">
-        <button mat-button [matMenuTriggerFor]="shellMenu">
-            <mat-icon>menu</mat-icon>
-        </button>
-        <mat-menu #shellMenu="matMenu">
-            <div class="menuWidth">
+<mat-toolbar>
+    <a mat-button [matMenuTriggerFor]="LeftShellMenu">
+        <mat-icon>more_vert</mat-icon>
+    </a>
+    <mat-menu #LeftShellMenu="matMenu">
+        <div>
+            <button mat-menu-item>
+                Left one
+            </button>
+            <button mat-menu-item>
+                Left two
+            </button>
+            <button mat-menu-item>
+                Left three
+            </button>
+        </div>
+    </mat-menu>
+
+    <a mat-button routerLink="/{{ state.Culture }}/" mat-button>
+        <mat-icon>home</mat-icon> {{ shellService.ShellApplicationName[state.LangID] }}
+    </a>
+    <span class="example-spacer"></span>
+
+    <a mat-button *ngIf="state.Contact.ContactID" routerLink="/{{ state.Culture }}/profile"
+        mat-button>
+        <mat-icon>elderly</mat-icon> {{ state.Contact.FirstName }} {{ state.Contact?.LastName }}
+    </a>
+    <a mat-button routerLink="/en-CA{{getLastPartOfUrl()}}" *ngIf="state.Language != languageEnum.en">
+        {{ shellService.English[state.LangID] }}
+    </a>
+    <a mat-button routerLink="/fr-CA{{getLastPartOfUrl()}}" *ngIf="state.Language != languageEnum.fr">
+        {{ shellService.Francais[state.LangID] }}
+    </a>
+
+    <span>
+        <a mat-button [matMenuTriggerFor]="RightShellMenu">
+            <mat-icon>more_vert</mat-icon>
+        </a>
+        <mat-menu #RightShellMenu="matMenu">
+            <div>
                 <button mat-menu-item>
-                    one
+                    Right one
                 </button>
                 <button mat-menu-item>
-                    two
+                    Right two
                 </button>
                 <button mat-menu-item>
-                    three
+                    Right three
                 </button>
             </div>
         </mat-menu>
-
-        <a href="/" mat-button>
-            {{ appLanguageService.ShellApplicationName[appLanguageService.LangID ?? 0] }}
-        </a>
-
-        <a mat-raised-button href="en-CA" *ngIf="appLanguageService.Language != languageEnum.en">
-            {{ appLanguageService.English[appLanguageService.LangID ?? 0] }}
-        </a>
-        <a mat-raised-button href="fr-CA"  *ngIf="appLanguageService.Language != languageEnum.fr">
-            {{ appLanguageService.Francais[appLanguageService.LangID ?? 0] }}
-        </a>
     </span>
 </mat-toolbar>
 
@@ -34,6 +56,6 @@
 
 <hr>
 <mat-toolbar class="footer">
-    <span>{{ year | json }} - {{ appLanguageService.ShellApplicationName[appLanguageService.LangID ?? 0] }}
+    <span>{{ year | json }} - {{ shellService.ShellApplicationName[state.LangID] }}
     </span>
 </mat-toolbar>
