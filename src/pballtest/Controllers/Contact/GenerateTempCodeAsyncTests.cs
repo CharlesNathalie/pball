@@ -116,9 +116,9 @@ public partial class ContactControllerTests : BaseControllerTests
                     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    string? strRet = JsonSerializer.Deserialize<string>(responseContent);
-                    Assert.NotNull(strRet);
-                    Assert.NotEmpty(strRet);
+                    boolRet = JsonSerializer.Deserialize<bool>(responseContent);
+                    Assert.NotNull(boolRet);
+                    Assert.True(boolRet);
                 }
             }
         }

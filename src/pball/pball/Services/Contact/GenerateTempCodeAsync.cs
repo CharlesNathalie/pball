@@ -2,79 +2,17 @@ namespace PBallServices;
 
 public partial class ContactService : ControllerBase, IContactService
 {
-    public async Task<ActionResult<string>> GenerateTempCodeAsync(LeagueContactGenerateCodeModel leagueContactGenerateCodeModel)
+    public async Task<ActionResult<bool>> GenerateTempCodeAsync(LoginEmailModel loginEmailModel)
     {
         ErrRes errRes = new ErrRes();
 
-        if (UserService.User == null)
+        Contact? contact = (from c in db.Contacts
+                                 where c.LoginEmail == loginEmailModel.LoginEmail
+                            select c).FirstOrDefault();
+
+        if (contact == null)
         {
-            errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
-            return await Task.FromResult(BadRequest(errRes));
-        }
-
-        if (leagueContactGenerateCodeModel.LeagueAdminContactID == 0)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeagueAdminContactID"));
-            return await Task.FromResult(BadRequest(errRes));
-        }
-
-        Contact? contactAdmin = (from c in db.Contacts
-                                 where c.ContactID == leagueContactGenerateCodeModel.LeagueAdminContactID
-                                 select c).FirstOrDefault();
-
-        if (contactAdmin == null)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", leagueContactGenerateCodeModel.LeagueAdminContactID.ToString()));
-            return await Task.FromResult(BadRequest(errRes));
-        }
-
-        if (leagueContactGenerateCodeModel.LeaguePlayerContactID == 0)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeaguePlayerContactID"));
-            return await Task.FromResult(BadRequest(errRes));
-        }
-
-        Contact? contactPlayer = (from c in db.Contacts
-                                  where c.ContactID == leagueContactGenerateCodeModel.LeaguePlayerContactID
-                                  select c).FirstOrDefault();
-
-        if (contactPlayer == null)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", leagueContactGenerateCodeModel.LeaguePlayerContactID.ToString()));
-            return await Task.FromResult(BadRequest(errRes));
-        }
-
-        if (leagueContactGenerateCodeModel.LeagueID == 0)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeagueID"));
-            return await Task.FromResult(BadRequest(errRes));
-        }
-
-        League? league = (from c in db.Leagues
-                          where c.LeagueID == leagueContactGenerateCodeModel.LeagueID
-                          select c).FirstOrDefault();
-
-        if (league == null)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "League", "LeagueID", leagueContactGenerateCodeModel.LeagueID.ToString()));
-            return await Task.FromResult(BadRequest(errRes));
-        }
-
-        LeagueContact? leagueContact = (from c in db.LeagueContacts
-                                        where c.ContactID == leagueContactGenerateCodeModel.LeagueAdminContactID
-                                        && c.LeagueID == leagueContactGenerateCodeModel.LeagueID
-                                        select c).FirstOrDefault();
-
-        if (leagueContact == null)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "LeagueContact", "Contact,LeagueID",
-                leagueContactGenerateCodeModel.LeagueAdminContactID.ToString() + "," + leagueContactGenerateCodeModel.LeagueID.ToString()));
-            return await Task.FromResult(BadRequest(errRes));
-        }
-
-        if (!leagueContact.IsLeagueAdmin)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes.YouNeedToBeLeagueAdminToGenerateTempCode));
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "LoginEmail", loginEmailModel.LoginEmail.ToString()));
             return await Task.FromResult(BadRequest(errRes));
         }
 
@@ -88,8 +26,7 @@ public partial class ContactService : ControllerBase, IContactService
             TempCode += (r.Next(0, 9)).ToString();
         }
 
-        contactPlayer.ResetPasswordTempCode = TempCode;
-        // not changing the LastUpdateDate_UTC or LastUpdateContactID because ResetPasswordTempCode is not really a change
+        contact.ResetPasswordTempCode = TempCode;
 
         try
         {
@@ -101,7 +38,7 @@ public partial class ContactService : ControllerBase, IContactService
             return await Task.FromResult(BadRequest(errRes));
         }
 
-        return await Task.FromResult(Ok(TempCode));
+        return await Task.FromResult(Ok(true));
     }
 }
 

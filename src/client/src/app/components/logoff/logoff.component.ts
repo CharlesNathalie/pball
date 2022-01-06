@@ -9,17 +9,18 @@ import { LogoffService } from './logoff.service';
 })
 export class LogoffComponent implements OnInit, OnDestroy {
 
-  constructor(public ass: AppStateService,
+  constructor(public state: AppStateService,
     public logoffService: LogoffService) {
   }
 
   ngOnInit(): void {
+    this.logoffService.ResetLocals();
  }
 
   ngOnDestroy(): void {
   }
 
   Logoff() {
-    this.logoffService.LogOff();
+    this.logoffService.Logoff();
   }
 }

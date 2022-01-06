@@ -8,25 +8,27 @@ import { AppStateService } from 'src/app/app-state.service';
   providedIn: 'root'
 })
 export class ShellService {
-
+  ApplicationName: string[] = ['Pickleball addicts', 'Mordus de Pickleball'];
+  ChangeProfile: string[] = ['Change profile', 'Modifier profil'];
   English: string[] = ['English', "English"];
   Francais: string[] = ['Français', 'Français'];
+  Login: string[] = ['Login', 'Connexion'];
+  Logoff: string[] = ['Logoff', 'Déconnexion'];
   Profile: string[] = ['Profile', 'Profile'];
   Register: string[] = ['Register', 'Register (fr)'];
   ShellMenu: string[] = ['Shell Menu', 'Menu Shell'];
-  ShellApplicationName: string[] = ['Pickleball Participation', 'Pickleball Participation (FR)'];
 
   constructor(public state: AppStateService) {
   }
 
-  init(title: Title, router: Router) {
-    title.setTitle(this.ShellApplicationName[this.state.LangID ?? 0]);
+  Init(title: Title, router: Router) {
+    title.setTitle(this.ApplicationName[this.state.LangID ?? 0]);
     router.url.startsWith("/fr-CA") ?
       this.state.SetLanguage(LanguageEnum.fr) :
       this.state.SetLanguage(LanguageEnum.en);
   }
 
-  getLastPartOfUrl(router: Router): string {
+  GetLastPartOfUrl(router: Router): string {
     let lastPartOfUrl: string = router.url;
     let pos: number = lastPartOfUrl.indexOf('en-CA');
     if (pos < 0) {
@@ -40,6 +42,13 @@ export class ShellService {
     lastPartOfUrl = lastPartOfUrl.substring(pos + 5);
 
     return lastPartOfUrl;
+  }
+
+  GetFirstLetters(name: string, numberOfLetters: number): string
+  {
+    if (name.length == 0) return '';
+
+    return name.substring(0, numberOfLetters);
   }
 
 }

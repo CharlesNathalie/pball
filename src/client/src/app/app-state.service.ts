@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GetLanguageEnum, LanguageEnum } from 'src/app/enums/LanguageEnum';
 import { Contact } from 'src/app/models/Contact.model';
@@ -8,16 +7,22 @@ import { WebContact } from 'src/app/models/WebContact.model';
   providedIn: 'root'
 })
 export class AppStateService {
-  Version: string[] = ['Version: 1.0.0.0', 'Version: 1.0.0.0'];
+  Version: string[] = ['Version: alpha-1.0.0.0', 'Version: alpha1.0.0.0'];
 
-  //BaseApiUrl = 'https://pball.azurewebsites.net/'; 
-  BaseApiUrl = 'https://localhost:7072/api/';
+  BaseApiUrl = 'https://pball.azurewebsites.net/api/'; 
+  //BaseApiUrl = 'https://localhost:7072/api/';
 
   languageEnum = GetLanguageEnum();
+  Language: LanguageEnum = LanguageEnum.en;
+  LangID: number = 0;
+  Culture: string = 'en-CA';
 
-  Status: string = '';
-  Working: boolean = false;
-  Error: HttpErrorResponse = <HttpErrorResponse>{};
+  Contact: Contact = <Contact>{};
+  WebContact: WebContact = <WebContact>{};
+
+  constructor() {
+    
+  }
 
   SetLanguage(Language: LanguageEnum) {
     if (Language == LanguageEnum.fr) {
@@ -31,11 +36,4 @@ export class AppStateService {
       this.Culture = 'en-CA';
     }
   }
-
-  Language: LanguageEnum = LanguageEnum.en;
-  LangID: number = 0;
-  Culture: string = 'en-CA';
-
-  Contact: Contact = <Contact>{};
-  WebContact: WebContact = <WebContact>{};
 }

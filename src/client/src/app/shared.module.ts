@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/app-material.module';
 import { ChartAllComponent } from './components/chart-all/chart-all.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { PageNotFoundComponent } from './components/pagenotfound/pagenotfound.component';
@@ -17,6 +18,7 @@ import { TablePlayerComponent } from './components/table-player/table-player.com
 @NgModule({
   declarations: [
     ChartAllComponent,
+    ForgotPasswordComponent,
     HomeComponent,
     LoginComponent,
     PageNotFoundComponent,
@@ -43,6 +45,7 @@ import { TablePlayerComponent } from './components/table-player/table-player.com
     RouterModule,
 
     ChartAllComponent,
+    ForgotPasswordComponent,
     HomeComponent,
     LoginComponent,  
     PageNotFoundComponent,

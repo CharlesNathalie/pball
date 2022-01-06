@@ -1,6 +1,32 @@
-<h1>Home Component</h1>
-<span>{{ homeService.HomeSomething[state.LangID] }}</span>
-<br>
-<a mat-raised-button routerLink="/{{ state.Culture }}/login">Login</a>
-<br>
-<a mat-raised-button routerLink="/{{ state.Culture }}/register">Register</a>
+<div class="formcenter">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ homeService.WelcomeTo[state.LangID]}} {{ shellService.ApplicationName[state.LangID] }}
+            </mat-card-title>
+            <mat-card-subtitle>
+                {{ state.Version[state.LangID] }}
+            </mat-card-subtitle>
+        </mat-card-header>
+        <h2>{{ homeService.WhatIsWorkingAtThisTime[state.LangID] }}</h2>
+        <p>{{ homeService.Login[state.LangID] }} --- 
+            {{ homeService.Register[state.LangID] }} --- 
+            {{ homeService.Profile[state.LangID] }} --- 
+            {{ homeService.ForgotPassword[state.LangID] }} --- 
+            {{ homeService.Bilingual[state.LangID] }}</p>
+        <p>&nbsp;</p>
+        <h2>{{ homeService.ToDo[state.LangID] }}</h2>
+        <p>{{ homeService.ManageLeagues[state.LangID] }}</p>
+        <p>{{ homeService.ManagePlayersWithinLeagues[state.LangID] }}</p>
+        <p>{{ homeService.ManageGames[state.LangID] }}</p>
+        <p>{{ homeService.ProduceTablesOfResults[state.LangID] }}</p>
+        <p>{{ homeService.ProduceChartsOfResults[state.LangID] }}</p>
+        <p>&nbsp;</p>
+        <button mat-raised-button routerLink="/{{ state.Culture }}/login">
+            {{ homeService.Login[state.LangID] }}
+        </button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button mat-raised-button routerLink="/{{ state.Culture }}/register">
+            {{ homeService.Register[state.LangID] }}
+        </button>
+    </mat-card>
+</div>

@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppStateService } from 'src/app/app-state.service';
+import { ShellService } from '../shell/shell.service';
 import { HomeService } from './home.service';
 
 @Component({
@@ -10,7 +11,8 @@ import { HomeService } from './home.service';
 export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(public state: AppStateService,
-    public homeService: HomeService) {
+    public homeService: HomeService,
+    public shellService: ShellService) {
   }
 
   ngOnInit(): void {

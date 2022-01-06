@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
 import { AppStateService } from 'src/app/app-state.service';
@@ -14,13 +14,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
   languageEnum = GetLanguageEnum();
 
   registerForm = this.formBuilder.group({
-    LoginEmail: ['', Validators.required],
-    FirstName: ['', Validators.required],
-    Initial: [''],
-    LastName: ['', Validators.required],
-    Password: ['', Validators.required],
-    ConfirmPassword: ['', Validators.required],
-    PlayerLevel: ['', Validators.required],
+    LoginEmail: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
+    FirstName: ['', [Validators.required, Validators.maxLength(50)]],
+    Initial: ['', [Validators.maxLength(20)]],
+    LastName: ['', [Validators.required, Validators.maxLength(50)]],
+    Password: ['', [Validators.required]],
+    ConfirmPassword: ['', [Validators.required]],
+    PlayerLevel: ['', [Validators.required, Validators.min(1.0), Validators.max(5)]],
   });
 
   constructor(public state: AppStateService,
@@ -29,24 +29,25 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.registerService.ResetLocals();
   }
 
   ngOnDestroy(): void {
   }
 
-  getHasError(fieldName: string): boolean {
-    return this.registerService.getHasError(fieldName, this.registerForm);
+  GetHasError(fieldName: 'LoginEmail' | 'FirstName' | 'Initial' | 'LastName' | 'Password' | 'ConfirmPassword' | 'PlayerLevel'): boolean {
+    return this.registerService.GetHasError(fieldName, this.registerForm);
   }
 
-  getErrorMessage(fieldName: string): string {
-    return this.registerService.getErrorMessage(fieldName, this.registerForm);
+  GetErrorMessage(fieldName: 'LoginEmail' | 'FirstName' | 'Initial' | 'LastName' | 'Password' | 'ConfirmPassword' | 'PlayerLevel'): string {
+    return this.registerService.GetErrorMessage(fieldName, this.registerForm);
   }
 
-  getFormValid(): boolean {
-    return this.registerService.getFormValid(this.registerForm);
+  GetFormValid(): boolean {
+    return this.registerService.GetFormValid(this.registerForm);
   }
 
-  onSubmit(): void {
-    this.registerService.submitForm(this.registerForm);
-    }
+  OnSubmit(): void {
+    this.registerService.SubmitForm(this.registerForm);
+  }
 }

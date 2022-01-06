@@ -11,59 +11,91 @@ import { AppStateService } from 'src/app/app-state.service';
   providedIn: 'root'
 })
 export class LoginService {
-  LoginTxt: string[] = ['Login', 'Login (fr)'];
-  LoggingIn: string[] = ['Logging in', 'Logging in (fr)'];
+  Cant_access_your_account: string[] = ['Can\'t access your account?', 'Dans l\'impossibilité d\'accéder à votre compte'];
+  CheckingEmailExist: string[] = ['Checking email exist', 'Vérification si courriel existe'];
+  InvalidLoginEmail: string[] = ['Invalid login email', 'Courriel de connexion est invalid'];
+  LoginEmail: string[] = ['Login email', 'Courriel de connexion'];
+  LoginSuccessful: string[] = ['Login successful', 'Connexion avec succès'];
+  LoginEmailIsRequired: string[] = ['Login email is required', 'Courriel de connexion est requis'];
+  Password: string[] = ['Password', 'Mot de passe'];
+  LoggingIn: string[] = ['Logging in', 'Connexion en cours'];
+  LoginTxt: string[] = ['Login', 'Connexion'];
+  No_account: string[] = ['No account?', 'Pas de compte?']
+  Please_enter_required_information: string[] = ['Please enter required information', 'SVP entrer l\'information requise'];
+  required: string[] = ['required', 'requis'];
+  ReturnToHomePage: string[] = ['Return to home page', 'Retour à la page d\'accueil'];
+
+  Status: string = '';
+  Working: boolean = false;
+  Error: HttpErrorResponse = <HttpErrorResponse>{};
+
+  loginSuccess: boolean = false;
 
   private sub: Subscription = new Subscription();
-  private loginModel: LoginModel = <LoginModel>{};
 
   constructor(public state: AppStateService,
     public httpClient: HttpClient) {
   }
 
   Login(loginModel: LoginModel) {
-    this.loginModel = loginModel;
+    this.Status = `${this.LoggingIn[this.state.LangID]} - ${loginModel.LoginEmail}`;
+    this.Working = true;
+    this.Error = <HttpErrorResponse>{};
 
     this.sub ? this.sub.unsubscribe() : null;
-
-    this.sub = this.DoLogin().subscribe();
+    this.sub = this.DoLogin(loginModel).subscribe();
   }
 
-  getErrorMessage(fieldName: string, registerForm: FormGroup): string {
+  GetErrorMessage(fieldName: 'LoginEmail' | 'Password', form: FormGroup): string {
     switch (fieldName) {
-      case "LoginEmail":
+      case 'LoginEmail':
         {
-          if (registerForm.controls[fieldName].hasError('required')) {
-            return 'You must enter a valueaaaaaaaaaaa';
+          if (form.controls[fieldName].hasError('required')) {
+            return this.LoginEmailIsRequired[this.state.LangID];
+          }
+          if (form.controls[fieldName].hasError('email')) {
+            return this.InvalidLoginEmail[this.state.LangID];
           }
 
-          return registerForm.controls[fieldName].hasError('email') ? 'Not a valid email' : '';
+          return '';
+        }
+      case 'Password':
+        {
+          return '';
         }
       default:
         return '';
     }
   }
 
-  getFormValid(registerForm: FormGroup): boolean {
-    return registerForm.valid ? true : false;
+  GetFormValid(form: FormGroup): boolean {
+    return form.valid ? true : false;
   }
 
-  getHasError(fieldName: string, registerForm: FormGroup): boolean {
-    return this.getErrorMessage(fieldName, registerForm) == '' ? false : true;
+  GetHasError(fieldName: 'LoginEmail' | 'Password', form: FormGroup): boolean {
+    return this.GetErrorMessage(fieldName, form) == '' ? false : true;
   }
 
-  submitForm(registerForm: FormGroup): boolean {
-    if (registerForm.valid) {
-      return true;
+  ResetLocals()
+  {
+    this.Status = '';
+    this.Working = false;
+    this.Error = <HttpErrorResponse>{}; 
+    this.loginSuccess = false;
+  }
+
+  SubmitForm(form: FormGroup) {
+    if (form.valid) {
+      let loginModel: LoginModel = <LoginModel>{ LoginEmail: form.controls['LoginEmail'].value, Password: form.controls['Password'].value };
+      this.Login(loginModel);
     }
-    return false;
   }
-  
-  private DoLogin() {
+
+  private DoLogin(loginModel: LoginModel) {
     let languageEnum = GetLanguageEnum();
 
-    this.state.Status = `${this.LoggingIn[this.state.LangID]} - ${this.loginModel.LoginEmail}`;
-    this.state.Working = true;
+    localStorage.setItem('currentContact', '');
+    this.state.Contact = <Contact>{};
 
     const url: string = `${this.state.BaseApiUrl}${languageEnum[this.state.Language]}-CA/contact/login`;
 
@@ -74,25 +106,29 @@ export class LoginService {
     };
 
     return this.httpClient.post<Contact>(url,
-      JSON.stringify(this.loginModel), httpOptions)
+      JSON.stringify(loginModel), httpOptions)
       .pipe(map((x: any) => { this.DoUpdateForLogin(x); }),
-        catchError(e => of(e).pipe(map(e => { this.DoError(e); }))));
+        catchError(e => of(e).pipe(map(e => { this.DoErrorForLogin(e); }))));
   }
 
   private DoUpdateForLogin(contact: Contact) {
-    this.state.Status = '';
-    this.state.Working = false;
+    this.Status = '';
+    this.Working = false;
+    this.Error = <HttpErrorResponse>{};
     console.debug(contact);
 
+    this.loginSuccess = true;
     this.state.Contact = contact;
 
     localStorage.setItem('currentContact', JSON.stringify(contact));
   }
 
-  private DoError(e: HttpErrorResponse) {
-    this.state.Status = '';
-    this.state.Working = false;
-    this.state.Error = <HttpErrorResponse>e;
+  private DoErrorForLogin(e: HttpErrorResponse) {
+    this.Status = '';
+    this.Working = false;
+    this.Error = <HttpErrorResponse>e;
+
+    this.loginSuccess = false;
     console.debug(e);
   }
 }

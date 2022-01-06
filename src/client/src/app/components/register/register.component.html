@@ -1,70 +1,80 @@
-<div class="formcenter">
+<div class="formcenter" *ngIf="!registerService.registerSuccess">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>{{ registerService.Register[state.LangID ?? languageEnum.en]}}
+            <mat-card-title>{{ registerService.CreateAccount[state.LangID ?? languageEnum.en]}}
             </mat-card-title>
         </mat-card-header>
 
-        <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
+        <form (ngSubmit)="OnSubmit()" [formGroup]="registerForm">
             <mat-card-content>
                 <mat-form-field>
-                    <mat-label>Login email</mat-label>
-                    <input matInput placeholder="john@gmail.com" formControlName="LoginEmail">
-                    <mat-error *ngIf="getHasError('LoginEmail')">{{getErrorMessage("LoginEmail")}}</mat-error>
+                    <mat-label>{{ registerService.LoginEmail[state.LangID] }}</mat-label>
+                    <input matInput type="email" placeholder="john@gmail.com" formControlName="LoginEmail">
+                    <mat-error *ngIf="GetHasError('LoginEmail')">{{GetErrorMessage("LoginEmail")}}</mat-error>
                 </mat-form-field>
                 <br>
                 <mat-form-field>
-                    <mat-label>First name</mat-label>
+                    <mat-label>{{ registerService.FirstName[state.LangID] }}</mat-label>
                     <input matInput placeholder="john" formControlName="FirstName">
-                    <mat-error *ngIf="getHasError('FirstName')">{{getErrorMessage("FirstName")}}</mat-error>
+                    <mat-error *ngIf="GetHasError('FirstName')">{{GetErrorMessage("FirstName")}}</mat-error>
                 </mat-form-field>
                 <br>
                 <mat-form-field>
-                    <mat-label>Initial</mat-label>
+                    <mat-label>{{ registerService.Initial[state.LangID] }}</mat-label>
                     <input matInput placeholder="j" formControlName="Initial">
-                    <mat-error *ngIf="getHasError('Initial')">{{getErrorMessage("Initial")}}</mat-error>
+                    <mat-error *ngIf="GetHasError('Initial')">{{GetErrorMessage("Initial")}}</mat-error>
                 </mat-form-field>
                 <br>
                 <mat-form-field>
-                    <mat-label>Last name</mat-label>
+                    <mat-label>{{ registerService.LastName[state.LangID] }}</mat-label>
                     <input matInput placeholder="Doe" formControlName="LastName">
-                    <mat-error *ngIf="getHasError('LastName')">{{getErrorMessage("LastName")}}</mat-error>
+                    <mat-error *ngIf="GetHasError('LastName')">{{GetErrorMessage("LastName")}}</mat-error>
                 </mat-form-field>
                 <br>
                 <mat-form-field>
-                    <mat-label>Password</mat-label>
+                    <mat-label>{{ registerService.Password[state.LangID] }}</mat-label>
                     <input matInput type="password" formControlName="Password">
-                    <mat-error *ngIf="getHasError('Password')">{{getErrorMessage("Password")}}</mat-error>
+                    <mat-error *ngIf="GetHasError('Password')">{{GetErrorMessage("Password")}}</mat-error>
                 </mat-form-field>
                 <br>
                 <mat-form-field>
-                    <mat-label>Confirm password</mat-label>
+                    <mat-label>{{ registerService.ConfirmPassword[state.LangID] }}</mat-label>
                     <input matInput type="password" formControlName="ConfirmPassword">
-                    <mat-error *ngIf="getHasError('ConfirmPassword')">{{getErrorMessage("ConfirmPassword")}}</mat-error>
+                    <mat-error *ngIf="GetHasError('ConfirmPassword')">{{GetErrorMessage("ConfirmPassword")}}</mat-error>
                 </mat-form-field>
                 <br>
                 <mat-form-field>
-                    <mat-label>Player level</mat-label>
+                    <mat-label>{{ registerService.PlayerLevel[state.LangID] }}</mat-label>
                     <input matInput type="number" step="0.1" max="5" min="1" formControlName="PlayerLevel">
-                    <mat-error *ngIf="getHasError('PlayerLevel')">{{getErrorMessage("PlayerLevel")}}</mat-error>
+                    <mat-error *ngIf="GetHasError('PlayerLevel')">{{GetErrorMessage("PlayerLevel")}}</mat-error>
                 </mat-form-field>
                 <br>
 
             </mat-card-content>
 
-            <mat-error>* required</mat-error>
+            <mat-error>* {{ registerService.required[state.LangID] }}</mat-error>
+            <br><br>
+            <a routerLink="/{{ state.Culture }}/login">{{ registerService.AlreadyHaveAnAccount[state.LangID] }}</a>
+            <br><br>
 
-            <button mat-raised-button *ngIf="getFormValid()">Register</button>
-            <button mat-raised-button disabled="disabled" *ngIf="!getFormValid()">Please enter required information</button>
+            <mat-error *ngIf="registerService.Error?.error">
+                <br><br>
+                <h3 *ngFor="let e of registerService.Error?.error?.ErrList">{{ e }}</h3>
+            </mat-error>
+
+            <button mat-raised-button *ngIf="GetFormValid()">{{ registerService.CreateAccount[state.LangID] }}</button>
+            <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
+                registerService.PleaseEnterRequiredInformation[state.LangID] }}</button>
 
         </form>
     </mat-card>
 </div>
-<div>
-    <p>{{ registerForm.value | json }}</p>
-
+<div class="formcenter" *ngIf="registerService.registerSuccess">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ registerService.AccountCreatedSuccessfully[state.LangID ?? languageEnum.en]}}
+            </mat-card-title>
+        </mat-card-header>
+        <button mat-raised-button routerLink="/{{ state.Culture }}/login">{{ registerService.ReturnToLogin[state.LangID] }}</button>
+    </mat-card>
 </div>
-
-<a mat-raised-button routerLink="/{{ state.Culture }}/home">Home</a>
-<br>
-<a mat-raised-button routerLink="/{{ state.Culture }}/login">Login</a>

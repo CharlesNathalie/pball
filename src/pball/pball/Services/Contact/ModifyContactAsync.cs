@@ -158,7 +158,7 @@ public partial class ContactService : ControllerBase, IContactService
                 PlayerLevel = contactToModify.PlayerLevel,
                 Removed = contactToModify.Removed,
                 ResetPasswordTempCode = "",
-                Token = "",
+                Token = contactToModify.Token,
             };
         }
 
