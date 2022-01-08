@@ -13,9 +13,9 @@ import { AppStateService } from 'src/app/app-state.service';
 export class LoginService {
   Cant_access_your_account: string[] = ['Can\'t access your account?', 'Dans l\'impossibilité d\'accéder à votre compte'];
   CheckingEmailExist: string[] = ['Checking email exist', 'Vérification si courriel existe'];
-  InvalidLoginEmail: string[] = ['Invalid login email', 'Courriel de connexion est invalid'];
+  InvalidLoginEmail: string[] = ['Invalid login email', 'Courriel de connexion est invalide'];
   LoginEmail: string[] = ['Login email', 'Courriel de connexion'];
-  LoginSuccessful: string[] = ['Login successful', 'Connexion avec succès'];
+  LoginSuccessful: string[] = ['Login successful', 'Connexion réussie'];
   LoginEmailIsRequired: string[] = ['Login email is required', 'Courriel de connexion est requis'];
   Password: string[] = ['Password', 'Mot de passe'];
   LoggingIn: string[] = ['Logging in', 'Connexion en cours'];

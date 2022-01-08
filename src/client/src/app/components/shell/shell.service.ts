@@ -9,13 +9,13 @@ import { AppStateService } from 'src/app/app-state.service';
 })
 export class ShellService {
   ApplicationName: string[] = ['Pickleball addicts', 'Mordus de Pickleball'];
-  ChangeProfile: string[] = ['Change profile', 'Modifier profil'];
+  ChangeProfile: string[] = ['Change profile', 'Modifier votre profil'];
   English: string[] = ['English', "English"];
   Francais: string[] = ['Français', 'Français'];
   Login: string[] = ['Login', 'Connexion'];
   Logoff: string[] = ['Logoff', 'Déconnexion'];
-  Profile: string[] = ['Profile', 'Profile'];
-  Register: string[] = ['Register', 'Register (fr)'];
+  Profile: string[] = ['Profile', 'Profil'];
+  Register: string[] = ['Register', 'S\'inscrire'];
   ShellMenu: string[] = ['Shell Menu', 'Menu Shell'];
 
   constructor(public state: AppStateService) {

@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class PageNotFoundService {
-  PageNotFound: string[] = ['Page not found', 'Page not found (fr)'];
+  PageNotFound: string[] = ['Page not found', 'Page introuvable'];
 
   constructor() {
   }

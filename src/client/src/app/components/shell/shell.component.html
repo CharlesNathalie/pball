@@ -21,9 +21,9 @@
     </button>
     <span class="example-spacer"></span>
 
-    <span *ngIf="state.Contact.ContactID">
+    <span *ngIf="state.Contact.ContactID">mat-icon
         <a mat-button [matMenuTriggerFor]="ProfileShellMenu">
-            <mat-icon>elderly</mat-icon> {{ GetFirstLetters(state.Contact.FirstName, 1) }} {{
+            <mat-icon>person</mat-icon> {{ GetFirstLetters(state.Contact.FirstName, 1) }} {{
             GetFirstLetters(state.Contact.LastName, 1) }}
         </a>
         <mat-menu #ProfileShellMenu="matMenu">
@@ -40,10 +40,11 @@
     </span>
     <span *ngIf="!state.Contact.ContactID">
         <button mat-menu-item routerLink="/{{ state.Culture }}/login">
+            <mat-icon>login</mat-icon>
             {{ shellService.Login[state.LangID] }}
         </button>
     </span>
-    
+
     <button mat-button routerLink="/en-CA{{GetLastPartOfUrl()}}" *ngIf="state.Language != languageEnum.en">
         {{ GetFirstLetters(shellService.English[state.LangID], 2) }}
     </button>
@@ -74,7 +75,10 @@
 <router-outlet></router-outlet>
 
 <hr>
-<mat-toolbar class="footer">
-    <span>{{ year | json }} - {{ shellService.ApplicationName[state.LangID] }}
-    </span>
-</mat-toolbar>
+<div>
+    <mat-toolbar class="footer">
+        <mat-icon>sports_cricket</mat-icon>
+        <span>&nbsp;{{ year | json }} - {{ shellService.ApplicationName[state.LangID] }}
+        </span>
+    </mat-toolbar>
+</div>

@@ -10,14 +10,14 @@ import { LoginEmailModel } from 'src/app/models/LoginEmailModel.model';
   providedIn: 'root'
 })
 export class ForgotPasswordService {
-  allowingYouToReceiveYourCodeWithoutDelay: string[] = ['allowing you to receive your code without delay', 'vous permettant de recevoir votre code sans délay'];
-  AnEmailWillBeSentTo: string[] = ['An email will be sent to', 'Un courriel sera acheminé à'];
-  AtThisTimeYourCodeWillBeSentByTheAdministrator: string[] = ['At this time your code will be sent by the administrator', 'A ce moment, votre code sera envoyé par le gestionnaire'];
+  allowingYouToReceiveYourCodeWithoutDelay: string[] = ['allowing you to receive your code without delay', 'pour recevoir votre code sans délai'];
+  AnEmailWillBeSentTo: string[] = ['An email will be sent to', 'Un courriel sera envoyé à'];
+  AtThisTimeYourCodeWillBeSentByTheAdministrator: string[] = ['At this time your code will be sent by the administrator', 'En ce moment, votre code sera envoyé par le gestionnaire'];
   GoToCreateAccount: string[] = ['Go to create account', 'Allez à s\'inscrire'];
   GoToHome: string[] = ['Go to home', 'Allez à la page d\'accueil'];
   GoToLogin: string[] = ['Go to login', 'Allez à connexion'];
   InTheFutureAllTheseRequestsWillBeDoneAutomatically: string[] = ['In the future, all these requests will be done automatically', "Dans le future, tous ces demandes seront faitent automatiquement"];
-  InvalidLoginEmail: string[] = ['Invalid login email', 'Courriel de connexion est invalid'];
+  InvalidLoginEmail: string[] = ['Invalid login email', 'Courriel de connexion est invalide'];
   LoginEmail: string[] = ['Login email', 'Courriel de connexion'];
   LoginEmailIsRequired: string[] = ['Login email is required', 'Courriel de connexion est requis'];
   Note: string[] = ['Note', 'Notez'];
@@ -27,7 +27,7 @@ export class ForgotPasswordService {
   SendInYourEmailAndACodeWillBeSentToYouToChangeYourPassword: string[] = ['Send in your email and a code will be sent to you to change your password', 'Envoyez-nous votre courriel et un code vous sera acheminé afin que vous puissiez changer votre mot de passe'];
   SendingEmailToCreateNewPassword: string[] = ['Sending email to create new password', 'Envoyer courriel afin de créer un nouveau mot de passe'];
   SendMeTheCode: string[] = ['Send me the code', 'Envoyer moi un code'];
-  YourRequestForACodeWasSuccessful: string[] = ['Your request for a code was successful', "Votre demande de code a été un succès"]
+  YourRequestForACodeWasSuccessful: string[] = ['Your request for a code was successful', "Votre demande de code a été faite avec succès"]
   required: string[] = ['required', 'requis'];
 
   Status: string = '';

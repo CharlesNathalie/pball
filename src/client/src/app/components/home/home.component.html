@@ -22,11 +22,15 @@
         <p>{{ homeService.ProduceChartsOfResults[state.LangID] }}</p>
         <p>&nbsp;</p>
         <button mat-raised-button routerLink="/{{ state.Culture }}/login">
-            {{ homeService.Login[state.LangID] }}
+          <mat-icon>login</mat-icon>  
+          {{ homeService.Login[state.LangID] }}
         </button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button mat-raised-button routerLink="/{{ state.Culture }}/register">
-            {{ homeService.Register[state.LangID] }}
+          <mat-icon>person_add_alt_1</mat-icon>
+          {{ homeService.Register[state.LangID] }}
         </button>
     </mat-card>
 </div>
+
+

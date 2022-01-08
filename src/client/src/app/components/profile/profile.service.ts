@@ -10,30 +10,30 @@ import { Contact } from 'src/app/models/Contact.model';
   providedIn: 'root'
 })
 export class ProfileService {
-  ChangingProfile: string[] = ['Changing profile', 'Changement du profil'];
+  ChangingProfile: string[] = ['Changing profile', 'Modifier votre profil'];
   FirstName: string[] = ['First name', 'Prénom'];
   FirstNameIsRequired: string[] = ['First name is required', 'Le prénom est requis'];
   Initial: string[] = ['Initial', 'Initiale'];
-  InitialIsRequired: string[] = ['Initial is required', 'L\initiale est requis'];
-  InvalidLoginEmail: string[] = ['Invalid login email', 'Courriel de connexion est invalid'];
+  InitialIsRequired: string[] = ['Initial is required', 'L\initiale est requise'];
+  InvalidLoginEmail: string[] = ['Invalid login email', 'Courriel de connexion est invalide'];
   LastName: string[] = ['Last name', 'Nom de famille'];
   LastNameIsRequired: string[] = ['Last name is required', 'Le nom de famille est requis'];
-  LoginEmail: string[] = ['Login email', 'Courriel d\'inscription'];
+  LoginEmail: string[] = ['Login email', 'Courriel de connexion'];
   LoginEmailIsRequired: string[] = ['Login email is required', 'Courriel de connexion est requis'];
-  MaximumLengthForLoginEmailIs100: string[] = ['Maximum length for login email is 100', 'La longueur maximale pour le courriel de connextion est 100'];
+  MaximumLengthForLoginEmailIs100: string[] = ['Maximum length for login email is 100', 'La longueur maximale pour le courriel de connexion est 100'];
   MaximumLengthForFirstNameIs50: string[] = ['Maximum length for first name is 50', 'La longueur maximale pour le prénom est 50'];
   MaximumLengthForInitialIs20: string[] = ['Maximum length for initial is 20', 'La longueur maximale pour l\'initiale est 20'];
   MaximumLengthForLastNameIs50: string[] = ['Maximum length for last name is 50', 'La longueur maximale pour le nom de famille est 50'];
   MaximumValueForPlayerLevelIs5: string[] = ['Maximum value for player level is 5', 'La valeure maximale pour le niveau du joueur est 5'];
   MinimumValueForPlayerLevelIs1: string[] = ['Minimum value for player level is 1', 'La valeure minimale pour le niveau du joueur est 1'];
   PlayerLevel: string[] = ['Player level', 'Niveau du joueur'];
-  PlayerLevelIsRequired: string[] = ['Player level is required', 'Le nieau du joueur est requis'];
+  PlayerLevelIsRequired: string[] = ['Player level is required', 'Le niveau du joueur est requis'];
   ProfileUpdatedSuccessfully: string[] = ['Profile updated successfully', 'Mise à jour du profil complété avec succès'];
   PleaseEnterRequiredInformation: string[] = ['Please enter required information', 'SVP entrer l\'information requise'];
   required: string[] = ['required', 'requis'];
   ReturnToHomePage: string[] = ['Return to home page', 'Retour à la page d\'accueil'];
-  UpdateProfile: string[] = ['Update profile', 'Mise à jour du profile'];
-  UpdatingProfile: string[] = ['Updating profile', 'Mise à jour du profile'];
+  UpdateProfile: string[] = ['Update profile', 'Mise à jour du profil'];
+  UpdatingProfile: string[] = ['Updating profile', 'Mise à jour du profil'];
 
   Status: string = '';
   Working: boolean = false;
