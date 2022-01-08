@@ -24,9 +24,14 @@ public partial class BaseControllerTests
         Assert.NotNull(Configuration["APISecret"]);
         Assert.NotNull(Configuration["pballDB"]);
 
+        //Services.AddDbContext<PBallContext>(options =>
+        //{
+        //    options.UseSqlServer(Configuration["pballDB"]);
+        //});
+
         Services.AddDbContext<PBallContext>(options =>
         {
-            options.UseSqlServer(Configuration["pballDB"]);
+            options.UseSqlite($"Data Source={ Configuration["pballDB"] }");
         });
 
         Provider = Services.BuildServiceProvider();

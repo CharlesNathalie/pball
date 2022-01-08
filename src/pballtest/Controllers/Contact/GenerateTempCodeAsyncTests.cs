@@ -103,14 +103,13 @@ public partial class ContactControllerTests : BaseControllerTests
 
                 if (contact != null && contact2 != null && league != null)
                 {
-                    LeagueContactGenerateCodeModel leagueContactGenerateCodeModel = new LeagueContactGenerateCodeModel()
+
+                    LoginEmailModel loginEmailModel = new LoginEmailModel()
                     {
-                        LeagueAdminContactID = contact.ContactID,
-                        LeaguePlayerContactID = contact2.ContactID,
-                        LeagueID = league.LeagueID,
+                        LoginEmail = contact2.LoginEmail,
                     };
 
-                    string stringData = JsonSerializer.Serialize(leagueContactGenerateCodeModel);
+                    string stringData = JsonSerializer.Serialize(loginEmailModel);
                     var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
                     HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/generatetempcode", contentData).Result;
                     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -224,14 +223,14 @@ public partial class ContactControllerTests : BaseControllerTests
 
                 if (contact != null && contact2 != null && league != null)
                 {
-                    LeagueContactGenerateCodeModel leagueContactGenerateCodeModel = new LeagueContactGenerateCodeModel()
+                    LoginEmailModel loginEmailModel = new LoginEmailModel()
                     {
-                        LeagueAdminContactID =  0, // contact.ContactID, will create an error
-                        LeaguePlayerContactID = contact2.ContactID,
-                        LeagueID = league.LeagueID,
+                        LoginEmail = contact2.LoginEmail,
                     };
 
-                    string stringData = JsonSerializer.Serialize(leagueContactGenerateCodeModel);
+                    loginEmailModel.LoginEmail = "";
+
+                    string stringData = JsonSerializer.Serialize(loginEmailModel);
                     var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
                     HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/generatetempcode", contentData).Result;
                     Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

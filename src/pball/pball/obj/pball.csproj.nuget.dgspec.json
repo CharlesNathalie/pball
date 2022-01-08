@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\pball\\pball\\src\\pball\\pball\\pball.csproj": {}
+    "C:\\pball\\src\\pball\\pball\\pball.csproj": {}
   },
   "projects": {
-    "C:\\pball\\pball\\src\\pball\\pball\\pball.csproj": {
+    "C:\\pball\\src\\pball\\pball\\pball.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\pball\\pball\\src\\pball\\pball\\pball.csproj",
+        "projectUniqueName": "C:\\pball\\src\\pball\\pball\\pball.csproj",
         "projectName": "pball",
-        "projectPath": "C:\\pball\\pball\\src\\pball\\pball\\pball.csproj",
-        "packagesPath": "C:\\Users\\natha\\.nuget\\packages\\",
-        "outputPath": "C:\\pball\\pball\\src\\pball\\pball\\obj\\",
+        "projectPath": "C:\\pball\\src\\pball\\pball\\pball.csproj",
+        "packagesPath": "C:\\Users\\charl\\.nuget\\packages\\",
+        "outputPath": "C:\\pball\\src\\pball\\pball\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\natha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\charl\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -49,6 +49,10 @@
               "version": "[6.0.1, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
               "version": "[6.0.1, )"
             },

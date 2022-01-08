@@ -41,9 +41,14 @@ public partial class BaseServiceTests
         Services.AddSingleton<ILoggedInService, LoggedInService>();
         Services.AddSingleton<IScrambleService, ScrambleService>();
 
+        //Services.AddDbContext<PBallContext>(options =>
+        //{
+        //    options.UseSqlServer(Configuration["pballDB"]);
+        //});
+
         Services.AddDbContext<PBallContext>(options =>
         {
-            options.UseSqlServer(Configuration["pballDB"]);
+            options.UseSqlite($"Data Source={ Configuration["pballDB"] }");
         });
 
         Provider = Services.BuildServiceProvider();

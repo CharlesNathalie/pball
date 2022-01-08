@@ -63,7 +63,7 @@ public partial class ContactServiceTests : BaseServiceTests
                     Assert.Equal(contact2.Initial, contactRet2.Initial);
                     Assert.Equal(contact2.PlayerLevel, contactRet2.PlayerLevel);
                     Assert.Empty(contactRet2.PasswordHash);
-                    Assert.Empty(contactRet2.Token);
+                    Assert.NotEmpty(contactRet2.Token);
                     Assert.Empty(contactRet2.ResetPasswordTempCode);
                 }
             }
