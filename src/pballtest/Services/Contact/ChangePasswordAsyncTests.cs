@@ -9,49 +9,24 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
+        Random random = new Random();
 
-        if (ContactService != null)
+        string TempCode = $"{ random.Next(1000, 9999) }";
+
+        Assert.NotNull(db);
+        if (db != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            Contact? contact = await DoRegisterTestAsync(registerModel);
-            Assert.NotNull(contact);
-
-            LoginModel loginModel = new LoginModel()
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
+                Assert.NotNull(contact);
 
-            var actionRes = await ContactService.LoginAsync(loginModel);
-            Contact? contact2 = await DoOKTestReturnContactAsync(actionRes);
-            Assert.NotNull(contact2);
-            if (contact2 != null)
-            {
-                Assert.Empty(contact2.PasswordHash);
-                Assert.NotEmpty(contact2.Token);
-            }
-
-            Random random = new Random();
-
-            string TempCode = $"{ random.Next(1000, 9999) }";
-
-            if (db != null)
-            {
-                if (contact2 != null)
+                if (contact != null)
                 {
-                    Contact? contactToAddTempCode = (from c in db.Contacts
-                                                     where c.ContactID == contact2.ContactID
-                                                     select c).FirstOrDefault();
-
-                    Assert.NotNull(contactToAddTempCode);
-
-                    if (contactToAddTempCode != null)
-                    {
-                        contactToAddTempCode.ResetPasswordTempCode = TempCode;
-                    }
+                    contact.ResetPasswordTempCode = TempCode;
 
                     try
                     {
@@ -61,32 +36,63 @@ public partial class ContactServiceTests : BaseServiceTests
                     {
                         Assert.True(false, ex.Message);
                     }
+
+                    Assert.NotNull(ScrambleService);
+                    if (ScrambleService != null)
+                    {
+                        ChangePasswordModel changePasswordModel = new ChangePasswordModel()
+                        {
+                            LoginEmail = contact.LoginEmail,
+                            Password = "NewPassword",
+                            TempCode = TempCode,
+                        };
+
+                        Assert.NotNull(ContactService);
+                        if (ContactService != null)
+                        {
+                            var actionRes = await ContactService.ChangePasswordAsync(changePasswordModel);
+                            bool? boolRet = await DoOKTestReturnBoolAsync(actionRes);
+                            Assert.True(boolRet);
+
+                            LoginModel loginModel = new LoginModel()
+                            {
+                                LoginEmail = contact.LoginEmail,
+                                Password = "NewPassword",
+                            };
+
+                            var actionLoginRes = await ContactService.LoginAsync(loginModel);
+                            Contact? contact3 = await DoOKTestReturnContactAsync(actionLoginRes);
+                            if (contact3 != null)
+                            {
+                                Assert.Empty(contact3.PasswordHash);
+                                Assert.Empty(contact3.ResetPasswordTempCode);
+                                Assert.NotEmpty(contact3.Token);
+                            }
+
+                            contact.ResetPasswordTempCode = TempCode;
+
+                            try
+                            {
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                Assert.True(false, ex.Message);
+                            }
+
+                            changePasswordModel = new ChangePasswordModel()
+                            {
+                                LoginEmail = contact.LoginEmail,
+                                Password = contact.LastName,
+                                TempCode = TempCode,
+                            };
+
+                            actionRes = await ContactService.ChangePasswordAsync(changePasswordModel);
+                            boolRet = await DoOKTestReturnBoolAsync(actionRes);
+                            Assert.True(boolRet);
+                        }
+                    }
                 }
-            }
-
-            ChangePasswordModel changePasswordModel = new ChangePasswordModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = $"{ registerModel.Password }New",
-                TempCode = TempCode,
-            };
-
-            var actionRes2 = await ContactService.ChangePasswordAsync(changePasswordModel);
-            boolRet = await DoOKTestReturnBoolAsync(actionRes2);
-            Assert.True(boolRet);
-
-            loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = $"{ registerModel.Password }New",
-            };
-
-            var actionLoginRes = await ContactService.LoginAsync(loginModel);
-            Contact? contact3 = await DoOKTestReturnContactAsync(actionLoginRes);
-            if (contact3 != null)
-            {
-                Assert.Empty(contact3.PasswordHash);
-                Assert.NotEmpty(contact3.Token);
             }
         }
     }
@@ -97,77 +103,29 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
+        Random random = new Random();
 
+        string TempCode = $"{ random.Next(1000, 9999) }";
+
+        ChangePasswordModel changePasswordModel = new ChangePasswordModel()
+        {
+            LoginEmail = "",
+            Password = "SomePassword",
+            TempCode = TempCode,
+        };
+
+        Assert.NotNull(ContactService);
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            Contact? contact = await DoRegisterTestAsync(registerModel);
-            Assert.NotNull(contact);
-
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            var actionRes = await ContactService.LoginAsync(loginModel);
-            Contact? contact2 = await DoOKTestReturnContactAsync(actionRes);
-            Assert.NotNull(contact2);
-            if (contact2 != null)
-            {
-                Assert.Empty(contact2.PasswordHash);
-                Assert.NotEmpty(contact2.Token);
-            }
-
-            Random random = new Random();
-
-            string TempCode = $"{ random.Next(1000, 9999) }";
-
-            if (db != null)
-            {
-                if (contact2 != null)
-                {
-                    Contact? contactToAddTempCode = (from c in db.Contacts
-                                                     where c.ContactID == contact2.ContactID
-                                                     select c).FirstOrDefault();
-
-                    Assert.NotNull(contactToAddTempCode);
-
-                    if (contactToAddTempCode != null)
-                    {
-                        contactToAddTempCode.ResetPasswordTempCode = TempCode;
-                    }
-
-                    try
-                    {
-                        db.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        Assert.True(false, ex.Message);
-                    }
-                }
-            }
-
-            ChangePasswordModel changePasswordModel = new ChangePasswordModel()
-            {
-                LoginEmail = "",
-                Password = $"{ registerModel.Password }New",
-                TempCode = TempCode,
-            };
-
-            var actionRes2 = await ContactService.ChangePasswordAsync(changePasswordModel);
-            boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes._IsRequired, "LoginEmail"), actionRes2);
+            var actionRes = await ContactService.ChangePasswordAsync(changePasswordModel);
+            bool? boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes._IsRequired, "LoginEmail"), actionRes);
             Assert.NotNull(boolRet);
             Assert.True(boolRet);
 
-            changePasswordModel.LoginEmail = "NotExist" + registerModel.LoginEmail;
+            changePasswordModel.LoginEmail = "NotExistLoginEmail";
 
-            actionRes2 = await ContactService.ChangePasswordAsync(changePasswordModel);
-            boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "LoginEmail", changePasswordModel.LoginEmail), actionRes2);
+            actionRes = await ContactService.ChangePasswordAsync(changePasswordModel);
+            boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "LoginEmail", changePasswordModel.LoginEmail), actionRes);
             Assert.NotNull(boolRet);
             Assert.True(boolRet);
         }
@@ -179,80 +137,46 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        if (ContactService != null)
+        Random random = new Random();
+
+        string TempCode = $"{ random.Next(1000, 9999) }";
+
+        Assert.NotNull(db);
+        if (db != null)
         {
-            bool? boolRet = await ClearAllContactsFromDBAsync();
-            Assert.True(boolRet);
-
-            if (ContactService != null)
+            Assert.NotNull(db.Contacts);
+            if (db != null && db.Contacts != null)
             {
-                RegisterModel registerModel = await FillRegisterModelAsync();
+                Contact? contact = (from c in db.Contacts
+                                    select c).FirstOrDefault();
 
-                Contact? contact = await DoRegisterTestAsync(registerModel);
                 Assert.NotNull(contact);
-
-                LoginModel loginModel = new LoginModel()
+                if (contact != null)
                 {
-                    LoginEmail = registerModel.LoginEmail,
-                    Password = registerModel.Password,
-                };
 
-                var actionRes = await ContactService.LoginAsync(loginModel);
-                Contact? contact2 = await DoOKTestReturnContactAsync(actionRes);
-                Assert.NotNull(contact2);
-                if (contact2 != null)
-                {
-                    Assert.Empty(contact2.PasswordHash);
-                    Assert.NotEmpty(contact2.Token);
-                }
-
-                Random random = new Random();
-
-                string TempCode = $"{ random.Next(1000, 9999) }";
-
-                if (db != null)
-                {
-                    if (contact2 != null)
+                    ChangePasswordModel changePasswordModel = new ChangePasswordModel()
                     {
-                        Contact? contactToAddTempCode = (from c in db.Contacts
-                                                         where c.ContactID == contact2.ContactID
-                                                         select c).FirstOrDefault();
+                        LoginEmail = contact.LoginEmail,
+                        Password = "",
+                        TempCode = TempCode,
+                    };
 
-                        Assert.NotNull(contactToAddTempCode);
+                    Assert.NotNull(ContactService);
+                    if (ContactService != null)
+                    {
+                        var actionRes = await ContactService.ChangePasswordAsync(changePasswordModel);
+                        bool? boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes._IsRequired, "Password"), actionRes);
+                        Assert.NotNull(boolRet);
+                        Assert.True(boolRet);
 
-                        if (contactToAddTempCode != null)
-                        {
-                            contactToAddTempCode.ResetPasswordTempCode = TempCode;
-                        }
+                        changePasswordModel.Password = "a".PadRight(51);
 
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            Assert.True(false, ex.Message);
-                        }
+                        actionRes = await ContactService.ChangePasswordAsync(changePasswordModel);
+                        boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes._MaxLengthIs_, "Password", "50"), actionRes);
+                        Assert.NotNull(boolRet);
+                        Assert.True(boolRet);
                     }
                 }
-                
-                ChangePasswordModel changePasswordModel = new ChangePasswordModel()
-                {
-                    LoginEmail = registerModel.LoginEmail,
-                    Password = "",
-                    TempCode = TempCode,
-                };
-                var actionRes2 = await ContactService.ChangePasswordAsync(changePasswordModel);
-                boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes._IsRequired, "Password"), actionRes2);
-                Assert.NotNull(boolRet);
-                Assert.True(boolRet);
-
-                changePasswordModel.Password = "a".PadRight(51);
-
-                actionRes2 = await ContactService.ChangePasswordAsync(changePasswordModel);
-                boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes._MaxLengthIs_, "Password", "50"), actionRes2);
-                Assert.NotNull(boolRet);
-                Assert.True(boolRet);
             }
         }
     }

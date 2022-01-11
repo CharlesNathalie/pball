@@ -9,22 +9,38 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
         RegisterModel registerModel = await FillRegisterModelAsync();
 
         Contact? contact = await DoRegisterTestAsync(registerModel);
         Assert.NotNull(contact);
 
+        Assert.NotNull(db);
         if (db != null)
         {
-            List<Contact> contactList = (from c in db.Contacts
-                                         select c).ToList();
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
+            {
+                if (contact != null)
+                {
+                    Contact? contactToDelete = (from c in db.Contacts
+                                                where c.ContactID == contact.ContactID
+                                                select c).FirstOrDefault();
 
-            Assert.NotNull(contactList);
-            Assert.NotEmpty(contactList);
-            Assert.Single(contactList);
+                    Assert.NotNull(contactToDelete);
+                    if (contactToDelete != null)
+                    {
+                        try
+                        {
+                            db.Contacts.Remove(contactToDelete);
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            Assert.True(false, ex.Message);
+                        }
+                    }
+                }
+            }
         }
     }
     [Theory]
@@ -34,19 +50,15 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
+        RegisterModel? registerModel = await FillRegisterModelAsync();
+
+        registerModel.LoginEmail = "";
 
         Assert.NotNull(ContactService);
-
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModelAsync();
-
-            registerModel.LoginEmail = "";
-
             var actionRes = await ContactService.RegisterAsync(registerModel);
-            boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "LoginEmail"), actionRes);
+            bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "LoginEmail"), actionRes);
             Assert.True(boolRet);
 
             registerModel.LoginEmail = "";
@@ -81,19 +93,15 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
+        RegisterModel? registerModel = await FillRegisterModelAsync();
+
+        registerModel.FirstName = "";
 
         Assert.NotNull(ContactService);
-
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModelAsync();
-
-            registerModel.FirstName = "";
-
             var actionRes = await ContactService.RegisterAsync(registerModel);
-            boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "FirstName"), actionRes);
+            bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "FirstName"), actionRes);
             Assert.True(boolRet);
 
             registerModel.FirstName = "a".PadRight(101);
@@ -110,19 +118,15 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
+        RegisterModel? registerModel = await FillRegisterModelAsync();
+
+        registerModel.LastName = "";
 
         Assert.NotNull(ContactService);
-
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModelAsync();
-
-            registerModel.LastName = "";
-
             var actionRes = await ContactService.RegisterAsync(registerModel);
-            boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "LastName"), actionRes);
+            bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "LastName"), actionRes);
             Assert.True(boolRet);
 
             registerModel.LastName = "a".PadRight(101);
@@ -139,19 +143,15 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
+        RegisterModel? registerModel = await FillRegisterModelAsync();
+
+        registerModel.Initial = "a".PadRight(51);
 
         Assert.NotNull(ContactService);
-
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModelAsync();
-
-            registerModel.Initial = "a".PadRight(51);
-
             var actionRes = await ContactService.RegisterAsync(registerModel);
-            boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._MaxLengthIs_, "Initial", "50"), actionRes);
+            bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._MaxLengthIs_, "Initial", "50"), actionRes);
             Assert.True(boolRet);
         }
     }
@@ -162,11 +162,7 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
         Assert.NotNull(ContactService);
-
         if (ContactService != null)
         {
             RegisterModel? registerModel = await FillRegisterModelAsync();
@@ -174,7 +170,7 @@ public partial class ContactServiceTests : BaseServiceTests
             registerModel.PlayerLevel = 0.9D;
 
             var actionRes = await ContactService.RegisterAsync(registerModel);
-            boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._ValueShouldBeBetween_And_, "PlayerLevel", "1.0", "5.0"), actionRes);
+            bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._ValueShouldBeBetween_And_, "PlayerLevel", "1.0", "5.0"), actionRes);
             Assert.True(boolRet);
 
             registerModel.PlayerLevel = 5.1D;
@@ -191,19 +187,15 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
+        RegisterModel? registerModel = await FillRegisterModelAsync();
+
+        registerModel.Password = "";
 
         Assert.NotNull(ContactService);
-
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModelAsync();
-
-            registerModel.Password = "";
-
             var actionRes = await ContactService.RegisterAsync(registerModel);
-            boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "Password"), actionRes);
+            bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "Password"), actionRes);
             Assert.True(boolRet);
 
             registerModel.Password = "a".PadRight(51);
@@ -220,86 +212,114 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        Assert.NotNull(ContactService);
-
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            RegisterModel? registerModel = await FillRegisterModelAsync();
-
-            var actionRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                registerModel.LoginEmail = contact.LoginEmail;
-            }
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
 
-            actionRes = await ContactService.RegisterAsync(registerModel);
-            boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._AlreadyTaken, registerModel.LoginEmail), actionRes);
-            Assert.True(boolRet);
+                Assert.NotNull(contact);
+                if (contact != null)
+                {
+                    RegisterModel? registerModel = await FillRegisterModelAsync();
+                    registerModel.LoginEmail = contact.LoginEmail;
+
+                    Assert.NotNull(ContactService);
+                    if (ContactService != null)
+                    {
+                        var actionRes = await ContactService.RegisterAsync(registerModel);
+                        bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._AlreadyTaken, registerModel.LoginEmail), actionRes);
+                        Assert.True(boolRet);
+                    }
+                }
+            }
         }
     }
     [Theory]
     [InlineData("en-CA")]
     [InlineData("fr-CA")]
-    public async Task RegisterAsync_FullName_AlreadyTaken_Error_Test(string culture)
+    public async Task RegisterAsync_FullName_With_Initial_AlreadyTaken_Error_Test(string culture)
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        Assert.NotNull(ContactService);
-
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            RegisterModel? registerModel = await FillRegisterModelAsync();
-
-            var actionRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                registerModel.FirstName = contact.FirstName;
-                registerModel.LastName = contact.LastName;
-                registerModel.Initial = contact.Initial;
-            }
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    where (c.Initial != null
+                                    && c.Initial != "")
+                                    select c).FirstOrDefault();
 
-            actionRes = await ContactService.RegisterAsync(registerModel);
-            boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._AlreadyTaken, registerModel.LoginEmail), actionRes);
-            Assert.True(boolRet);
+                Assert.NotNull(contact);
+                if (contact != null)
+                {
+                    RegisterModel? registerModel = await FillRegisterModelAsync();
+
+                    registerModel.FirstName = contact.FirstName;
+                    registerModel.LastName = contact.LastName;
+                    registerModel.Initial = contact.Initial;
+
+                    Assert.NotNull(ContactService);
+                    if (ContactService != null)
+                    {
+                        string Initial = registerModel.Initial.EndsWith(".") ? registerModel.Initial.Substring(0, registerModel.Initial.Length - 1) : registerModel.Initial;
+                        string FullName = $"{ registerModel.FirstName } { Initial } { registerModel.LastName }";
+
+                        var actionRes = await ContactService.RegisterAsync(registerModel);
+                        bool? boolRet2 = await DoBadRequestContactTestAsync(string.Format(PBallRes._AlreadyTaken, FullName), actionRes);
+                        Assert.True(boolRet2);
+                    }
+                }
+            }
         }
-
-        boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
+    }
+    [Theory]
+    [InlineData("en-CA")]
+    [InlineData("fr-CA")]
+    public async Task RegisterAsync_FullName_Without_Initial_AlreadyTaken_Error_Test(string culture)
+    {
+        Assert.True(await _ContactServiceSetupAsync(culture));
 
         Assert.NotNull(ContactService);
-
         if (ContactService != null)
         {
-            RegisterModel? registerModel = await FillRegisterModelAsync();
-
-            registerModel.Initial = "";
-
-            var actionRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db);
+            if (db != null)
             {
-                registerModel.FirstName = contact.FirstName;
-                registerModel.LastName = contact.LastName;
-                registerModel.Initial = contact.Initial;
-            }
+                Assert.NotNull(db.Contacts);
+                if (db.Contacts != null)
+                {
+                    Contact? contact = (from c in db.Contacts
+                                        orderby c.ContactID
+                                        where (c.Initial == null
+                                        || c.Initial == "")
+                                        select c).FirstOrDefault();
 
-            actionRes = await ContactService.RegisterAsync(registerModel);
-            boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._AlreadyTaken, registerModel.LoginEmail), actionRes);
-            Assert.True(boolRet);
+                    Assert.NotNull(contact);
+                    if (contact != null)
+                    {
+                        RegisterModel? registerModel = await FillRegisterModelAsync();
+
+                        registerModel.FirstName = contact.FirstName;
+                        registerModel.LastName = contact.LastName;
+                        registerModel.Initial = "";
+
+                        string FullName = $"{ registerModel.FirstName } { registerModel.LastName }";
+
+                        var actionRes = await ContactService.RegisterAsync(registerModel);
+                        bool? boolRet2 = await DoBadRequestContactTestAsync(string.Format(PBallRes._AlreadyTaken, FullName), actionRes);
+                        Assert.True(boolRet2);
+                    }
+                }
+            }
         }
     }
 }

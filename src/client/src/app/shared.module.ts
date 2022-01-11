@@ -13,6 +13,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ShellComponent } from './components/shell/shell.component';
 import { TableAllComponent } from './components/table-all/table-all.component';
+import { TableMostGamesPlayedComponent } from './components/table-most-games-played/table-most-games-played.component';
 import { TablePlayerComponent } from './components/table-player/table-player.component';
 
 @NgModule({
@@ -26,6 +27,7 @@ import { TablePlayerComponent } from './components/table-player/table-player.com
     RegisterComponent,
     ShellComponent,
     TableAllComponent,
+    TableMostGamesPlayedComponent,
     TablePlayerComponent,
   ],
   imports: [
@@ -53,6 +55,7 @@ import { TablePlayerComponent } from './components/table-player/table-player.com
     RegisterComponent,
     ShellComponent,
     TableAllComponent,
+    TableMostGamesPlayedComponent,
     TablePlayerComponent,
   ]
 })

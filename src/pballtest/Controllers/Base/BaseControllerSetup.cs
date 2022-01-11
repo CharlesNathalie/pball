@@ -24,11 +24,6 @@ public partial class BaseControllerTests
         Assert.NotNull(Configuration["APISecret"]);
         Assert.NotNull(Configuration["pballDB"]);
 
-        //Services.AddDbContext<PBallContext>(options =>
-        //{
-        //    options.UseSqlServer(Configuration["pballDB"]);
-        //});
-
         Services.AddDbContext<PBallContext>(options =>
         {
             options.UseSqlite($"Data Source={ Configuration["pballDB"] }");
@@ -39,11 +34,6 @@ public partial class BaseControllerTests
 
         db = Provider.GetService<PBallContext>();
         Assert.NotNull(db);
-
-        await ClearAllLeagueContactsFromDBAsync();
-        await ClearAllGamesFromDBAsync();
-        await ClearAllLeaguesFromDBAsync();
-        await ClearAllContactsFromDBAsync();
 
         return await Task.FromResult(true);
     }

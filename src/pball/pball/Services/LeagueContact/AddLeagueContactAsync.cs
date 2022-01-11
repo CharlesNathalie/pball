@@ -71,15 +71,18 @@ public partial class LeagueContactService : ControllerBase, ILeagueContactServic
             LastUpdateContactID = 0,
         };
 
-        db.LeagueContacts?.Add(leagueContactNew);
-        try
+        if (db.LeagueContacts != null)
         {
-            db.SaveChanges();
-        }
-        catch (Exception ex)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
-            return await Task.FromResult(BadRequest(errRes));
+            db.LeagueContacts.Add(leagueContactNew);
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+                return await Task.FromResult(BadRequest(errRes));
+            }
         }
 
         return await Task.FromResult(Ok(leagueContactNew));

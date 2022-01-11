@@ -32,7 +32,7 @@
             </mat-error>
             <button mat-raised-button *ngIf="GetFormValid()">{{ loginService.LoginTxt[state.LangID] }}</button>
             <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
-                loginService.Please_enter_required_information[state.LangID] }}</button>
+                loginService.PleaseEnterRequiredInformation[state.LangID] }}</button>
 
         </form>
     </mat-card>

@@ -21,7 +21,7 @@
         <p>{{ homeService.ProduceTablesOfResults[state.LangID] }}</p>
         <p>{{ homeService.ProduceChartsOfResults[state.LangID] }}</p>
         <p>&nbsp;</p>
-        <button mat-raised-button routerLink="/{{ state.Culture }}/login">
+        <button mat-raised-button  routerLink="/{{ state.Culture }}/login">
           <mat-icon>login</mat-icon>  
           {{ homeService.Login[state.LangID] }}
         </button>
@@ -33,4 +33,7 @@
     </mat-card>
 </div>
 
+<div>
+    <app-table-most-games-played></app-table-most-games-played>
+</div>
 

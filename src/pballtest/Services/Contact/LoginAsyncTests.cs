@@ -9,42 +9,41 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        if (ContactService != null)
-        {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            Contact? contact = await DoRegisterTestAsync(registerModel);
-            Assert.NotNull(contact);
-
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            var actionRes = await ContactService.LoginAsync(loginModel);
-            Contact? contact2 = await DoOKTestReturnContactAsync(actionRes);
-            Assert.NotNull(contact2);
-            if (contact2 != null)
-            {
-                Assert.Empty(contact2.PasswordHash);
-                Assert.NotEmpty(contact2.Token);
-            }
-        }
-
+        Assert.NotNull(db);
         if (db != null)
         {
-            List<Contact> contactList = (from c in db.Contacts
-                                         select c).ToList();
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
+            {
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
 
-            Assert.NotNull(contactList);
-            Assert.NotEmpty(contactList);
-            Assert.Single(contactList);
+                Assert.NotNull(contact);
+                if (contact != null)
+                {
+                    LoginModel loginModel = new LoginModel()
+                    {
+                        LoginEmail = contact.LoginEmail,
+                        Password = contact.LastName,
+                    };
+
+                    Assert.NotNull(ContactService);
+                    if (ContactService != null)
+                    {
+                        var actionRes = await ContactService.LoginAsync(loginModel);
+                        contact = await DoOKTestReturnContactAsync(actionRes);
+                        Assert.NotNull(contact);
+                        if (contact != null)
+                        {
+                            Assert.Empty(contact.PasswordHash);
+                            Assert.NotEmpty(contact.Token);
+                            Assert.Empty(contact.ResetPasswordTempCode);
+                        }
+                    }
+                }
+            }
         }
-
     }
     [Theory]
     [InlineData("en-CA")]
@@ -53,36 +52,46 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            if (Configuration != null)
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                RegisterModel registerModel = await FillRegisterModelAsync();
-
-                Contact? contact = await DoRegisterTestAsync(registerModel);
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
+                
                 Assert.NotNull(contact);
-
-                LoginModel loginModel = new LoginModel()
+                if (contact != null)
                 {
-                    LoginEmail = "",
-                    Password = registerModel.Password,
-                };
+                    LoginModel loginModel = new LoginModel()
+                    {
+                        LoginEmail = "",
+                        Password = contact.LastName,
+                    };
 
-                var actionRes = await ContactService.LoginAsync(loginModel);
-                bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "LoginEmail"), actionRes);
-                Assert.True(boolRet);
+                    Assert.NotNull(ContactService);
+                    if (ContactService != null)
+                    {
 
-                loginModel.LoginEmail = "a@b.c";
+                        var actionRes = await ContactService.LoginAsync(loginModel);
+                        bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "LoginEmail"), actionRes);
+                        Assert.True(boolRet);
 
-                actionRes = await ContactService.LoginAsync(loginModel);
-                boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._LengthShouldBeBetween_And_, "LoginEmail", "6", "100"), actionRes);
-                Assert.True(boolRet);
+                        loginModel.LoginEmail = "a@b.c";
 
-                loginModel.LoginEmail = "a".PadRight(101) + "@b.c";
+                        actionRes = await ContactService.LoginAsync(loginModel);
+                        boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._LengthShouldBeBetween_And_, "LoginEmail", "6", "100"), actionRes);
+                        Assert.True(boolRet);
 
-                actionRes = await ContactService.LoginAsync(loginModel);
-                boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._LengthShouldBeBetween_And_, "LoginEmail", "6", "100"), actionRes);
-                Assert.True(boolRet);
+                        loginModel.LoginEmail = "a".PadRight(101) + "@b.c";
+
+                        actionRes = await ContactService.LoginAsync(loginModel);
+                        boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._LengthShouldBeBetween_And_, "LoginEmail", "6", "100"), actionRes);
+                        Assert.True(boolRet);
+                    }
+                }
             }
         }
     }
@@ -93,30 +102,39 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            if (Configuration != null)
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                RegisterModel registerModel = await FillRegisterModelAsync();
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
 
-                Contact? contact = await DoRegisterTestAsync(registerModel);
                 Assert.NotNull(contact);
-
-                LoginModel loginModel = new LoginModel()
+                if (contact != null)
                 {
-                    LoginEmail = registerModel.LoginEmail,
-                    Password = "",
-                };
+                    LoginModel loginModel = new LoginModel()
+                    {
+                        LoginEmail = contact.LoginEmail,
+                        Password = "",
+                    };
 
-                var actionRes = await ContactService.LoginAsync(loginModel);
-                bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "Password"), actionRes);
-                Assert.True(boolRet);
+                    Assert.NotNull(ContactService);
+                    if (ContactService != null)
+                    {
+                        var actionRes = await ContactService.LoginAsync(loginModel);
+                        bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._IsRequired, "Password"), actionRes);
+                        Assert.True(boolRet);
 
-                loginModel.Password = "a".PadRight(51);
+                        loginModel.Password = "a".PadRight(51);
 
-                actionRes = await ContactService.LoginAsync(loginModel);
-                boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._MaxLengthIs_, "Password", "50"), actionRes);
-                Assert.True(boolRet);
+                        actionRes = await ContactService.LoginAsync(loginModel);
+                        boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes._MaxLengthIs_, "Password", "50"), actionRes);
+                        Assert.True(boolRet);
+                    }
+                }
             }
         }
     }
@@ -127,24 +145,33 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            if (Configuration != null)
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                RegisterModel registerModel = await FillRegisterModelAsync();
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
 
-                Contact? contact = await DoRegisterTestAsync(registerModel);
                 Assert.NotNull(contact);
-
-                LoginModel loginModel = new LoginModel()
+                if (contact != null)
                 {
-                    LoginEmail = "NotFound@gmail.com",
-                    Password = registerModel.Password,
-                };
+                    LoginModel loginModel = new LoginModel()
+                    {
+                        LoginEmail = "NotFound@gmail.com",
+                        Password = contact.LastName,
+                    };
 
-                var actionRes = await ContactService.LoginAsync(loginModel);
-                bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes.UnableToLoginAs_WithProvidedPassword, loginModel.LoginEmail), actionRes);
-                Assert.True(boolRet);
+                    Assert.NotNull(ContactService);
+                    if (ContactService != null)
+                    {
+                        var actionRes = await ContactService.LoginAsync(loginModel);
+                        bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes.UnableToLoginAs_WithProvidedPassword, loginModel.LoginEmail), actionRes);
+                        Assert.True(boolRet);
+                    }
+                }
             }
         }
     }
@@ -155,24 +182,34 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            if (Configuration != null)
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                RegisterModel registerModel = await FillRegisterModelAsync();
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
 
-                Contact? contact = await DoRegisterTestAsync(registerModel);
                 Assert.NotNull(contact);
-
-                LoginModel loginModel = new LoginModel()
+                if (contact != null)
                 {
-                    LoginEmail = registerModel.LoginEmail,
-                    Password = "NotFoundPassword",
-                };
+                    LoginModel loginModel = new LoginModel()
+                    {
+                        LoginEmail = contact.LoginEmail,
+                        Password = "NotFoundPassword",
+                    };
 
-                var actionRes = await ContactService.LoginAsync(loginModel);
-                bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes.UnableToLoginAs_WithProvidedPassword, loginModel.LoginEmail), actionRes);
-                Assert.True(boolRet);
+                    Assert.NotNull(ContactService);
+                    if (ContactService != null)
+                    {
+                        var actionRes = await ContactService.LoginAsync(loginModel);
+                        bool? boolRet = await DoBadRequestContactTestAsync(string.Format(PBallRes.UnableToLoginAs_WithProvidedPassword, loginModel.LoginEmail), actionRes);
+                        Assert.True(boolRet);
+
+                    }
+                }
             }
         }
     }

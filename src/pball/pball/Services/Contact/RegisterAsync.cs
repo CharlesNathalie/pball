@@ -135,15 +135,18 @@ public partial class ContactService : ControllerBase, IContactService
             LastUpdateContactID = -1,
         };
 
-        db.Contacts?.Add(contact);
-        try
+        if (db.Contacts != null)
         {
-            db.SaveChanges();
-        }
-        catch (Exception ex)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
-            return await Task.FromResult(BadRequest(errRes));
+            db.Contacts.Add(contact);
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+                return await Task.FromResult(BadRequest(errRes));
+            }
         }
 
         contact.LastUpdateContactID = contact.ContactID;

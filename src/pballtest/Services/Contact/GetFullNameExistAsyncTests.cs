@@ -9,54 +9,57 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            var actionAddRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionAddRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                Assert.True(contact.ContactID > 0);
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
+
+                Assert.NotNull(contact);
+                if (contact != null)
+                {
+                    FullNameModel fullNameModel = new FullNameModel()
+                    {
+                        FirstName = contact.FirstName,
+                        LastName = contact.LastName,
+                        Initial = contact.Initial,
+                    };
+
+                    Assert.NotNull(ContactService);
+                    if (ContactService != null)
+                    {
+                        var actionRes = await ContactService.GetFullNameExistAsync(fullNameModel);
+                        bool? boolRet = await DoOKTestReturnBoolAsync(actionRes);
+                        Assert.NotNull(boolRet);
+                        Assert.True(boolRet);
+
+                        fullNameModel.FirstName = $" { contact.FirstName }Not";
+
+                        actionRes = await ContactService.GetFullNameExistAsync(fullNameModel);
+                        boolRet = await DoOKTestReturnBoolAsync(actionRes);
+                        Assert.NotNull(boolRet);
+                        Assert.False(boolRet);
+
+                        fullNameModel.LastName = $" { contact.LastName }Not";
+
+                        actionRes = await ContactService.GetFullNameExistAsync(fullNameModel);
+                        boolRet = await DoOKTestReturnBoolAsync(actionRes);
+                        Assert.NotNull(boolRet);
+                        Assert.False(boolRet);
+
+                        fullNameModel.Initial = $" { contact.Initial }Not";
+
+                        actionRes = await ContactService.GetFullNameExistAsync(fullNameModel);
+                        boolRet = await DoOKTestReturnBoolAsync(actionRes);
+                        Assert.NotNull(boolRet);
+                        Assert.False(boolRet);
+                    }
+                }
             }
-
-            FullNameModel fullNameModel = new FullNameModel()
-            {
-                FirstName = registerModel.FirstName,
-                LastName = registerModel.LastName,
-                Initial = registerModel.Initial,
-            };
-
-            var actionRes = await ContactService.GetFullNameExistAsync(fullNameModel);
-            boolRet = await DoOKTestReturnBoolAsync(actionRes);
-            Assert.NotNull(boolRet);
-            Assert.True(boolRet);
-
-            fullNameModel.FirstName = $" { registerModel.FirstName }Not";
-
-            actionRes = await ContactService.GetFullNameExistAsync(fullNameModel);
-            boolRet = await DoOKTestReturnBoolAsync(actionRes);
-            Assert.NotNull(boolRet);
-            Assert.False(boolRet);
-
-            fullNameModel.LastName = $" { registerModel.LastName }Not";
-
-            actionRes = await ContactService.GetFullNameExistAsync(fullNameModel);
-            boolRet = await DoOKTestReturnBoolAsync(actionRes);
-            Assert.NotNull(boolRet);
-            Assert.False(boolRet);
-
-            fullNameModel.Initial = $" { registerModel.Initial }Not";
-
-            actionRes = await ContactService.GetFullNameExistAsync(fullNameModel);
-            boolRet = await DoOKTestReturnBoolAsync(actionRes);
-            Assert.NotNull(boolRet);
-            Assert.False(boolRet);
         }
     }
 }

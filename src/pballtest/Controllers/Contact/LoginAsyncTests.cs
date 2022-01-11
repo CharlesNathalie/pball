@@ -9,10 +9,7 @@ public partial class ContactControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        boolRet = await ClearServerLoggedInListAsync(culture);
+        bool? boolRet = await ClearServerLoggedInListAsync(culture);
         Assert.True(boolRet);
 
         RegisterModel registerModel = await FillRegisterModelAsync();
@@ -46,10 +43,7 @@ public partial class ContactControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        boolRet = await ClearServerLoggedInListAsync(culture);
+        bool? boolRet = await ClearServerLoggedInListAsync(culture);
         Assert.True(boolRet);
 
         RegisterModel registerModel = await FillRegisterModelAsync();

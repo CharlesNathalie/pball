@@ -9,71 +9,85 @@ public partial class LeagueServiceTests : BaseServiceTests
     {
         Assert.True(await _LeagueServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db.Leagues);
+            if (db.Leagues != null)
             {
-                Assert.True(contact.ContactID > 0);
-            }
+                League? leagueInDB = (from c in db.Leagues
+                                      orderby c.LeagueID
+                                      select c).AsNoTracking().FirstOrDefault();
 
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            var actionLoginRes = await ContactService.LoginAsync(loginModel);
-            contact = await DoOKTestReturnContactAsync(actionLoginRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
-            {
-                if (UserService != null)
+                Assert.NotNull(leagueInDB);
+                if (leagueInDB != null)
                 {
-                    UserService.User = contact;
-                }
-                Assert.True(contact.ContactID > 0);
-                Assert.Empty(contact.PasswordHash);
-                Assert.NotEmpty(contact.Token);
-            }
-
-            if (LeagueService != null)
-            {
-                League league = await FillLeague();
-                Assert.NotEmpty(league.LeagueName);
-
-                var actionRes = await LeagueService.AddLeagueAsync(league);
-                League? leagueRet = await DoOKTestReturnLeagueAsync(actionRes);
-                Assert.NotNull(leagueRet);
-
-                if (leagueRet != null)
-                {
-                    leagueRet.LeagueName = league.LeagueName + "new";
-                    leagueRet.PercentPointsFactor = 1.2D;
-                    leagueRet.PointsToLoosers = 1.3D;
-                    leagueRet.PointsToWinners = 4.3D;
-                    leagueRet.PlayerLevelFactor = 2.1D;
-
-                    var actionModifyRes = await LeagueService.ModifyLeagueAsync(leagueRet);
-                    League? leagueRet2 = await DoOKTestReturnLeagueAsync(actionModifyRes);
-                    Assert.NotNull(leagueRet2);
-                    if (leagueRet2 != null)
+                    Assert.NotNull(LeagueService);
+                    if (LeagueService != null)
                     {
-                        Assert.Equal(leagueRet.LeagueID, leagueRet2.LeagueID);
-                        Assert.Equal(leagueRet.LeagueName, leagueRet2.LeagueName);
-                        Assert.Equal(leagueRet.PercentPointsFactor, leagueRet2.PercentPointsFactor);
-                        Assert.Equal(leagueRet.PointsToLoosers, leagueRet2.PointsToLoosers);
-                        Assert.Equal(leagueRet.PointsToWinners, leagueRet2.PointsToWinners);
-                        Assert.Equal(leagueRet.PlayerLevelFactor, leagueRet2.PlayerLevelFactor);
+                        Assert.NotNull(db.Contacts);
+                        if (db.Contacts != null)
+                        {
+                            Contact? contact = (from c in db.Contacts
+                                                orderby c.ContactID
+                                                select c).AsNoTracking().FirstOrDefault();
+
+                            Assert.NotNull(contact);
+                            if (contact != null)
+                            {
+                                Assert.NotNull(UserService);
+                                if (UserService != null)
+                                {
+                                    UserService.User = contact;
+                                }
+                            }
+                        }
+
+                        League leagueToModify = new League()
+                        {
+                            LeagueID = leagueInDB.LeagueID,
+                            LeagueName = leagueInDB.LeagueName + " more",
+                            PercentPointsFactor = leagueInDB.PercentPointsFactor + 0.1D,
+                            PlayerLevelFactor = leagueInDB.PlayerLevelFactor + 0.1D,
+                            PointsToLoosers = leagueInDB.PointsToLoosers + 0.1D,
+                            PointsToWinners = leagueInDB.PointsToWinners + 0.1D,
+                        };
+
+                        var actionModifyRes = await LeagueService.ModifyLeagueAsync(leagueToModify);
+                        League? leagueRet = await DoOKTestReturnLeagueAsync(actionModifyRes);
+                        Assert.NotNull(leagueRet);
+                        if (leagueRet != null)
+                        {
+                            Assert.Equal(leagueToModify.LeagueID, leagueRet.LeagueID);
+                            Assert.Equal(leagueToModify.LeagueName, leagueRet.LeagueName);
+                            Assert.Equal(leagueToModify.PercentPointsFactor, leagueRet.PercentPointsFactor);
+                            Assert.Equal(leagueToModify.PointsToLoosers, leagueRet.PointsToLoosers);
+                            Assert.Equal(leagueToModify.PointsToWinners, leagueRet.PointsToWinners);
+                            Assert.Equal(leagueToModify.PlayerLevelFactor, leagueRet.PlayerLevelFactor);
+
+                            League leagueToModify2 = new League()
+                            {
+                                LeagueID = leagueToModify.LeagueID,
+                                LeagueName = leagueInDB.LeagueName,
+                                PercentPointsFactor = leagueInDB.PercentPointsFactor,
+                                PlayerLevelFactor = leagueInDB.PlayerLevelFactor,
+                                PointsToLoosers = leagueInDB.PointsToLoosers,
+                                PointsToWinners = leagueInDB.PointsToWinners,
+                            };
+
+                            var actionModifyRes2 = await LeagueService.ModifyLeagueAsync(leagueToModify2);
+                            League? leagueRet2 = await DoOKTestReturnLeagueAsync(actionModifyRes2);
+                            Assert.NotNull(leagueRet2);
+                            if (leagueRet2 != null)
+                            {
+                                Assert.Equal(leagueToModify2.LeagueID, leagueRet2.LeagueID);
+                                Assert.Equal(leagueToModify2.LeagueName, leagueRet2.LeagueName);
+                                Assert.Equal(leagueToModify2.PercentPointsFactor, leagueRet2.PercentPointsFactor);
+                                Assert.Equal(leagueToModify2.PointsToLoosers, leagueRet2.PointsToLoosers);
+                                Assert.Equal(leagueToModify2.PointsToWinners, leagueRet2.PointsToWinners);
+                                Assert.Equal(leagueToModify2.PlayerLevelFactor, leagueRet2.PlayerLevelFactor);
+                            }
+                        }
                     }
                 }
             }
@@ -86,54 +100,56 @@ public partial class LeagueServiceTests : BaseServiceTests
     {
         Assert.True(await _LeagueServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db.Leagues);
+            if (db.Leagues != null)
             {
-                Assert.True(contact.ContactID > 0);
-            }
+                League? leagueInDB = (from c in db.Leagues
+                                      orderby c.LeagueID
+                                      select c).AsNoTracking().FirstOrDefault();
 
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            var actionLoginRes = await ContactService.LoginAsync(loginModel);
-            contact = await DoOKTestReturnContactAsync(actionLoginRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
-            {
-                if (UserService != null)
+                Assert.NotNull(leagueInDB);
+                if (leagueInDB != null)
                 {
-                    UserService.User = contact;
+                    Assert.NotNull(LeagueService);
+                    if (LeagueService != null)
+                    {
+                        Assert.NotNull(db.Contacts);
+                        if (db.Contacts != null)
+                        {
+                            Contact? contact = (from c in db.Contacts
+                                                orderby c.ContactID
+                                                select c).AsNoTracking().FirstOrDefault();
+
+                            Assert.NotNull(contact);
+                            if (contact != null)
+                            {
+                                Assert.NotNull(UserService);
+                                if (UserService != null)
+                                {
+                                    UserService.User = null;
+                                }
+                            }
+                        }
+
+                        League leagueToModify = new League()
+                        {
+                            LeagueID = leagueInDB.LeagueID,
+                            LeagueName = leagueInDB.LeagueName + " more",
+                            PercentPointsFactor = leagueInDB.PercentPointsFactor + 0.1D,
+                            PlayerLevelFactor = leagueInDB.PlayerLevelFactor + 0.1D,
+                            PointsToLoosers = leagueInDB.PointsToLoosers + 0.1D,
+                            PointsToWinners = leagueInDB.PointsToWinners + 0.1D,
+                        };
+
+                        var actionModifyRes = await LeagueService.ModifyLeagueAsync(new League());
+                        bool? boolRet = await DoBadRequestLeagueTestAsync(PBallRes.YouDoNotHaveAuthorization, actionModifyRes);
+                        Assert.NotNull(boolRet);
+                        Assert.True(boolRet);
+                    }
                 }
-                Assert.True(contact.ContactID > 0);
-                Assert.Empty(contact.PasswordHash);
-                Assert.NotEmpty(contact.Token);
-            }
-
-            if (UserService != null)
-            {
-                UserService.User = null;
-            }
-
-            if (LeagueService != null)
-            {
-                var actionModifyRes = await LeagueService.ModifyLeagueAsync(new League());
-                boolRet = await DoBadRequestLeagueTestAsync(PBallRes.YouDoNotHaveAuthorization, actionModifyRes);
-                Assert.NotNull(boolRet);
-                Assert.True(boolRet);
             }
         }
     }
@@ -144,60 +160,65 @@ public partial class LeagueServiceTests : BaseServiceTests
     {
         Assert.True(await _LeagueServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db.Leagues);
+            if (db.Leagues != null)
             {
-                Assert.True(contact.ContactID > 0);
-            }
+                League? leagueInDB = (from c in db.Leagues
+                                      orderby c.LeagueID
+                                      select c).AsNoTracking().FirstOrDefault();
 
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            var actionLoginRes = await ContactService.LoginAsync(loginModel);
-            contact = await DoOKTestReturnContactAsync(actionLoginRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
-            {
-                if (UserService != null)
+                Assert.NotNull(leagueInDB);
+                if (leagueInDB != null)
                 {
-                    UserService.User = contact;
+                    Assert.NotNull(LeagueService);
+                    if (LeagueService != null)
+                    {
+                        Assert.NotNull(db.Contacts);
+                        if (db.Contacts != null)
+                        {
+                            Contact? contact = (from c in db.Contacts
+                                                orderby c.ContactID
+                                                select c).AsNoTracking().FirstOrDefault();
+
+                            Assert.NotNull(contact);
+                            if (contact != null)
+                            {
+                                Assert.NotNull(UserService);
+                                if (UserService != null)
+                                {
+                                    UserService.User = contact;
+                                }
+                            }
+                        }
+
+                        League league = new League()
+                        {
+                            LeagueID = leagueInDB.LeagueID,
+                            LeagueName = leagueInDB.LeagueName + " more",
+                            PercentPointsFactor = leagueInDB.PercentPointsFactor + 0.1D,
+                            PlayerLevelFactor = leagueInDB.PlayerLevelFactor + 0.1D,
+                            PointsToLoosers = leagueInDB.PointsToLoosers + 0.1D,
+                            PointsToWinners = leagueInDB.PointsToWinners + 0.1D,
+                        };
+
+                        league.LeagueID = 0;
+
+                        var actionModifyRes = await LeagueService.ModifyLeagueAsync(league);
+                        bool? boolRet = await DoBadRequestLeagueTestAsync(string.Format(PBallRes._IsRequired, "LeagueID"), actionModifyRes);
+                        Assert.NotNull(boolRet);
+                        Assert.True(boolRet);
+
+                        league.LeagueID = 10000;
+
+                        actionModifyRes = await LeagueService.ModifyLeagueAsync(league);
+                        boolRet = await DoBadRequestLeagueTestAsync(string.Format(PBallRes.CouldNotFind_With_Equal_, "League", "LeagueID", league.LeagueID.ToString()), actionModifyRes);
+                        Assert.NotNull(boolRet);
+                        Assert.True(boolRet);
+                    }
                 }
-                Assert.True(contact.ContactID > 0);
-                Assert.Empty(contact.PasswordHash);
-                Assert.NotEmpty(contact.Token);
-            }
-
-            if (LeagueService != null)
-            {
-                League league = await FillLeague();
-
-                league.LeagueID = 0;
-
-                var actionModifyRes = await LeagueService.ModifyLeagueAsync(league);
-                boolRet = await DoBadRequestLeagueTestAsync(string.Format(PBallRes._IsRequired, "LeagueID"), actionModifyRes);
-                Assert.NotNull(boolRet);
-                Assert.True(boolRet);
-
-                league.LeagueID = 10000;
-
-                actionModifyRes = await LeagueService.ModifyLeagueAsync(league);
-                boolRet = await DoBadRequestLeagueTestAsync(string.Format(PBallRes.CouldNotFind_With_Equal_, "League", "LeagueID", league.LeagueID.ToString()), actionModifyRes);
-                Assert.NotNull(boolRet);
-                Assert.True(boolRet);
             }
         }
     }
@@ -208,60 +229,57 @@ public partial class LeagueServiceTests : BaseServiceTests
     {
         Assert.True(await _LeagueServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db.Leagues);
+            if (db.Leagues != null)
             {
-                Assert.True(contact.ContactID > 0);
-            }
+                League? leagueInDB = (from c in db.Leagues
+                                      orderby c.LeagueID
+                                      select c).AsNoTracking().FirstOrDefault();
 
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            var actionLoginRes = await ContactService.LoginAsync(loginModel);
-            contact = await DoOKTestReturnContactAsync(actionLoginRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
-            {
-                if (UserService != null)
+                Assert.NotNull(leagueInDB);
+                if (leagueInDB != null)
                 {
-                    UserService.User = contact;
-                }
-                Assert.True(contact.ContactID > 0);
-                Assert.Empty(contact.PasswordHash);
-                Assert.NotEmpty(contact.Token);
-            }
+                    Assert.NotNull(LeagueService);
+                    if (LeagueService != null)
+                    {
+                        Assert.NotNull(db.Contacts);
+                        if (db.Contacts != null)
+                        {
+                            Contact? contact = (from c in db.Contacts
+                                                orderby c.ContactID
+                                                select c).AsNoTracking().FirstOrDefault();
 
-            if (LeagueService != null)
-            {
-                League league = await FillLeague();
-                Assert.NotEmpty(league.LeagueName);
+                            Assert.NotNull(contact);
+                            if (contact != null)
+                            {
+                                Assert.NotNull(UserService);
+                                if (UserService != null)
+                                {
+                                    UserService.User = contact;
+                                }
+                            }
+                        }
 
-                var actionRes = await LeagueService.AddLeagueAsync(league);
-                League? leagueRet = await DoOKTestReturnLeagueAsync(actionRes);
-                Assert.NotNull(leagueRet);
+                        League leagueRet = new League()
+                        {
+                            LeagueID = leagueInDB.LeagueID,
+                            LeagueName = leagueInDB.LeagueName + " more",
+                            PercentPointsFactor = leagueInDB.PercentPointsFactor + 0.1D,
+                            PlayerLevelFactor = leagueInDB.PlayerLevelFactor + 0.1D,
+                            PointsToLoosers = leagueInDB.PointsToLoosers + 0.1D,
+                            PointsToWinners = leagueInDB.PointsToWinners + 0.1D,
+                        };
 
-                if (leagueRet != null)
-                {
-                    leagueRet.LeagueName = "";
+                        leagueRet.LeagueName = "";
 
-                    var actionModifyRes = await LeagueService.ModifyLeagueAsync(leagueRet);
-                    boolRet = await DoBadRequestLeagueTestAsync(string.Format(PBallRes._IsRequired, "LeagueName"), actionModifyRes);
-                    Assert.NotNull(boolRet);
-                    Assert.True(boolRet);
+                        var actionModifyRes = await LeagueService.ModifyLeagueAsync(leagueRet);
+                        bool? boolRet = await DoBadRequestLeagueTestAsync(string.Format(PBallRes._IsRequired, "LeagueName"), actionModifyRes);
+                        Assert.NotNull(boolRet);
+                        Assert.True(boolRet);
+                    }
                 }
             }
         }
@@ -273,69 +291,57 @@ public partial class LeagueServiceTests : BaseServiceTests
     {
         Assert.True(await _LeagueServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db.Leagues);
+            if (db.Leagues != null)
             {
-                Assert.True(contact.ContactID > 0);
-            }
+                League? leagueInDB = (from c in db.Leagues
+                                      orderby c.LeagueID
+                                      select c).AsNoTracking().FirstOrDefault();
 
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            var actionLoginRes = await ContactService.LoginAsync(loginModel);
-            contact = await DoOKTestReturnContactAsync(actionLoginRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
-            {
-                if (UserService != null)
+                Assert.NotNull(leagueInDB);
+                if (leagueInDB != null)
                 {
-                    UserService.User = contact;
-                }
-                Assert.True(contact.ContactID > 0);
-                Assert.Empty(contact.PasswordHash);
-                Assert.NotEmpty(contact.Token);
-            }
+                    Assert.NotNull(LeagueService);
+                    if (LeagueService != null)
+                    {
+                        Assert.NotNull(db.Contacts);
+                        if (db.Contacts != null)
+                        {
+                            Contact? contact = (from c in db.Contacts
+                                                orderby c.ContactID
+                                                select c).AsNoTracking().FirstOrDefault();
 
-            if (LeagueService != null)
-            {
-                League league = await FillLeague();
-                Assert.NotEmpty(league.LeagueName);
+                            Assert.NotNull(contact);
+                            if (contact != null)
+                            {
+                                Assert.NotNull(UserService);
+                                if (UserService != null)
+                                {
+                                    UserService.User = contact;
+                                }
+                            }
+                        }
 
-                var actionRes = await LeagueService.AddLeagueAsync(league);
-                League? leagueRet = await DoOKTestReturnLeagueAsync(actionRes);
-                Assert.NotNull(leagueRet);
+                        League leagueRet = new League()
+                        {
+                            LeagueID = leagueInDB.LeagueID,
+                            LeagueName = leagueInDB.LeagueName + " more",
+                            PercentPointsFactor = leagueInDB.PercentPointsFactor + 0.1D,
+                            PlayerLevelFactor = leagueInDB.PlayerLevelFactor + 0.1D,
+                            PointsToLoosers = leagueInDB.PointsToLoosers + 0.1D,
+                            PointsToWinners = leagueInDB.PointsToWinners + 0.1D,
+                        };
 
-                League league2 = await FillLeague();
-                Assert.NotEmpty(league2.LeagueName);
+                        leagueRet.LeagueName = "";
 
-                league2.LeagueName = league2.LeagueName + "new";
-
-                var actionRes2 = await LeagueService.AddLeagueAsync(league2);
-                League? leagueRet2 = await DoOKTestReturnLeagueAsync(actionRes2);
-                Assert.NotNull(leagueRet2);
-
-                if (leagueRet != null)
-                {
-                    leagueRet.LeagueName = league2.LeagueName;
-
-                    var actionModifyRes = await LeagueService.ModifyLeagueAsync(leagueRet);
-                    boolRet = await DoBadRequestLeagueTestAsync(string.Format(PBallRes._AlreadyTaken, "LeagueName"), actionModifyRes);
-                    Assert.NotNull(boolRet);
-                    Assert.True(boolRet);
+                        var actionModifyRes = await LeagueService.ModifyLeagueAsync(leagueRet);
+                        bool? boolRet = await DoBadRequestLeagueTestAsync(string.Format(PBallRes._IsRequired, "LeagueName"), actionModifyRes);
+                        Assert.NotNull(boolRet);
+                        Assert.True(boolRet);
+                    }
                 }
             }
         }

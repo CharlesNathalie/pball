@@ -1,0 +1,46 @@
+<form (ngSubmit)="OnSubmit()" [formGroup]="getMostGamesPlayedForm">
+  <mat-form-field>
+    <mat-label>{{ tableMostGamesPlayedService.AllLeague[state.LangID] }}</mat-label>
+    <input matInput type="text" [disabled]="true" placeholder="League" formControlName="LeagueID">
+    <mat-error *ngIf="GetHasError('LeagueID')">{{GetErrorMessage("LeagueID")}}</mat-error>
+  </mat-form-field>
+  <br>
+  <mat-form-field>
+    <mat-label>Enter a date range</mat-label>
+    <mat-date-range-input [rangePicker]="picker">
+      <input matStartDate placeholder="Start date" formControlName="StartDate">
+      <input matEndDate placeholder="End date" formControlName="EndDate">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+    <mat-error *ngIf="GetHasError('StartDate')">{{GetErrorMessage("StartDate")}}</mat-error>
+    <mat-error *ngIf="GetHasError('EndDate')">{{GetErrorMessage("EndDate")}}</mat-error>
+  </mat-form-field>
+
+
+  <mat-error>* {{ tableMostGamesPlayedService.required[state.LangID] }}</mat-error>
+  <br><br>
+  <mat-error *ngIf="tableMostGamesPlayedService.Error?.error">
+    <h3 *ngFor="let e of tableMostGamesPlayedService.Error?.error?.ErrList">{{ e }}</h3>
+  </mat-error>
+  <button mat-raised-button *ngIf="GetFormValid()">{{ tableMostGamesPlayedService.Refresh[state.LangID] }}</button>
+  <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
+    tableMostGamesPlayedService.PleaseEnterRequiredInformation[state.LangID] }}</button>
+
+</form>
+
+<table mat-table [dataSource]="state.MostGamesPlayedModelList" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="FullName">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let rank"> {{rank.FullName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="NumberOfGames">
+    <th mat-header-cell *matHeaderCellDef> # Games </th>
+    <td mat-cell *matCellDef="let rank"> {{rank.NumberOfGames}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

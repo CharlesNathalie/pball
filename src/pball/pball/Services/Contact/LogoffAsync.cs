@@ -29,40 +29,9 @@ public partial class ContactService : ControllerBase, IContactService
                 LoggedInService.LoggedInContactList.Remove(contactExist);
             }
         }
-
-
-        Contact? contact = (from c in db.Contacts
-                            where c.ContactID == ContactID
-                            select c).FirstOrDefault();
-
-        if (contact == null)
+        else
         {
             errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", ContactID.ToString()));
-            return await Task.FromResult(BadRequest(errRes));
-        }
-
-        try
-        {
-            contact.Token = "";
-
-            if (UserService != null)
-            {
-                UserService.User = null;
-            }
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
-                return await Task.FromResult(BadRequest(errRes));
-            }
-        }
-        catch (Exception ex)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
             return await Task.FromResult(BadRequest(errRes));
         }
 

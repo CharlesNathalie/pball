@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { GetLanguageEnum, LanguageEnum } from 'src/app/enums/LanguageEnum';
 import { Contact } from 'src/app/models/Contact.model';
 import { WebContact } from 'src/app/models/WebContact.model';
+import { Game } from './models/Game.model';
+import { League } from './models/League.model';
+import { LeagueContact } from './models/LeagueContact.model';
+import { MostGamesPlayedModel } from './models/MostGamesPlayedModel';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +23,10 @@ export class AppStateService {
 
   Contact: Contact = <Contact>{};
   WebContact: WebContact = <WebContact>{};
+  MostGamesPlayedModelList: MostGamesPlayedModel[] = [];
+  LeagueList: League[] = [];
+  LeagueContactList: LeagueContact[] = [];
+  ContactGameList: Game[] = [];
 
   constructor() {
     

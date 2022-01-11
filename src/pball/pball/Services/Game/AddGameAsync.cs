@@ -30,7 +30,7 @@ public partial class GameService : ControllerBase, IGameService
 
         if (league == null)
         {
-            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeagueID"));
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "League", "LeagueID", game.LeagueID.ToString()));
             return await Task.FromResult(BadRequest(errRes));
         }
 
@@ -128,18 +128,21 @@ public partial class GameService : ControllerBase, IGameService
             GameDate = game.GameDate,
             Removed = false,
             LastUpdateDate_UTC =  DateTime.UtcNow,
-            LastUpdateContactID = 0,
+            LastUpdateContactID = UserService.User.ContactID,
         };
 
-        db.Games?.Add(gameNew);
-        try
+        if (db.Games != null)
         {
-            db.SaveChanges();
-        }
-        catch (Exception ex)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
-            return await Task.FromResult(BadRequest(errRes));
+            db.Games.Add(gameNew);
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+                return await Task.FromResult(BadRequest(errRes));
+            }
         }
 
         return await Task.FromResult(Ok(gameNew));

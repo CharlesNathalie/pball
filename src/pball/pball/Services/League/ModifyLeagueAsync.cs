@@ -20,7 +20,7 @@ public partial class LeagueService : ControllerBase, ILeagueService
 
         League? leagueToModify = (from c in db.Leagues
                                   where c.LeagueID == league.LeagueID
-                                  select c).FirstOrDefault();
+                                  select c).AsNoTracking().FirstOrDefault();
 
         if (leagueToModify == null)
         {

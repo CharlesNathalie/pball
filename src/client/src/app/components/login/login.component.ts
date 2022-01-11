@@ -31,16 +31,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  Login() {
-    let loginModel: LoginModel = <LoginModel>{ LoginEmail: '9741a@gmail.com', Password: '2445a' };
-    this.loginService.Login(loginModel);
-  }
-
-  LoginError() {
-    let loginModel: LoginModel = <LoginModel>{ LoginEmail: '9741a@gmail.com', Password: '2445aaaa' };
-    this.loginService.Login(loginModel);
-  }
-
   GetHasError(fieldName: 'LoginEmail' | 'Password'): boolean {
     return this.loginService.GetHasError(fieldName, this.loginForm);
   }

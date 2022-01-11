@@ -21,8 +21,8 @@ public partial class LeagueService : ControllerBase, ILeagueService
         // PointsToWinners, PointsToLoosers, PlayerLevelFactor, PercentPointsFactor will all default to 0.0D
 
         League? leagueExist = (from c in db.Leagues
-                            where c.LeagueName == league.LeagueName
-                            select c).FirstOrDefault();
+                               where c.LeagueName == league.LeagueName
+                               select c).AsNoTracking().FirstOrDefault();
 
         if (leagueExist != null)
         {
@@ -39,18 +39,21 @@ public partial class LeagueService : ControllerBase, ILeagueService
             PointsToWinners = league.PointsToWinners,
             Removed = false,
             LastUpdateDate_UTC = DateTime.UtcNow,
-            LastUpdateContactID = 0,
+            LastUpdateContactID = UserService.User.ContactID,
         };
 
-        db.Leagues?.Add(leagueNew);
-        try
+        if (db.Leagues != null)
         {
-            db.SaveChanges();
-        }
-        catch (Exception ex)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
-            return await Task.FromResult(BadRequest(errRes));
+            db.Leagues.Add(leagueNew);
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                errRes.ErrList.Add(string.Format(PBallRes.Error_, ex.Message));
+                return await Task.FromResult(BadRequest(errRes));
+            }
         }
 
         return await Task.FromResult(Ok(leagueNew));

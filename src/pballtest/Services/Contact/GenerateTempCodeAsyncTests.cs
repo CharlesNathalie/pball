@@ -9,43 +9,53 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
+        Assert.NotNull(ContactService);
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db);
+            if (db != null)
             {
-                Assert.True(contact.ContactID > 0);
-            }
-
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            var actionLoginRes = await ContactService.LoginAsync(loginModel);
-            contact = await DoOKTestReturnContactAsync(actionRegisterRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
-            {
-                LoginEmailModel loginEmailModel = new LoginEmailModel()
+                Assert.NotNull(db.Contacts);
+                if (db.Contacts != null)
                 {
-                    LoginEmail = contact.LoginEmail,
-                };
+                    Contact? contact = (from c in db.Contacts
+                                        orderby c.ContactID
+                                        select c).FirstOrDefault();
 
-                var actionRes = await ContactService.GenerateTempCodeAsync(loginEmailModel);
-                boolRet = await DoOKTestReturnBoolAsync(actionRes);
-                Assert.NotNull(boolRet);
-                Assert.True(boolRet);
+                    Assert.NotNull(contact);
+                    if (contact != null)
+                    {
+                        LoginEmailModel loginEmailModel = new LoginEmailModel()
+                        {
+                            LoginEmail = contact.LoginEmail,
+                        };
+
+                        var actionRes = await ContactService.GenerateTempCodeAsync(loginEmailModel);
+                        bool? boolRet = await DoOKTestReturnBoolAsync(actionRes);
+                        Assert.NotNull(boolRet);
+                        Assert.True(boolRet);
+
+                        contact = (from c in db.Contacts
+                                   orderby c.ContactID
+                                   select c).FirstOrDefault();
+
+                        Assert.NotNull(contact);
+                        if (contact != null)
+                        {
+                            Assert.NotEmpty(contact.ResetPasswordTempCode);
+
+                            contact.ResetPasswordTempCode = "";
+                            try
+                            {
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                Assert.True(false, ex.Message);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -56,45 +66,34 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
         if (ContactService != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db);
+            if (db != null)
             {
-                Assert.True(contact.ContactID > 0);
-            }
-
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            var actionLoginRes = await ContactService.LoginAsync(loginModel);
-            contact = await DoOKTestReturnContactAsync(actionRegisterRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
-            {
-                LoginEmailModel loginEmailModel = new LoginEmailModel()
+                Assert.NotNull(db.Contacts);
+                if (db.Contacts != null)
                 {
-                    LoginEmail = contact.LoginEmail,
-                };
+                    Contact? contact = (from c in db.Contacts
+                                        orderby c.ContactID
+                                        select c).FirstOrDefault();
 
-                loginEmailModel.LoginEmail = "";
+                    Assert.NotNull(contact);
+                    if (contact != null)
+                    {
+                        LoginEmailModel loginEmailModel = new LoginEmailModel()
+                        {
+                            LoginEmail = contact.LoginEmail,
+                        };
 
-                var actionRes = await ContactService.GenerateTempCodeAsync(loginEmailModel);
-                boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "LoginEmail", loginEmailModel.LoginEmail.ToString()), actionRes);
-                Assert.NotNull(boolRet);
-                Assert.True(boolRet);
+                        loginEmailModel.LoginEmail = "ThisWillNotBeFound";
+
+                        var actionRes = await ContactService.GenerateTempCodeAsync(loginEmailModel);
+                        bool? boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "LoginEmail", loginEmailModel.LoginEmail.ToString()), actionRes);
+                        Assert.NotNull(boolRet);
+                        Assert.True(boolRet);
+                    }
+                }
             }
         }
     }

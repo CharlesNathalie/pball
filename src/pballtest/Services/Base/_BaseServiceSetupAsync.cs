@@ -41,11 +41,6 @@ public partial class BaseServiceTests
         Services.AddSingleton<ILoggedInService, LoggedInService>();
         Services.AddSingleton<IScrambleService, ScrambleService>();
 
-        //Services.AddDbContext<PBallContext>(options =>
-        //{
-        //    options.UseSqlServer(Configuration["pballDB"]);
-        //});
-
         Services.AddDbContext<PBallContext>(options =>
         {
             options.UseSqlite($"Data Source={ Configuration["pballDB"] }");
@@ -81,32 +76,23 @@ public partial class BaseServiceTests
         db = Provider.GetService<PBallContext>();
         Assert.NotNull(db);
 
-        await ClearAllLeagueContactsFromDBAsync();
-        await ClearAllGamesFromDBAsync();
-        await ClearAllLeaguesFromDBAsync();
-        await ClearAllContactsFromDBAsync();
+        int MinContactCount = 100;
+        int MinLeagueCount = 5;
+        int MinLeagueContactCount = 15 * MinLeagueCount;
+        int MinGameCount = 100 * MinLeagueCount;
 
-        RegisterModel registerModel = await FillRegisterModelAsync();
-
-        Contact? contact = await DoRegisterTestAsync(registerModel);
-        Assert.NotNull(contact);
-
-        if (contact != null)
+        if (db != null && db.Contacts != null && db.Leagues != null && db.LeagueContacts != null && db.Games != null)
         {
-            Assert.True(contact.ContactID > 0);
+            int countContact = (from c in db.Contacts select c).Count();
+            int countLeague = (from c in db.Leagues select c).Count();
+            int countLeagueConact = (from c in db.LeagueContacts select c).Count();
+            int countGame = (from c in db.Games select c).Count();
 
-            LoginModel loginModel = new LoginModel()
+            if (countContact < MinContactCount || countLeague < MinLeagueCount || countLeagueConact < MinLeagueContactCount || countGame < MinGameCount)
             {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            Contact? contact2 = await DoLoginTestAsync(loginModel);
-            Assert.NotNull(contact2);
-
-            if (contact2 != null)
-            {
-                Assert.True(contact2.ContactID > 0);
+                bool? boolRet = await FillDBWithTestDataAsync(MinContactCount, MinLeagueCount, MinLeagueContactCount / MinLeagueCount, MinGameCount / MinLeagueCount);
+                Assert.NotNull(boolRet);
+                Assert.True(boolRet);
             }
         }
 

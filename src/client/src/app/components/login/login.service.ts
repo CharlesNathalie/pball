@@ -21,7 +21,7 @@ export class LoginService {
   LoggingIn: string[] = ['Logging in', 'Connexion en cours'];
   LoginTxt: string[] = ['Login', 'Connexion'];
   No_account: string[] = ['No account?', 'Pas de compte?']
-  Please_enter_required_information: string[] = ['Please enter required information', 'SVP entrer l\'information requise'];
+  PleaseEnterRequiredInformation: string[] = ['Please enter required information', 'SVP entrer l\'information requise'];
   required: string[] = ['required', 'requis'];
   ReturnToHomePage: string[] = ['Return to home page', 'Retour à la page d\'accueil'];
 

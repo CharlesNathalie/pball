@@ -9,58 +9,56 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                Assert.True(contact.ContactID > 0);
-            }
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
 
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            var actionLoginRes = await ContactService.LoginAsync(loginModel);
-            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
-            Assert.NotNull(contact2);
-
-            if (contact2 != null)
-            {
-                if (UserService != null)
+                Assert.NotNull(contact);
+                if (contact != null)
                 {
-                    UserService.User = contact2;
-                }
-                Assert.True(contact2.ContactID > 0);
-                Assert.Empty(contact2.PasswordHash);
-                Assert.NotEmpty(contact2.Token);
-            }
-
-            if (LoggedInService != null)
-            {
-                Assert.NotEmpty(LoggedInService.LoggedInContactList);
-
-                if (contact2 != null)
-                {
-                    var actionRes2 = await ContactService.LogoffAsync(contact2.ContactID);
-                    boolRet = await DoOKTestReturnBoolAsync(actionRes2);
-                    Assert.NotNull(boolRet);
-                    Assert.True(boolRet);
-
-                    Assert.False(LoggedInService.LoggedInContactList.Where(c => c.ContactID == contact2.ContactID).Any());
-                    if (UserService != null)
+                    Assert.NotNull(ContactService);
+                    if (ContactService != null)
                     {
-                        Assert.Null(UserService.User);
+                        LoginModel loginModel = new LoginModel()
+                        {
+                            LoginEmail = contact.LoginEmail,
+                            Password = contact.LastName,
+                        };
+
+                        var actionRes = await ContactService.LoginAsync(loginModel);
+                        Contact? contactRet = await DoOKTestReturnContactAsync(actionRes);
+
+                        Assert.NotNull(contactRet);
+                        if (contactRet != null)
+                        {
+                            Assert.Equal(contact.ContactID, contactRet.ContactID);
+
+                            Assert.NotNull(UserService);
+                            if (UserService != null)
+                            {
+                                UserService.User = contact;
+
+                                var actionRes2 = await ContactService.LogoffAsync(contact.ContactID);
+                                bool? boolRet = await DoOKTestReturnBoolAsync(actionRes2);
+                                Assert.NotNull(boolRet);
+                                Assert.True(boolRet);
+
+                                Assert.NotNull(LoggedInService);
+                                if (LoggedInService != null)
+                                {
+                                    Contact? contactLoggedIn = (from c in LoggedInService.LoggedInContactList
+                                                                where c.ContactID == contact.ContactID
+                                                                select c).FirstOrDefault();
+                                    Assert.Null(contactLoggedIn);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -73,63 +71,51 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                Assert.True(contact.ContactID > 0);
-            }
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
 
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            var actionLoginRes = await ContactService.LoginAsync(loginModel);
-            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
-            Assert.NotNull(contact2);
-
-            if (contact2 != null)
-            {
-                if (UserService != null)
+                Assert.NotNull(contact);
+                if (contact != null)
                 {
-                    UserService.User = contact2;
-                }
-                Assert.True(contact2.ContactID > 0);
-                Assert.Empty(contact2.PasswordHash);
-                Assert.NotEmpty(contact2.Token);
-            }
-
-            if (LoggedInService != null)
-            {
-                Assert.NotEmpty(LoggedInService.LoggedInContactList);
-
-                if (contact2 != null)
-                {
+                    Assert.NotNull(UserService);
                     if (UserService != null)
                     {
-                        UserService.User = null;
+                        UserService.User = null; // contact;
                     }
 
-                    var actionRes2 = await ContactService.LogoffAsync(contact2.ContactID);
-                    boolRet = await DoBadRequestBoolTestAsync(PBallRes.YouDoNotHaveAuthorization, actionRes2);
-                    Assert.NotNull(boolRet);
-                    Assert.True(boolRet);
-
-                    Assert.True(LoggedInService.LoggedInContactList.Where(c => c.ContactID == contact2.ContactID).Any());
-                    if (UserService != null)
+                    Assert.NotNull(ContactService);
+                    if (ContactService != null)
                     {
-                        Assert.Null(UserService.User);
+                        LoginModel loginModel = new LoginModel()
+                        {
+                            LoginEmail = contact.LoginEmail,
+                            Password = contact.LastName,
+                        };
+
+                        var actionRes = await ContactService.LoginAsync(loginModel);
+                        Contact? contactRet = await DoOKTestReturnContactAsync(actionRes);
+
+                        Assert.NotNull(contactRet);
+                        if (contactRet != null)
+                        {
+                            var actionRes2 = await ContactService.LogoffAsync(contact.ContactID);
+                            bool? boolRet = await DoBadRequestBoolTestAsync(PBallRes.YouDoNotHaveAuthorization, actionRes2);
+                            Assert.NotNull(boolRet);
+                            Assert.True(boolRet);
+
+                            Assert.NotNull(LoggedInService);
+                            if (LoggedInService != null)
+                            {
+                                Assert.True(LoggedInService.LoggedInContactList.Where(c => c.ContactID == contact.ContactID).Any());
+                            }
+                        }
                     }
                 }
             }
@@ -142,73 +128,62 @@ public partial class ContactServiceTests : BaseServiceTests
     {
         Assert.True(await _ContactServiceSetupAsync(culture));
 
-        bool? boolRet = await ClearAllContactsFromDBAsync();
-        Assert.True(boolRet);
-
-        if (ContactService != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            RegisterModel registerModel = await FillRegisterModelAsync();
-
-            var actionRegisterRes = await ContactService.RegisterAsync(registerModel);
-            Contact? contact = await DoOKTestReturnContactAsync(actionRegisterRes);
-            Assert.NotNull(contact);
-
-            if (contact != null)
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                Assert.True(contact.ContactID > 0);
-            }
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
 
-            LoginModel loginModel = new LoginModel()
-            {
-                LoginEmail = registerModel.LoginEmail,
-                Password = registerModel.Password,
-            };
-
-            var actionLoginRes = await ContactService.LoginAsync(loginModel);
-            Contact? contact2 = await DoOKTestReturnContactAsync(actionLoginRes);
-            Assert.NotNull(contact2);
-
-            if (contact2 != null)
-            {
-                if (UserService != null)
+                Assert.NotNull(contact);
+                if (contact != null)
                 {
-                    UserService.User = contact2;
-                }
-                Assert.True(contact2.ContactID > 0);
-                Assert.Empty(contact2.PasswordHash);
-                Assert.NotEmpty(contact2.Token);
-            }
-
-            if (LoggedInService != null)
-            {
-                Assert.NotEmpty(LoggedInService.LoggedInContactList);
-
-                if (contact2 != null)
-                {
-                    contact2.ContactID = 0;
-
-                    var actionRes2 = await ContactService.LogoffAsync(contact2.ContactID);
-                    boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes._IsRequired, "ContactID"), actionRes2);
-                    Assert.NotNull(boolRet);
-                    Assert.True(boolRet);
-
-                    Assert.True(LoggedInService.LoggedInContactList.Where(c => c.ContactID == contact2.ContactID).Any());
                     if (UserService != null)
                     {
-                        Assert.NotNull(UserService.User);
+                        UserService.User = contact;
                     }
 
-                    contact2.ContactID = 10000;
-
-                    actionRes2 = await ContactService.LogoffAsync(contact2.ContactID);
-                    boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", contact2.ContactID.ToString()), actionRes2);
-                    Assert.NotNull(boolRet);
-                    Assert.True(boolRet);
-
-                    Assert.False(LoggedInService.LoggedInContactList.Where(c => c.ContactID == contact2.ContactID).Any());
-                    if (UserService != null)
+                    LoginModel loginModel = new LoginModel()
                     {
-                        Assert.NotNull(UserService.User);
+                        LoginEmail = contact.LoginEmail,
+                        Password = contact.LastName,
+                    };
+
+                    if (ContactService != null)
+                    {
+                        var actionLoginRes = await ContactService.LoginAsync(loginModel);
+                        Contact? contactRet = await DoOKTestReturnContactAsync(actionLoginRes);
+
+                        Assert.NotNull(contactRet);
+                        if (contactRet != null)
+                        {
+                            Assert.NotNull(LoggedInService);
+                            if (LoggedInService != null)
+                            {
+                                Assert.True(LoggedInService.LoggedInContactList.Where(c => c.ContactID == contact.ContactID).Any());
+
+                                int ContactID = 0;
+
+                                var actionRes = await ContactService.LogoffAsync(ContactID);
+                                bool? boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes._IsRequired, "ContactID"), actionRes);
+                                Assert.NotNull(boolRet);
+                                Assert.True(boolRet);
+
+                                Assert.True(LoggedInService.LoggedInContactList.Where(c => c.ContactID == contact.ContactID).Any());
+
+                                ContactID = 10000;
+
+                                actionRes = await ContactService.LogoffAsync(ContactID);
+                                boolRet = await DoBadRequestBoolTestAsync(string.Format(PBallRes.CouldNotFind_With_Equal_, "Contact", "ContactID", ContactID.ToString()), actionRes);
+                                Assert.NotNull(boolRet);
+                                Assert.True(boolRet);
+
+                                Assert.True(LoggedInService.LoggedInContactList.Where(c => c.ContactID == contact.ContactID).Any());
+                            }
+                        }
                     }
                 }
             }
