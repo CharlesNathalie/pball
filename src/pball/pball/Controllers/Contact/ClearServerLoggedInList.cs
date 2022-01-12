@@ -6,9 +6,15 @@ public partial class ContactController : ControllerBase, IContactController
     [HttpGet]
     public async Task<ActionResult<bool>> ClearServerLoggedInListAsync()
     {
+        ErrRes errRes = new ErrRes();
+
         if (HelperService != null)
         {
-            if (!await HelperService.SetCultureAsync(RouteData)) return await Task.FromResult(BadRequest(string.Format(PBallRes.LanguageNotSelected)));
+            if (!await HelperService.SetCultureAsync(RouteData))
+            {
+                errRes.ErrList.Add(string.Format(PBallRes.LanguageNotSelected));
+                return await Task.FromResult(BadRequest(errRes));
+            }
         }
 
         if (LoggedInService != null)
@@ -18,7 +24,8 @@ public partial class ContactController : ControllerBase, IContactController
             return await Task.FromResult(true);
         }
 
-        return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "LoggedInService")));
+        errRes.ErrList.Add(string.Format(string.Format(PBallRes._IsRequired, "ContactService")));
+        return await Task.FromResult(BadRequest(errRes));
     }
 }
 

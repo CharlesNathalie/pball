@@ -2,8 +2,9 @@
 
 public partial class LeagueController : ControllerBase, ILeagueController
 {
-    [HttpPut]
-    public async Task<ActionResult<League>> ModifyLeagueAsync(League league)
+    [Route("GetUserLeagues")]
+    [HttpGet]
+    public async Task<ActionResult<List<League>>> GetUserLeaguesAsync()
     {
         ErrRes errRes = new ErrRes();
 
@@ -23,7 +24,7 @@ public partial class LeagueController : ControllerBase, ILeagueController
 
         if (LeagueService != null)
         {
-            return await LeagueService.ModifyLeagueAsync(league);
+            return await LeagueService.GetUserLeaguesAsync();
         }
 
         errRes.ErrList.Add(string.Format(string.Format(PBallRes._IsRequired, "LeagueService")));

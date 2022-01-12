@@ -9,49 +9,54 @@ public partial class ContactControllerTests : BaseControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        bool? boolRet = await ClearServerLoggedInListAsync(culture);
-        Assert.True(boolRet);
-
-        RegisterModel registerModel = await FillRegisterModelAsync();
-
-        Contact? contact = await DoOkRegister(registerModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            Assert.True(contact.ContactID > 0);
-        }
-
-        LoginModel loginModel = new LoginModel()
-        {
-            LoginEmail = registerModel.LoginEmail,
-            Password = registerModel.Password,
-        };
-
-        contact = await DoOkLogin(loginModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
-        {
-            Assert.True(contact.ContactID > 0);
-            Assert.NotEmpty(contact.Token);
-        }
-
-        if (contact != null)
-        {
-            using (HttpClient httpClient = new HttpClient())
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).AsNoTracking().FirstOrDefault();
 
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
-
-                if (Configuration != null)
+                Assert.NotNull(contact);
+                if (contact != null)
                 {
-                    HttpResponseMessage response = httpClient.DeleteAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/{ contact.ContactID }").Result;
-                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                    using (HttpClient httpClient = new HttpClient())
+                    {
+                        var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        httpClient.DefaultRequestHeaders.Accept.Add(contentType);
 
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                    contact = JsonSerializer.Deserialize<Contact>(responseContent);
-                    Assert.NotNull(contact);
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
+
+                        if (Configuration != null)
+                        {
+                            HttpResponseMessage response = httpClient.DeleteAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/{ contact.ContactID }").Result;
+                            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                            string responseContent = await response.Content.ReadAsStringAsync();
+                            Contact? contactRet = JsonSerializer.Deserialize<Contact>(responseContent);
+                            Assert.NotNull(contactRet);
+                        }
+                    }
+
+                    Contact? contactToChange = (from c in db.Contacts
+                                                orderby c.ContactID
+                                                select c).FirstOrDefault();
+
+                    Assert.NotNull(contactToChange);
+                    if (contactToChange != null)
+                    {
+                        contactToChange.Removed = false;
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            Assert.True(false, ex.Message);
+                        }
+                    }
                 }
             }
         }
@@ -63,49 +68,36 @@ public partial class ContactControllerTests : BaseControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        bool? boolRet = await ClearServerLoggedInListAsync(culture);
-        Assert.True(boolRet);
-
-        RegisterModel registerModel = await FillRegisterModelAsync();
-
-        Contact? contact = await DoOkRegister(registerModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            Assert.True(contact.ContactID > 0);
-        }
-
-        LoginModel loginModel = new LoginModel()
-        {
-            LoginEmail = registerModel.LoginEmail,
-            Password = registerModel.Password,
-        };
-
-        contact = await DoOkLogin(loginModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
-        {
-            Assert.True(contact.ContactID > 0);
-            Assert.NotEmpty(contact.Token);
-        }
-
-        if (contact != null)
-        {
-            using (HttpClient httpClient = new HttpClient())
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
 
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
-
-                if (Configuration != null)
+                Assert.NotNull(contact);
+                if (contact != null)
                 {
-                    HttpResponseMessage response = httpClient.DeleteAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/{ contact.ContactID + 100000 }").Result;
-                    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+                    using (HttpClient httpClient = new HttpClient())
+                    {
+                        var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        httpClient.DefaultRequestHeaders.Accept.Add(contentType);
 
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                    ErrRes? errRes = JsonSerializer.Deserialize<ErrRes>(responseContent);
-                    Assert.NotNull(errRes);
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
+
+                        if (Configuration != null)
+                        {
+                            HttpResponseMessage response = httpClient.DeleteAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/{ -1 }").Result;
+                            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                            string responseContent = await response.Content.ReadAsStringAsync();
+                            ErrRes? errRes = JsonSerializer.Deserialize<ErrRes>(responseContent);
+                            Assert.NotNull(errRes);
+                        }
+                    }
                 }
             }
         }

@@ -9,59 +9,93 @@ public partial class LeagueContactControllerTests : BaseControllerTests
     {
         Assert.True(await LeagueContactControllerSetup(culture));
 
-        bool? boolRet = await ClearServerLoggedInListAsync(culture);
-        Assert.True(boolRet);
-
-        RegisterModel registerModel = await FillRegisterModelAsync();
-
-        Contact? contact = await DoOkRegister(registerModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            Assert.True(contact.ContactID > 0);
-        }
-
-        LoginModel loginModel = new LoginModel()
-        {
-            LoginEmail = registerModel.LoginEmail,
-            Password = registerModel.Password,
-        };
-
-        contact = await DoOkLogin(loginModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
-        {
-            Assert.True(contact.ContactID > 0);
-            Assert.NotEmpty(contact.Token);
-        }
-
-        if (contact != null)
-        {
-            League? league = await FillLeagueAsync();
-
-            league = await DoOkLeague(league, contact, culture);
-            Assert.NotNull(league);
-            if (league != null)
+            Assert.NotNull(db.LeagueContacts);
+            if (db.LeagueContacts != null)
             {
-                Assert.True(league.LeagueID > 0);
-            }
+                LeagueContact? leagueContact = (from c in db.LeagueContacts
+                                                orderby c.LeagueContactID
+                                                select c).AsNoTracking().FirstOrDefault();
 
-            if (league != null)
-            {
-                if (contact != null)
+                Assert.NotNull(leagueContact);
+                if (leagueContact != null)
                 {
-                    LeagueContact? leagueContact = new LeagueContact()
+                    Assert.NotNull(db.Contacts);
+                    if (db.Contacts != null)
                     {
-                        ContactID = contact.ContactID,
-                        IsLeagueAdmin = true,
-                        LeagueID = league.LeagueID,
-                    };
+                        Contact? contact = (from c in db.Contacts
+                                            from lc in db.LeagueContacts
+                                            where c.ContactID != lc.ContactID
+                                            select c).AsNoTracking().FirstOrDefault();
 
-                    leagueContact = await DoOkLeagueContact(leagueContact, contact, culture);
-                    Assert.NotNull(leagueContact);
-                    if (leagueContact != null)
-                    {
-                        Assert.True(leagueContact.LeagueContactID > 0);
+                        Assert.NotNull(contact);
+                        if (contact != null)
+                        {
+                            if (Configuration != null)
+                            {
+                                using (HttpClient httpClient = new HttpClient())
+                                {
+                                    LoginModel loginModel = new LoginModel()
+                                    {
+                                        LoginEmail = contact.LoginEmail,
+                                        Password = contact.LastName,
+                                    };
+
+                                    var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                                    httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+
+                                    string stringData = JsonSerializer.Serialize(loginModel);
+                                    var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                                    HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/login", contentData).Result;
+                                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                                    string responseContent = await response.Content.ReadAsStringAsync();
+                                    Contact? contactLogin = JsonSerializer.Deserialize<Contact>(responseContent);
+
+                                    Assert.NotNull(contactLogin);
+                                    if (contactLogin != null)
+                                    {
+                                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contactLogin.Token);
+
+                                        leagueContact.LeagueContactID = 0;
+                                        leagueContact.ContactID = contact.ContactID;
+
+                                        stringData = JsonSerializer.Serialize(leagueContact);
+                                        contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                                        response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/leaguecontact", contentData).Result;
+                                        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                                        responseContent = await response.Content.ReadAsStringAsync();
+                                        LeagueContact? leagueContactRet = JsonSerializer.Deserialize<LeagueContact>(responseContent);
+                                        Assert.NotNull(leagueContactRet);
+                                        if (leagueContactRet != null)
+                                        {
+                                            Assert.True(leagueContactRet.LeagueID > 0);
+
+                                            LeagueContact? leagueContactToDelete = (from c in db.LeagueContacts
+                                                                                    where c.LeagueContactID == leagueContactRet.LeagueContactID
+                                                                                    select c).FirstOrDefault();
+
+                                            Assert.NotNull(leagueContactToDelete);
+                                            if (leagueContactToDelete != null)
+                                            {
+                                                try
+                                                {
+                                                    db.LeagueContacts.Remove(leagueContactToDelete);
+                                                    db.SaveChanges();
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    Assert.True(false, ex.Message);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -74,71 +108,74 @@ public partial class LeagueContactControllerTests : BaseControllerTests
     {
         Assert.True(await LeagueContactControllerSetup(culture));
 
-        bool? boolRet = await ClearServerLoggedInListAsync(culture);
-        Assert.True(boolRet);
-
-        RegisterModel registerModel = await FillRegisterModelAsync();
-
-        Contact? contact = await DoOkRegister(registerModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            Assert.True(contact.ContactID > 0);
-        }
-
-        LoginModel loginModel = new LoginModel()
-        {
-            LoginEmail = registerModel.LoginEmail,
-            Password = registerModel.Password,
-        };
-
-        contact = await DoOkLogin(loginModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
-        {
-            Assert.True(contact.ContactID > 0);
-            Assert.NotEmpty(contact.Token);
-        }
-
-        if (contact != null)
-        {
-            League? league = await FillLeagueAsync();
-
-            league = await DoOkLeague(league, contact, culture);
-            Assert.NotNull(league);
-            if (league != null)
+            Assert.NotNull(db.LeagueContacts);
+            if (db.LeagueContacts != null)
             {
-                Assert.True(league.LeagueID > 0);
-            }
+                LeagueContact? leagueContact = (from c in db.LeagueContacts
+                                                orderby c.LeagueContactID
+                                                select c).AsNoTracking().FirstOrDefault();
 
-            if (league != null)
-            {
-                if (contact != null)
+                Assert.NotNull(leagueContact);
+                if (leagueContact != null)
                 {
-                    LeagueContact? leagueContact = new LeagueContact()
+                    Assert.NotNull(db.Contacts);
+                    if (db.Contacts != null)
                     {
-                        ContactID = 0, // contact.ContactID, will create an error
-                        IsLeagueAdmin = true,
-                        LeagueID = league.LeagueID,
-                    };
+                        Contact? contact = (from c in db.Contacts
+                                            from lc in db.LeagueContacts
+                                            where c.ContactID != lc.ContactID
+                                            select c).AsNoTracking().FirstOrDefault();
 
-                    if (Configuration != null)
-                    {
-                        using (HttpClient httpClient = new HttpClient())
+                        Assert.NotNull(contact);
+                        if (contact != null)
                         {
-                            var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                            httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+                            if (Configuration != null)
+                            {
+                                using (HttpClient httpClient = new HttpClient())
+                                {
+                                    LoginModel loginModel = new LoginModel()
+                                    {
+                                        LoginEmail = contact.LoginEmail,
+                                        Password = contact.LastName,
+                                    };
 
-                            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
+                                    var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                                    httpClient.DefaultRequestHeaders.Accept.Add(contentType);
 
-                            string stringData = JsonSerializer.Serialize(leagueContact);
-                            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
-                            HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/leaguecontact", contentData).Result;
-                            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+                                    string stringData = JsonSerializer.Serialize(loginModel);
+                                    var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                                    HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/login", contentData).Result;
+                                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-                            string responseContent = await response.Content.ReadAsStringAsync();
-                            ErrRes? errRes = JsonSerializer.Deserialize<ErrRes>(responseContent);
-                            Assert.NotNull(errRes);
+                                    string responseContent = await response.Content.ReadAsStringAsync();
+                                    Contact? contactLogin = JsonSerializer.Deserialize<Contact>(responseContent);
+
+                                    Assert.NotNull(contactLogin);
+                                    if (contactLogin != null)
+                                    {
+                                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contactLogin.Token);
+
+                                        leagueContact.LeagueContactID = 0;
+                                        leagueContact.ContactID = 0;
+
+                                        stringData = JsonSerializer.Serialize(leagueContact);
+                                        contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                                        response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/leaguecontact", contentData).Result;
+                                        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                                        responseContent = await response.Content.ReadAsStringAsync();
+                                        ErrRes? errRes = JsonSerializer.Deserialize<ErrRes>(responseContent);
+                                        Assert.NotNull(errRes);
+                                        if (errRes != null)
+                                        {
+                                            Assert.NotEmpty(errRes.ErrList);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

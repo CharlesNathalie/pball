@@ -9,23 +9,70 @@ public partial class ContactControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        RegisterModel registerModel = await FillRegisterModelAsync();
-
-        Contact? contact = await DoOkRegister(registerModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
-        {
-            Assert.True(contact.ContactID > 0);
-        }
-
+        Assert.NotNull(db);
         if (db != null)
         {
-            List<Contact> contactList = (from c in db.Contacts
-                                         select c).ToList();
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
+            {
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).AsNoTracking().FirstOrDefault();
 
-            Assert.NotNull(contactList);
-            Assert.True(contactList.Any());
-            Assert.Single(contactList);
+                Assert.NotNull(contact);
+                if (contact != null)
+                {
+                    using (HttpClient httpClient = new HttpClient())
+                    {
+                        var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
+
+                        if (Configuration != null)
+                        {
+                            RegisterModel registerModel = new RegisterModel()
+                            {
+                                FirstName = contact.FirstName + "new",
+                                LastName = contact.LastName,
+                                Initial = contact.Initial,
+                                LoginEmail = "New" + contact.LoginEmail,
+                                Password = contact.LastName,
+                                PlayerLevel = contact.PlayerLevel,
+                            };
+
+                            string stringData = JsonSerializer.Serialize(registerModel);
+                            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                            HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/register", contentData).Result;
+                            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                            string responseContent = await response.Content.ReadAsStringAsync();
+                            contact = JsonSerializer.Deserialize<Contact>(responseContent);
+                            Assert.NotNull(contact);
+                            if (contact != null)
+                            {
+                                Contact? contactToDelete = (from c in  db.Contacts
+                                                            where c.ContactID == contact.ContactID
+                                                            select c).FirstOrDefault();
+
+                                Assert.NotNull(contactToDelete);
+                                if (contactToDelete != null)
+                                {
+                                    try
+                                    {
+                                        db.Contacts.Remove(contactToDelete);
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Assert.True(false, ex.Message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     [Theory]
@@ -35,15 +82,50 @@ public partial class ContactControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        RegisterModel registerModel = await FillRegisterModelAsync();
-
-        registerModel.LoginEmail = "";
-
-        ErrRes? errRes = await DoBadRequestRegister(registerModel, culture);
-        Assert.NotNull(errRes);
-        if (errRes != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            Assert.NotEmpty(errRes.ErrList);
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
+            {
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).AsNoTracking().FirstOrDefault();
+
+                Assert.NotNull(contact);
+                if (contact != null)
+                {
+                    using (HttpClient httpClient = new HttpClient())
+                    {
+                        var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
+
+                        if (Configuration != null)
+                        {
+                            RegisterModel registerModel = new RegisterModel()
+                            {
+                                FirstName = "",
+                                LastName = contact.LastName,
+                                Initial = contact.Initial,
+                                LoginEmail = "New" + contact.LoginEmail,
+                                Password = contact.LastName,
+                                PlayerLevel = contact.PlayerLevel,
+                            };
+
+                            string stringData = JsonSerializer.Serialize(registerModel);
+                            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                            HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/register", contentData).Result;
+                            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                            string responseContent = await response.Content.ReadAsStringAsync();
+                            ErrRes? errRes = JsonSerializer.Deserialize<ErrRes>(responseContent);
+                            Assert.NotNull(errRes);
+                        }
+                    }
+                }
+            }
         }
     }
 }

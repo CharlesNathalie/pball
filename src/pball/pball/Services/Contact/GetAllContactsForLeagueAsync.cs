@@ -6,6 +6,12 @@ public partial class ContactService : ControllerBase, IContactService
     {
         ErrRes errRes = new ErrRes();
 
+        if (UserService.User == null)
+        {
+            errRes.ErrList.Add(PBallRes.YouDoNotHaveAuthorization);
+            return await Task.FromResult(BadRequest(errRes));
+        }
+
         if (db != null && db.Contacts != null && db.LeagueContacts != null)
         {
             return await Task.FromResult(Ok((from c in db.Contacts

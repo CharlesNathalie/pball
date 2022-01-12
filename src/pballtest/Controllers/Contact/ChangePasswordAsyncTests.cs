@@ -7,95 +7,92 @@ public partial class ContactControllerTests : BaseControllerTests
     [InlineData("fr-CA")]
     public async Task ChangePasswordAsync_Good_Test(string culture)
     {
-        Random random = new Random();
-
         Assert.True(await ContactControllerSetup(culture));
 
-        bool? boolRet = await ClearServerLoggedInListAsync(culture);
-        Assert.True(boolRet);
-
-        RegisterModel registerModel = await FillRegisterModelAsync();
-
-        Contact? contact = await DoOkRegister(registerModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            Assert.True(contact.ContactID > 0);
-        }
-
-        LoginModel loginModel = new LoginModel()
-        {
-            LoginEmail = registerModel.LoginEmail,
-            Password = registerModel.Password,
-        };
-
-        contact = await DoOkLogin(loginModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
-        {
-            Assert.True(contact.ContactID > 0);
-            Assert.NotEmpty(contact.Token);
-        }
-
-        if (contact != null)
-        {
-            string TempCode = $"{ random.Next(1000, 9999) }";
-
-            if (db != null)
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                Contact? contactToAddTempCode = (from c in db.Contacts
-                                                 where c.ContactID == contact.ContactID
-                                                 select c).FirstOrDefault();
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).FirstOrDefault();
 
-                if (contactToAddTempCode != null)
-                {
-                    contactToAddTempCode.ResetPasswordTempCode = TempCode;
-                }
-
-                try
-                {
-                    db.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    Assert.True(false, ex.Message);
-                }
-            }
-
-            if (Configuration != null)
-            {
-                using (HttpClient httpClient = new HttpClient())
-                {
-                    ChangePasswordModel changePasswordModel = new ChangePasswordModel()
-                    {
-                        LoginEmail = registerModel.LoginEmail,
-                        Password = $"{ registerModel.Password }New",
-                        TempCode = TempCode,
-                    };
-
-                    string stringData = JsonSerializer.Serialize(changePasswordModel);
-                    var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/changepassword", contentData).Result;
-                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                    boolRet = JsonSerializer.Deserialize<bool>(responseContent);
-                    Assert.NotNull(boolRet);
-                    Assert.True(boolRet);
-                }
-
-                loginModel = new LoginModel()
-                {
-                    LoginEmail = registerModel.LoginEmail,
-                    Password = $"{ registerModel.Password }New",
-                };
-
-                contact = await DoOkLogin(loginModel, culture);
                 Assert.NotNull(contact);
                 if (contact != null)
                 {
-                    Assert.True(contact.ContactID > 0);
-                    Assert.NotEmpty(contact.Token);
+                    Random random = new Random();
+                    string TempCode = $"{ random.Next(1000, 9999) }";
+
+                    contact.ResetPasswordTempCode = TempCode;
+
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        Assert.True(false, ex.Message);
+                    }
+
+                    using (HttpClient httpClient = new HttpClient())
+                    {
+                        ChangePasswordModel changePasswordModel = new ChangePasswordModel()
+                        {
+                            LoginEmail = contact.LoginEmail,
+                            Password = contact.LastName + "New",
+                            TempCode = TempCode,
+                        };
+
+                        Assert.NotNull(Configuration);
+                        if (Configuration != null)
+                        {
+                            string stringData = JsonSerializer.Serialize(changePasswordModel);
+                            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                            HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/changepassword", contentData).Result;
+                            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                            string responseContent = await response.Content.ReadAsStringAsync();
+                            bool? boolRet = JsonSerializer.Deserialize<bool>(responseContent);
+
+                            Assert.NotNull(boolRet);
+                            if (boolRet != null)
+                            {
+                                Assert.True(boolRet);
+
+                                TempCode = $"{ random.Next(1000, 9999) }";
+
+                                contact.ResetPasswordTempCode = TempCode;
+
+                                try
+                                {
+                                    db.SaveChanges();
+                                }
+                                catch (Exception ex)
+                                {
+                                    Assert.True(false, ex.Message);
+                                }
+
+                                changePasswordModel.Password = contact.LastName;
+                                changePasswordModel.TempCode = TempCode;
+
+                                stringData = JsonSerializer.Serialize(changePasswordModel);
+                                contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                                response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/changepassword", contentData).Result;
+                                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                                responseContent = await response.Content.ReadAsStringAsync();
+                                boolRet = JsonSerializer.Deserialize<bool>(responseContent);
+
+                                Assert.NotNull(boolRet);
+                                if (boolRet != null)
+                                {
+                                    Assert.True(boolRet);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -105,80 +102,54 @@ public partial class ContactControllerTests : BaseControllerTests
     [InlineData("fr-CA")]
     public async Task ChangePasswordAsync_Error_Test(string culture)
     {
-        Random random = new Random();
-
         Assert.True(await ContactControllerSetup(culture));
 
-        bool? boolRet = await ClearServerLoggedInListAsync(culture);
-        Assert.True(boolRet);
-
-        RegisterModel registerModel = await FillRegisterModelAsync();
-
-        Contact? contact = await DoOkRegister(registerModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            Assert.True(contact.ContactID > 0);
-        }
-
-        LoginModel loginModel = new LoginModel()
-        {
-            LoginEmail = registerModel.LoginEmail,
-            Password = registerModel.Password,
-        };
-
-        contact = await DoOkLogin(loginModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
-        {
-            Assert.True(contact.ContactID > 0);
-            Assert.NotEmpty(contact.Token);
-        }
-
-        if (contact != null)
-        {
-            string TempCode = $"{ random.Next(1000, 9999) }";
-
-            if (db != null)
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                Contact? contactToAddTempCode = (from c in db.Contacts
-                                                 where c.ContactID == contact.ContactID
-                                                 select c).FirstOrDefault();
+                Contact? contact = (from c in db.Contacts
+                                    orderby c.ContactID
+                                    select c).AsNoTracking().FirstOrDefault();
 
-                if (contactToAddTempCode != null)
+                Assert.NotNull(contact);
+                if (contact != null)
                 {
-                    contactToAddTempCode.ResetPasswordTempCode = TempCode;
-                }
+                    contact.ResetPasswordTempCode = "";
 
-                try
-                {
-                    db.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    Assert.True(false, ex.Message);
-                }
-            }
-
-            if (Configuration != null)
-            {
-                using (HttpClient httpClient = new HttpClient())
-                {
-                    ChangePasswordModel changePasswordModel = new ChangePasswordModel()
+                    try
                     {
-                        LoginEmail = registerModel.LoginEmail,
-                        Password = $"{ registerModel.Password }New",
-                        TempCode = "121a", // will create an error
-                    };
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        Assert.True(false, ex.Message);
+                    }
 
-                    string stringData = JsonSerializer.Serialize(changePasswordModel);
-                    var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/changepassword", contentData).Result;
-                    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+                    using (HttpClient httpClient = new HttpClient())
+                    {
+                        ChangePasswordModel changePasswordModel = new ChangePasswordModel()
+                        {
+                            LoginEmail = contact.LoginEmail,
+                            Password = contact.LastName + "New",
+                            TempCode = "121a", // will create an error
+                        };
 
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                    ErrRes? errRes = JsonSerializer.Deserialize<ErrRes>(responseContent);
-                    Assert.NotNull(errRes);
+                        Assert.NotNull(Configuration);
+                        if (Configuration != null)
+                        {
+                            string stringData = JsonSerializer.Serialize(changePasswordModel);
+                            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                            HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/changepassword", contentData).Result;
+                            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                            string responseContent = await response.Content.ReadAsStringAsync();
+                            ErrRes? errRes = JsonSerializer.Deserialize<ErrRes>(responseContent);
+                            Assert.NotNull(errRes);
+                        }
+                    }
                 }
             }
         }

@@ -1,6 +1,6 @@
-namespace pball.Services.Tests;
+namespace pball.Controllers.Tests;
 
-public partial class BaseServiceTests
+public partial class BaseControllerTests
 {
     public async Task<bool> FillDBWithTestDataAsync(int ContactNumber, int LeagueNumber, int LeagueContactNumber, int GamePerLeagueNumber)
     {

@@ -9,63 +9,52 @@ public partial class ContactControllerTests : BaseControllerTests
     {
         Assert.True(await ContactControllerSetup(culture));
 
-        bool? boolRet = await ClearServerLoggedInListAsync(culture);
-        Assert.True(boolRet);
-
-        RegisterModel registerModel = await FillRegisterModelAsync();
-
-        Contact? contact = await DoOkRegister(registerModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
+        Assert.NotNull(db);
+        if (db != null)
         {
-            Assert.True(contact.ContactID > 0);
-        }
-
-        LoginModel loginModel = new LoginModel()
-        {
-            LoginEmail = registerModel.LoginEmail,
-            Password = registerModel.Password,
-        };
-
-        contact = await DoOkLogin(loginModel, culture);
-        Assert.NotNull(contact);
-        if (contact != null)
-        {
-            Assert.True(contact.ContactID > 0);
-            Assert.NotEmpty(contact.Token);
-        }
-
-        if (Configuration != null)
-        {
-            using (HttpClient httpClient = new HttpClient())
+            Assert.NotNull(db.Contacts);
+            if (db.Contacts != null)
             {
-                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+                Contact? contact = (from c in db.Contacts
+                                    where string.IsNullOrWhiteSpace(c.Initial)
+                                    select c).AsNoTracking().FirstOrDefault();
 
-                LoginEmailModel loginEmailModel = new LoginEmailModel()
+                Assert.NotNull(contact);
+                if (contact != null)
                 {
-                    LoginEmail = registerModel.LoginEmail,
-                };
+                    using (HttpClient httpClient = new HttpClient())
+                    {
+                        var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        httpClient.DefaultRequestHeaders.Accept.Add(contentType);
 
-                string stringData = JsonSerializer.Serialize(loginEmailModel);
-                var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/getloginemailexist", contentData).Result;
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                        //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", contact.Token);
 
-                string responseContent = await response.Content.ReadAsStringAsync();
-                boolRet = JsonSerializer.Deserialize<bool>(responseContent);
-                Assert.True(boolRet);
+                        if (Configuration != null)
+                        {
+                            LoginEmailModel loginEmailModel = new LoginEmailModel()
+                            {
+                                LoginEmail = contact.LoginEmail,
+                            };
 
-                loginEmailModel.LoginEmail = $"Not{ registerModel.LoginEmail}";
+                            string stringData = JsonSerializer.Serialize(loginEmailModel);
+                            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                            HttpResponseMessage response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/getloginemailexist", contentData).Result;
+                            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-                stringData = JsonSerializer.Serialize(loginEmailModel);
-                contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
-                response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/getloginemailexist", contentData).Result;
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                            string responseContent = await response.Content.ReadAsStringAsync();
+                            bool? boolRet = JsonSerializer.Deserialize<bool>(responseContent);
+                            Assert.True(boolRet);
 
-                responseContent = await response.Content.ReadAsStringAsync();
-                boolRet = JsonSerializer.Deserialize<bool>(responseContent);
-                Assert.False(boolRet);
+                            loginEmailModel.LoginEmail = $"Not{ contact.LoginEmail}";
+
+                            stringData = JsonSerializer.Serialize(loginEmailModel);
+                            contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+                            response = httpClient.PostAsync($"{ Configuration["pballurl"] }api/{ culture }/contact/getloginemailexist", contentData).Result;
+                            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                        }
+                    }
+                }
             }
         }
     }

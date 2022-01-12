@@ -12,21 +12,13 @@ public partial class GameService : ControllerBase, IGameService
             return await Task.FromResult(BadRequest(errRes));
         }
 
-        if (leagueGamesModel.LeagueID == 0)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "LeagueID"));
-            return await Task.FromResult(BadRequest(errRes));
-        }
+        League? league = (from c in db.Leagues
+                          where c.LeagueID == leagueGamesModel.LeagueID
+                          select c).FirstOrDefault();
 
-        if (leagueGamesModel.StartDate.Year < 2020)
+        if (league == null)
         {
-            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "StartDate"));
-            return await Task.FromResult(BadRequest(errRes));
-        }
-
-        if (leagueGamesModel.EndDate.Year < 2020)
-        {
-            errRes.ErrList.Add(string.Format(PBallRes._IsRequired, "EndDate"));
+            errRes.ErrList.Add(string.Format(PBallRes.CouldNotFind_With_Equal_, "League", "LeagueID", leagueGamesModel.LeagueID.ToString()));
             return await Task.FromResult(BadRequest(errRes));
         }
 

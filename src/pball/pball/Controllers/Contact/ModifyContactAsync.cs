@@ -5,10 +5,20 @@ public partial class ContactController : ControllerBase, IContactController
     [HttpPut]
     public async Task<ActionResult<Contact>> ModifyContactAsync(Contact contact)
     {
+        ErrRes errRes = new ErrRes();
+
         if (HelperService != null)
         {
-            if (!await HelperService.SetCultureAsync(RouteData)) return await Task.FromResult(BadRequest(string.Format(PBallRes.LanguageNotSelected)));
-            if (!await HelperService.CheckLoggedInAsync(RouteData, Request)) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
+            if (!await HelperService.SetCultureAsync(RouteData))
+            {
+                errRes.ErrList.Add(string.Format(PBallRes.LanguageNotSelected));
+                return await Task.FromResult(BadRequest(errRes));
+            }
+            if (!await HelperService.CheckLoggedInAsync(RouteData, Request))
+            {
+                errRes.ErrList.Add(string.Format(PBallRes.YouDoNotHaveAuthorization));
+                return await Task.FromResult(BadRequest(errRes));
+            }
         }
 
         if (ContactService != null)
@@ -16,7 +26,8 @@ public partial class ContactController : ControllerBase, IContactController
             return await ContactService.ModifyContactAsync(contact);
         }
 
-        return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "ContactService")));
+        errRes.ErrList.Add(string.Format(string.Format(PBallRes._IsRequired, "ContactService")));
+        return await Task.FromResult(BadRequest(errRes));
     }
 }
 

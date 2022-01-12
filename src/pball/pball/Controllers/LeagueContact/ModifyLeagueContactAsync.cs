@@ -5,10 +5,20 @@ public partial class LeagueContactController : ControllerBase, ILeagueContactCon
     [HttpPut]
     public async Task<ActionResult<LeagueContact>> ModifyLeagueContactAsync(LeagueContact leagueContact)
     {
+        ErrRes errRes = new ErrRes();
+
         if (HelperService != null)
         {
-            if (!await HelperService.SetCultureAsync(RouteData)) return await Task.FromResult(BadRequest(string.Format(PBallRes.LanguageNotSelected)));
-            if (!await HelperService.CheckLoggedInAsync(RouteData, Request)) return await Task.FromResult(BadRequest(string.Format(PBallRes.YouDoNotHaveAuthorization)));
+            if (!await HelperService.SetCultureAsync(RouteData))
+            {
+                errRes.ErrList.Add(string.Format(PBallRes.LanguageNotSelected));
+                return await Task.FromResult(BadRequest(errRes));
+            }
+            if (!await HelperService.CheckLoggedInAsync(RouteData, Request))
+            {
+                errRes.ErrList.Add(string.Format(PBallRes.YouDoNotHaveAuthorization));
+                return await Task.FromResult(BadRequest(errRes));
+            }
         }
 
         if (LeagueContactService != null)
@@ -16,7 +26,8 @@ public partial class LeagueContactController : ControllerBase, ILeagueContactCon
             return await LeagueContactService.ModifyLeagueContactAsync(leagueContact);
         }
 
-        return await Task.FromResult(BadRequest(string.Format(PBallRes._IsRequired, "LeagueService")));
+        errRes.ErrList.Add(string.Format(string.Format(PBallRes._IsRequired, "LeagueContactService")));
+        return await Task.FromResult(BadRequest(errRes));
     }
 }
 
