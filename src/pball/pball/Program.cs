@@ -28,13 +28,13 @@ if (builder.Environment.IsDevelopment())
     });
 }
 
-//builder.Services.AddDbContext<PBallContext>(options =>
-//    options.UseSqlServer(builder.Configuration["pballDB"]));
-
 builder.Services.AddDbContext<PBallContext>(options =>
-{
-    options.UseSqlite($"Data Source={ builder.Configuration["pballDB"] }");
-});
+    options.UseSqlServer(builder.Configuration["pballDB"]));
+
+//builder.Services.AddDbContext<PBallContext>(options =>
+//{
+//    options.UseSqlite($"Data Source={ builder.Configuration["pballDB"] }");
+//});
 
 builder.Services.AddSingleton<IScrambleService, ScrambleService>();
 builder.Services.AddSingleton<ILoggedInService, LoggedInService>();

@@ -1,5 +1,5 @@
 <mat-toolbar>
-    <a mat-button [matMenuTriggerFor]="LeftShellMenu">
+    <!-- <a mat-button [matMenuTriggerFor]="LeftShellMenu">
         <mat-icon>more_vert</mat-icon>
     </a>
     <mat-menu #LeftShellMenu="matMenu">
@@ -14,17 +14,18 @@
                 Left three
             </button>
         </div>
-    </mat-menu>
+    </mat-menu> -->
 
     <button mat-button routerLink="/{{ state.Culture }}/" mat-button>
         <mat-icon>home</mat-icon> {{ shellService.ApplicationName[state.LangID] }}
     </button>
+
     <span class="example-spacer"></span>
 
-    <span *ngIf="state.Contact.ContactID">mat-icon
+    <span *ngIf="GetContactID()">
         <a mat-button [matMenuTriggerFor]="ProfileShellMenu">
-            <mat-icon>person</mat-icon> {{ GetFirstLetters(state.Contact.FirstName, 1) }} {{
-            GetFirstLetters(state.Contact.LastName, 1) }}
+            <mat-icon>person</mat-icon> {{ GetFirstLetters(state.User.FirstName, 1) }} {{
+            GetFirstLetters(state.User.LastName, 1) }}
         </a>
         <mat-menu #ProfileShellMenu="matMenu">
             <div>
@@ -38,10 +39,12 @@
         </mat-menu>
 
     </span>
-    <span *ngIf="!state.Contact.ContactID">
-        <button mat-menu-item routerLink="/{{ state.Culture }}/login">
+    <span *ngIf="!state.User.ContactID">
+        <button mat-button routerLink="/{{ state.Culture }}/login">
             <mat-icon>login</mat-icon>
+            <span *ngIf="state.Screen != 'Small'">
             {{ shellService.Login[state.LangID] }}
+            </span>
         </button>
     </span>
 
@@ -52,7 +55,7 @@
         {{ GetFirstLetters(shellService.Francais[state.LangID], 2) }}
     </button>
 
-    <span>
+    <!-- <span>
         <a mat-button [matMenuTriggerFor]="RightShellMenu">
             <mat-icon>more_vert</mat-icon>
         </a>
@@ -69,7 +72,7 @@
                 </button>
             </div>
         </mat-menu>
-    </span>
+    </span> -->
 </mat-toolbar>
 
 <router-outlet></router-outlet>

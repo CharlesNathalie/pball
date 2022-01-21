@@ -1,4 +1,4 @@
-<div class="formcenter" *ngIf="!loginService.loginSuccess">
+<div class="formcenter" *ngIf="!loginService.LoginSuccess">
     <mat-card>
         <mat-card-header>
             <mat-card-title>{{ loginService.LoginTxt[state.LangID]}}
@@ -37,7 +37,7 @@
         </form>
     </mat-card>
 </div>
-<div class="formcenter" *ngIf="loginService.loginSuccess">
+<div class="formcenter" *ngIf="loginService.LoginSuccess">
     <mat-card>
         <mat-card-header>
             <mat-card-title>{{ loginService.LoginSuccessful[state.LangID ?? languageEnum.en]}}

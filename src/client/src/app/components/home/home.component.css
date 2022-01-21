@@ -1,48 +1,12 @@
-.formcenter{
-    display: flex;
-    justify-content: center;
-    min-width: 400px;
+  .div-container {
+    position: relative;
+    min-height: 200px;
+    max-height: 400px;
+    overflow: auto;
+    text-align: center;
+    width: 100%;
   }
 
-  .mat-form-field {
-      width: 350px !important;
-  }
-
-  /* debut nathalie */
-   .mat-grid-tile  {
-    background-color: greenyellow;
-    font-size: larger;    
-  }
-  /* fin nathalie */
-
-  section {
-    display: table;
-  }
-  
-  .example-label {
-    display: table-cell;
-    font-size: 14px;
-    margin-left: 8px;
-    min-width: 120px;
-  }
-  
-  .example-button-row {
-    display: table-cell;
-    width: 490px;
-  }
-  
-  .example-button-row .mat-button-base {
-    margin: 8px 8px 8px 0;
-  }
-  
-  .example-flex-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-  
-  .example-button-container {
-    display: flex;
-    justify-content: center;
-    width: 120px;
+  .highlight{
+    font-weight: bold !important;
   }

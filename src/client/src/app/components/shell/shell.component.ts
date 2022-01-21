@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/app-state.service';
 import { ShellService } from './shell.service';
 import { LogoffService } from '../logoff/logoff.service';
+import { DemoDataService } from 'src/app/services/demo-data/demo-data.service';
 
 @Component({
   selector: 'app-shell',
@@ -40,5 +41,9 @@ export class ShellComponent implements OnInit, OnDestroy {
 
   Logoff() {
     this.logoffService.Logoff();
+  }
+
+  GetContactID() {
+    return this.state.User.ContactID;
   }
 }

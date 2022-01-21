@@ -1,0 +1,24 @@
+.highlight{
+  font-weight: bold;
+}
+
+.sortedAsc {
+  font-weight: bold;
+}
+
+.sortedDesc {
+  font-weight: bold;
+  font-style: italic;
+}
+
+div {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-header-cell {
+  text-align: center !important;
+}

@@ -4,76 +4,84 @@ import { catchError, map, of, Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/app-state.service';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
 import { League } from 'src/app/models/League.model';
+import { ContactService } from '../contact/contact.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LeagueService {
-  GettingAllLeagues: string[] = ['Getting all leagues', 'Getting all league (fr)'];
+  GettingUserLeagues: string[] = ['Getting user leagues', 'Getting user league (fr)'];
 
   Status: string = '';
   Working: boolean = false;
   Error: HttpErrorResponse = <HttpErrorResponse>{};
 
-  getAllLeaguesSuccess: boolean = false;
+  GetUserLeaguesSuccess: boolean = false;
 
   private sub: Subscription = new Subscription();
 
   constructor(public state: AppStateService,
-    public httpClient: HttpClient) {
+    public httpClient: HttpClient,
+    public contactService: ContactService) {
   }
 
-  GetAllLeagues() {
-    this.Status = `${this.GettingAllLeagues[this.state.LangID]}`;
+  GetPlayerLeagues() {
+    this.Status = `${this.GettingUserLeagues[this.state.LangID]}`;
     this.Working = true;
     this.Error = <HttpErrorResponse>{};
 
     this.sub ? this.sub.unsubscribe() : null;
-    this.sub = this.DoGetAllLeagues().subscribe();
+    this.sub = this.DoGetPlayerLeagues().subscribe();
   }
 
-  ResetLocals()
-  {
+  ResetLocals() {
     this.Status = '';
     this.Working = false;
-    this.Error = <HttpErrorResponse>{}; 
-    this.getAllLeaguesSuccess = false;
-
+    this.Error = <HttpErrorResponse>{};
+    this.GetUserLeaguesSuccess = false;
   }
 
-  private DoGetAllLeagues() {
+  private DoGetPlayerLeagues() {
     let languageEnum = GetLanguageEnum();
 
-    const url: string = `${this.state.BaseApiUrl}${languageEnum[this.state.Language]}-CA/leaguecontact/getallleagues }`;
+    const url: string = `${this.state.BaseApiUrl}${languageEnum[this.state.Language]}-CA/league/getplayerleagues`;
 
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.state.User.Token}`,
       })
     };
 
     return this.httpClient.get<League[]>(url, httpOptions)
-      .pipe(map((x: any) => { this.DoUpdateForGetAllLeagues(x); }),
-        catchError(e => of(e).pipe(map(e => { this.DoErrorForGetAllLeagues(e); }))));
+      .pipe(map((x: any) => { this.DoUpdateForGetPlayerLeagues(x); }),
+        catchError(e => of(e).pipe(map(e => { this.DoErrorForGetPlayerLeagues(e); }))));
   }
 
-  private DoUpdateForGetAllLeagues(leagueList: League[]) {
+  private DoUpdateForGetPlayerLeagues(leagueList: League[]) {
     this.Status = '';
     this.Working = false;
     this.Error = <HttpErrorResponse>{};
-    this.getAllLeaguesSuccess = true;
-
+    this.GetUserLeaguesSuccess = true;
     this.state.LeagueList = leagueList;
-
+    if (this.state.LeagueList.length > 0)
+    {
+      let leagueArr: League[] = this.state.LeagueList.filter(c => c.LeagueID == this.state.LeagueID);
+      if (!leagueArr.length)
+      {
+        this.state.LeagueID = this.state.LeagueList[0].LeagueID;
+      }
+      this.contactService.GetAllPlayersForLeague()
+    }   
     console.debug(leagueList);
   }
 
-  private DoErrorForGetAllLeagues(e: HttpErrorResponse) {
+  private DoErrorForGetPlayerLeagues(e: HttpErrorResponse) {
     this.Status = '';
     this.Working = false;
     this.Error = <HttpErrorResponse>e;
-
-    this.getAllLeaguesSuccess = false;
+    this.state.LeagueList = [];
+    this.GetUserLeaguesSuccess = false;
     console.debug(e);
   }
 }

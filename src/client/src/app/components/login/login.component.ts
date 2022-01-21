@@ -4,6 +4,7 @@ import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
 import { LoginModel } from 'src/app/models/LoginModel.model';
 import { AppStateService } from 'src/app/app-state.service';
 import { LoginService } from './login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(public state: AppStateService,
     public formBuilder: FormBuilder,
-    public loginService: LoginService) {
+    public loginService: LoginService,
+    public router: Router) {
   }
 
   ngOnInit(): void {

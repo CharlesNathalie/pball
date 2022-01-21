@@ -1,11 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { catchError, map, of, Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/app-state.service';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
-import { Contact } from 'src/app/models/Contact.model';
 import { RegisterModel } from 'src/app/models/RegisterModel.model';
+import { User } from 'src/app/models/User.model';
 
 @Injectable({
   providedIn: 'root'
@@ -45,20 +46,21 @@ export class RegisterService {
   Working: boolean = false;
   Error: HttpErrorResponse = <HttpErrorResponse>{};
 
-  registerSuccess: boolean = false;
+  RegisterSuccess: boolean = false;
 
   private sub: Subscription = new Subscription();
 
-  Contact: Contact = <Contact>{};
-
   constructor(public state: AppStateService,
-    public httpClient: HttpClient) {
+    public httpClient: HttpClient,
+    public router: Router) {
   }
 
   Register(registerModel: RegisterModel) {
     this.Status = `${this.Registering[this.state.LangID]} - ${registerModel.LoginEmail}`;
     this.Working = true;
     this.Error = <HttpErrorResponse>{};
+
+    this.state.User = <User>{};
 
     this.sub ? this.sub.unsubscribe() : null;
     this.sub = this.DoRegister(registerModel).subscribe();
@@ -161,8 +163,7 @@ export class RegisterService {
     this.Status = '';
     this.Working = false;
     this.Error = <HttpErrorResponse>{}; 
-    this.registerSuccess = false;
-
+    this.RegisterSuccess = false;
   }
 
   SubmitForm(form: FormGroup) {
@@ -182,8 +183,8 @@ export class RegisterService {
   private DoRegister(registerModel: RegisterModel) {
     let languageEnum = GetLanguageEnum();
 
-    localStorage.setItem('currentContact', '');
-    this.state.Contact = <Contact>{};
+    localStorage.setItem('User', '');
+    this.state.ClearData();
 
     const url: string = `${this.state.BaseApiUrl}${languageEnum[this.state.Language]}-CA/contact/register`;
 
@@ -193,28 +194,26 @@ export class RegisterService {
       })
     };
 
-    return this.httpClient.post<Contact>(url,
+    return this.httpClient.post<boolean>(url,
       JSON.stringify(registerModel), httpOptions)
       .pipe(map((x: any) => { this.DoUpdateForRegister(x); }),
         catchError(e => of(e).pipe(map(e => { this.DoErrorForRegister(e); }))));
   }
 
-  private DoUpdateForRegister(contact: Contact) {
+  private DoUpdateForRegister(boolRet: boolean) {
     this.Status = '';
     this.Working = false;
     this.Error = <HttpErrorResponse>{};
-    this.registerSuccess = true;
-    this.Contact = contact;
-    console.debug(contact);
+    this.RegisterSuccess = true;
+    this.router.navigate([`/${ this.state.Culture }/login`]);
+    console.debug(boolRet);
   }
 
   private DoErrorForRegister(e: HttpErrorResponse) {
     this.Status = '';
     this.Working = false;
     this.Error = <HttpErrorResponse>e;
-
-    this.registerSuccess = false;
-    this.Contact = <Contact>{};
+    this.RegisterSuccess = false;
     console.debug(e);
   }
 

@@ -4,7 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { catchError, map, of, Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/app-state.service';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
-import { Contact } from 'src/app/models/Contact.model';
+import { Player } from 'src/app/models/Player.model';
 
 @Injectable({
   providedIn: 'root'
@@ -43,14 +43,14 @@ export class ProfileService {
 
   private sub: Subscription = new Subscription();
 
-  Contact: Contact = <Contact>{};
+  Player: Player = <Player>{};
 
   constructor(public state: AppStateService,
     public httpClient: HttpClient) {
   }
 
   Profile() {
-    this.Status = `${this.UpdatingProfile[this.state.LangID]} - ${this.state.Contact.LoginEmail}`;
+    this.Status = `${this.UpdatingProfile[this.state.LangID]} - ${this.state.User.LoginEmail}`;
     this.Working = true;
     this.Error = <HttpErrorResponse>{};
 
@@ -136,18 +136,15 @@ export class ProfileService {
     this.Working = false;
     this.Error = <HttpErrorResponse>{};
     this.profileSuccess = false;
-
-    this.Contact = JSON.parse(JSON.stringify(this.state.Contact));
   }
 
   SubmitForm(form: FormGroup) {
-    this.Contact = JSON.parse(JSON.stringify(this.state.Contact));
     if (form.valid) {
-      this.Contact.LoginEmail = form.controls['LoginEmail'].value;
-      this.Contact.FirstName = form.controls['FirstName'].value;
-      this.Contact.Initial = form.controls['Initial'].value;
-      this.Contact.LastName = form.controls['LastName'].value;
-      this.Contact.PlayerLevel = form.controls['PlayerLevel'].value;
+      this.Player.LoginEmail = form.controls['LoginEmail'].value;
+      this.Player.FirstName = form.controls['FirstName'].value;
+      this.Player.Initial = form.controls['Initial'].value;
+      this.Player.LastName = form.controls['LastName'].value;
+      this.Player.PlayerLevel = form.controls['PlayerLevel'].value;
       this.Profile();
     };
   }
@@ -155,31 +152,31 @@ export class ProfileService {
   private DoProfile() {
     let languageEnum = GetLanguageEnum();
 
-    localStorage.setItem('currentContact', '');
+    localStorage.setItem('User', '');
 
     const url: string = `${this.state.BaseApiUrl}${languageEnum[this.state.Language]}-CA/contact`;
 
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.state.Contact.Token}`,
+        'Authorization': `Bearer ${this.state.User.Token}`,
      })
     };
 
-    return this.httpClient.put<Contact>(url,
-      JSON.stringify(this.Contact), httpOptions)
+    return this.httpClient.put<Player>(url,
+      JSON.stringify(this.Player), httpOptions)
       .pipe(map((x: any) => { this.DoUpdateForProfile(x); }),
         catchError(e => of(e).pipe(map(e => { this.DoErrorForProfile(e); }))));
   }
 
-  private DoUpdateForProfile(contact: Contact) {
+  private DoUpdateForProfile(player: Player) {
     this.Status = '';
     this.Working = false;
     this.Error = <HttpErrorResponse>{};
     this.profileSuccess = true;
-    this.Contact = contact;
-    this.state.Contact = JSON.parse(JSON.stringify(contact));
-    console.debug(contact);
+    this.Player = player;
+    this.state.User = JSON.parse(JSON.stringify(player));
+    console.debug(player);
   }
 
   private DoErrorForProfile(e: HttpErrorResponse) {
@@ -188,7 +185,7 @@ export class ProfileService {
     this.Error = <HttpErrorResponse>e;
 
     this.profileSuccess = false;
-    this.Contact = <Contact>{};
+    this.Player = <Player>{};
     console.debug(e);
   }
 

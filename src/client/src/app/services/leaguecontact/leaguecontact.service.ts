@@ -4,7 +4,6 @@ import { FormGroup } from '@angular/forms';
 import { catchError, map, of, Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/app-state.service';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
-import { Contact } from 'src/app/models/Contact.model';
 import { LeagueContact } from 'src/app/models/LeagueContact.model';
 
 @Injectable({

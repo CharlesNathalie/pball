@@ -13,8 +13,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ShellComponent } from './components/shell/shell.component';
 import { TableAllComponent } from './components/table-all/table-all.component';
-import { TableMostGamesPlayedComponent } from './components/table-most-games-played/table-most-games-played.component';
-import { TablePlayerComponent } from './components/table-player/table-player.component';
+import { TableLeagueStatsComponent } from './components/table-league-stats/table-league-stats.component';
+import { TablePlayerGamesComponent } from './components/table-player-games/table-player-games.component';
 
 @NgModule({
   declarations: [
@@ -27,8 +27,8 @@ import { TablePlayerComponent } from './components/table-player/table-player.com
     RegisterComponent,
     ShellComponent,
     TableAllComponent,
-    TableMostGamesPlayedComponent,
-    TablePlayerComponent,
+    TableLeagueStatsComponent,
+    TablePlayerGamesComponent,
   ],
   imports: [
     CommonModule,
@@ -55,8 +55,8 @@ import { TablePlayerComponent } from './components/table-player/table-player.com
     RegisterComponent,
     ShellComponent,
     TableAllComponent,
-    TableMostGamesPlayedComponent,
-    TablePlayerComponent,
+    TableLeagueStatsComponent,
+    TablePlayerGamesComponent,
   ]
 })
 export class SharedModule { }

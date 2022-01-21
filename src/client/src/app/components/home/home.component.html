@@ -1,39 +1,142 @@
-<div class="formcenter">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>{{ homeService.WelcomeTo[state.LangID]}} {{ shellService.ApplicationName[state.LangID] }}
-            </mat-card-title>
-            <mat-card-subtitle>
-                {{ state.Version[state.LangID] }}
-            </mat-card-subtitle>
-        </mat-card-header>
-        <h2>{{ homeService.WhatIsWorkingAtThisTime[state.LangID] }}</h2>
-        <p>{{ homeService.Login[state.LangID] }} --- 
-            {{ homeService.Register[state.LangID] }} --- 
-            {{ homeService.Profile[state.LangID] }} --- 
-            {{ homeService.ForgotPassword[state.LangID] }} --- 
-            {{ homeService.Bilingual[state.LangID] }}</p>
-        <p>&nbsp;</p>
-        <h2>{{ homeService.ToDo[state.LangID] }}</h2>
-        <p>{{ homeService.ManageLeagues[state.LangID] }}</p>
-        <p>{{ homeService.ManagePlayersWithinLeagues[state.LangID] }}</p>
-        <p>{{ homeService.ManageGames[state.LangID] }}</p>
-        <p>{{ homeService.ProduceTablesOfResults[state.LangID] }}</p>
-        <p>{{ homeService.ProduceChartsOfResults[state.LangID] }}</p>
-        <p>&nbsp;</p>
-        <button mat-raised-button  routerLink="/{{ state.Culture }}/login">
-          <mat-icon>login</mat-icon>  
-          {{ homeService.Login[state.LangID] }}
-        </button>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <button mat-raised-button routerLink="/{{ state.Culture }}/register">
-          <mat-icon>person_add_alt_1</mat-icon>
-          {{ homeService.Register[state.LangID] }}
-        </button>
-    </mat-card>
-</div>
+<mat-grid-list cols="{{state.CurrentCols}}" rowHeight="1:1">
+    <mat-grid-tile>
+        <div class="div-container">
+            <div *ngIf="!state.User?.ContactID">
+                <button mat-button routerLink="/{{ state.Culture }}/login">
+                    <mat-icon>login</mat-icon>
+                    {{ shellService.Login[state.LangID] }}
+                </button>
+                <button mat-button routerLink="/{{ state.Culture }}/register">
+                    <mat-icon>person_add</mat-icon>
+                    {{ shellService.Register[state.LangID] }}
+                </button>
+            </div>
 
-<div>
-    <app-table-most-games-played></app-table-most-games-played>
-</div>
+            <div *ngIf="state.User?.ContactID">
+                <div *ngFor="let league of state.LeagueList">
+                    <button mat-raised-button [ngClass]="GetLeagueHighlight(league.LeagueID)"
+                        (click)="SetLeagueID(league.LeagueID)">
+                        {{ league.LeagueName }}
+                    </button>
+                    <br><br>
+                </div>
+                <div>
+                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('day')" (click)="Period('day')"
+                        title="{{ homeService.Today[state.LangID] }}">
+                        <span *ngIf="state.Screen == 'Small'">{{ homeService.TodayInit[state.LangID] }}</span>
+                        <span *ngIf="state.Screen != 'Small'">{{ homeService.Today[state.LangID] }}</span>
+                    </button>
+                    &nbsp;&nbsp;
+                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('week')" (click)="Period('week')"
+                        title="{{ homeService.Week[state.LangID] }}">
+                        <span *ngIf="state.Screen == 'Small'">{{ homeService.WeekInit[state.LangID] }}</span>
+                        <span *ngIf="state.Screen != 'Small'">{{ homeService.Week[state.LangID] }}</span>
+                    </button>
+                    &nbsp;&nbsp;
+                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('month')" (click)="Period('month')"
+                        title="{{ homeService.Month[state.LangID] }}">
+                        <span *ngIf="state.Screen == 'Small'">{{ homeService.MonthInit[state.LangID] }}</span>
+                        <span *ngIf="state.Screen != 'Small'">{{ homeService.Month[state.LangID] }}</span>
+                    </button>
+                    &nbsp;&nbsp;
+                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('year')" (click)="Period('year')"
+                        title="{{ homeService.Year[state.LangID] }}">
+                        <span *ngIf="state.Screen == 'Small'">{{ homeService.YearInit[state.LangID] }}</span>
+                        <span *ngIf="state.Screen != 'Small'">{{ homeService.Year[state.LangID] }}</span>
+                    </button>
+                    &nbsp;&nbsp;
+                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('all')" (click)="Period('all')"
+                        title="{{ homeService.All[state.LangID] }}">
+                        <span *ngIf="state.Screen == 'Small'">{{ homeService.AllInit[state.LangID] }}</span>
+                        <span *ngIf="state.Screen != 'Small'">{{ homeService.All[state.LangID] }}</span>
+                    </button>
+                    <br><br>
+                </div>
+                <div>
+                    <h3>{{ homeService.BetweenDates[state.LangID]}}</h3>
+                    <mat-form-field [ngClass]="GetDataTimeHighlight('between')">
+                        <input matInput #startDate (dateChange)="ChangedStartDate(startDate)" [value]="state.StartDate"
+                            [matDatepicker]="pickerStart">
+                        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerStart></mat-datepicker>
+                    </mat-form-field>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <mat-form-field [ngClass]="GetDataTimeHighlight('between')">
+                        <input matInput #endDate (dateChange)="ChangedEndDate(endDate)" [value]="state.EndDate"
+                            [matDatepicker]="pickerEnd">
+                        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerEnd></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <br>
+            <hr color="blue" width="50%">
+            <div>
+                <button mat-button *ngIf="!state.DemoVisible" (click)="ShowDemo()">
+                    {{ shellService.ShowDemo[state.LangID] }}
+                </button>
+                <button mat-button *ngIf="state.DemoVisible" (click)="HideDemo()">
+                    {{ shellService.HideDemo[state.LangID] }}
+                </button>
+            </div>
+            <div *ngIf="state.User?.ContactID">
+                <h2>{{ homeService.ScrollToViewResults[state.LangID] }}</h2>
+            </div>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile *ngIf="state.LeagueStatsModelList.length">
+        <div class="div-container">
+            <app-table-league-stats></app-table-league-stats>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile *ngIf="state.PlayerGameModelList.length">
+        <div class="div-container">
+            <app-table-player-games></app-table-player-games>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile *ngIf="false">
+        <div class="div-container">
+            <p>
+                Start Date: {{ state.StartDate | json }}
+            </p>
+            <p>
+                End Date: {{ state.EndDate | json }}
+            </p>
+            <p>
+                User: {{ state.User | json }}
+            </p>
+            <p>
+                LeagueID: {{ state.LeagueID | json }}
+            </p>
+            <p>
+                LeagueStatsModel: {{ state.LeagueStatsModelList | json }}
+            </p>
+            <p>
+                PlayerGameModel: {{ state.PlayerGameModelList | json }}
+            </p>
+            <p>
+                LeagueList: {{ state.LeagueList | json }}
+            </p>
+            <p>
+                PlayerList: {{ state.PlayerList | json }}
+            </p>
+            <p>
+                LeagueContactList: {{ state.LeagueContactList | json }}
+            </p>
+            <p>
+                GameList: {{ state.GameList | json }}
+            </p>
 
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile *ngIf="false">
+        <div class="div-container">
+            <h1>More content</h1>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile *ngIf="false">
+        <div class="div-container">
+            <h1>More content</h1>
+        </div>
+    </mat-grid-tile>
+</mat-grid-list>

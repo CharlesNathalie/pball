@@ -3,9 +3,11 @@ import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { catchError, map, of, Subscription } from 'rxjs';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
-import { Contact } from 'src/app/models/Contact.model';
 import { LoginModel } from 'src/app/models/LoginModel.model';
 import { AppStateService } from 'src/app/app-state.service';
+import { Router } from '@angular/router';
+import { LeagueService } from 'src/app/services/league/league.service';
+import { User } from 'src/app/models/User.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,18 +31,24 @@ export class LoginService {
   Working: boolean = false;
   Error: HttpErrorResponse = <HttpErrorResponse>{};
 
-  loginSuccess: boolean = false;
+  LoginSuccess: boolean = false;
 
   private sub: Subscription = new Subscription();
 
   constructor(public state: AppStateService,
-    public httpClient: HttpClient) {
+    public httpClient: HttpClient,
+    public router: Router,
+    public leagueService: LeagueService) {
   }
 
   Login(loginModel: LoginModel) {
+
     this.Status = `${this.LoggingIn[this.state.LangID]} - ${loginModel.LoginEmail}`;
     this.Working = true;
     this.Error = <HttpErrorResponse>{};
+
+    localStorage.setItem('User', '');
+    this.state.ClearData();
 
     this.sub ? this.sub.unsubscribe() : null;
     this.sub = this.DoLogin(loginModel).subscribe();
@@ -76,12 +84,11 @@ export class LoginService {
     return this.GetErrorMessage(fieldName, form) == '' ? false : true;
   }
 
-  ResetLocals()
-  {
+  ResetLocals() {
     this.Status = '';
     this.Working = false;
-    this.Error = <HttpErrorResponse>{}; 
-    this.loginSuccess = false;
+    this.Error = <HttpErrorResponse>{};
+    this.LoginSuccess = false;
   }
 
   SubmitForm(form: FormGroup) {
@@ -94,8 +101,9 @@ export class LoginService {
   private DoLogin(loginModel: LoginModel) {
     let languageEnum = GetLanguageEnum();
 
-    localStorage.setItem('currentContact', '');
-    this.state.Contact = <Contact>{};
+    this.state.User = <User>{};
+    this.state.ClearData();
+    this.state.ClearLocalStorage();
 
     const url: string = `${this.state.BaseApiUrl}${languageEnum[this.state.Language]}-CA/contact/login`;
 
@@ -105,30 +113,28 @@ export class LoginService {
       })
     };
 
-    return this.httpClient.post<Contact>(url,
+    return this.httpClient.post<User>(url,
       JSON.stringify(loginModel), httpOptions)
       .pipe(map((x: any) => { this.DoUpdateForLogin(x); }),
         catchError(e => of(e).pipe(map(e => { this.DoErrorForLogin(e); }))));
   }
 
-  private DoUpdateForLogin(contact: Contact) {
+  private DoUpdateForLogin(user: User) {
     this.Status = '';
     this.Working = false;
     this.Error = <HttpErrorResponse>{};
-    console.debug(contact);
-
-    this.loginSuccess = true;
-    this.state.Contact = contact;
-
-    localStorage.setItem('currentContact', JSON.stringify(contact));
+    this.state.User = user;
+    this.LoginSuccess = true;
+    this.leagueService.GetPlayerLeagues();
+    console.debug(user);
+    this.router.navigate([`/${ this.state.Culture }/home`]);
   }
 
   private DoErrorForLogin(e: HttpErrorResponse) {
     this.Status = '';
     this.Working = false;
     this.Error = <HttpErrorResponse>e;
-
-    this.loginSuccess = false;
+    this.LoginSuccess = false;
     console.debug(e);
   }
 }

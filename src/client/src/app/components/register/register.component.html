@@ -1,4 +1,4 @@
-<div class="formcenter" *ngIf="!registerService.registerSuccess">
+<div class="formcenter" *ngIf="!registerService.RegisterSuccess">
     <mat-card>
         <mat-card-header>
             <mat-card-title>{{ registerService.CreateAccount[state.LangID ?? languageEnum.en]}}
@@ -69,7 +69,7 @@
         </form>
     </mat-card>
 </div>
-<div class="formcenter" *ngIf="registerService.registerSuccess">
+<div class="formcenter" *ngIf="registerService.RegisterSuccess">
     <mat-card>
         <mat-card-header>
             <mat-card-title>{{ registerService.AccountCreatedSuccessfully[state.LangID ?? languageEnum.en]}}

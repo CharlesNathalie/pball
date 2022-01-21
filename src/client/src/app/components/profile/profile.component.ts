@@ -22,15 +22,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.profileService.ResetLocals();
-    
+
     this.profileForm = this.formBuilder.group({
-      LoginEmail: [this.profileService.Contact.LoginEmail, [Validators.required, Validators.email, Validators.maxLength(100)]],
-      FirstName: [this.profileService.Contact.FirstName, [Validators.required, Validators.maxLength(50)]],
-      Initial: [this.profileService.Contact.Initial, [Validators.maxLength(20)]],
-      LastName: [this.profileService.Contact.LastName, [Validators.required, Validators.maxLength(50)]],
-      PlayerLevel: [this.profileService.Contact.PlayerLevel, [Validators.required, Validators.min(1.0), Validators.max(5)]],
+      LoginEmail: [this.state.User.LoginEmail, [Validators.required, Validators.email, Validators.maxLength(100)]],
+      FirstName: [this.state.User.FirstName, [Validators.required, Validators.maxLength(50)]],
+      Initial: [this.state.User.Initial, [Validators.maxLength(20)]],
+      LastName: [this.state.User.LastName, [Validators.required, Validators.maxLength(50)]],
+      PlayerLevel: [this.state.User.PlayerLevel.toFixed(1), [Validators.required, Validators.min(1.0), Validators.max(5)]],
     });
-    }
+  }
 
   ngOnDestroy(): void {
   }

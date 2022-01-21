@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "LKsS45mtJAfbn3jD/eN2mMB7yeosLujd3eRtYyNkTD4=",
+  "Hash": "kRKSa60JpDTOi+bnD9ac4a+Omu8bb77BexVTc7lixCM=",
   "Source": "pball",
   "BasePath": "_content/pball",
   "Mode": "Default",
@@ -85,12 +85,12 @@
       "OriginalItemSpec": "wwwroot\\index.html"
     },
     {
-      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\main.126fce84aa71daa9.js",
+      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\main.a4ea32ad7b355cb5.js",
       "SourceId": "pball",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\pball\\src\\pball\\pball\\wwwroot\\",
       "BasePath": "_content/pball",
-      "RelativePath": "main.126fce84aa71daa9.js",
+      "RelativePath": "main.a4ea32ad7b355cb5.js",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -99,15 +99,15 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\main.126fce84aa71daa9.js"
+      "OriginalItemSpec": "wwwroot\\main.a4ea32ad7b355cb5.js"
     },
     {
-      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\polyfills.7e4ec7cbb472459f.js",
+      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\polyfills.802c96d72624ff5a.js",
       "SourceId": "pball",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\pball\\src\\pball\\pball\\wwwroot\\",
       "BasePath": "_content/pball",
-      "RelativePath": "polyfills.7e4ec7cbb472459f.js",
+      "RelativePath": "polyfills.802c96d72624ff5a.js",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -116,15 +116,15 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\polyfills.7e4ec7cbb472459f.js"
+      "OriginalItemSpec": "wwwroot\\polyfills.802c96d72624ff5a.js"
     },
     {
-      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\runtime.3b2ac8c1adcf7f83.js",
+      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\runtime.e1b8707acf1fcdd2.js",
       "SourceId": "pball",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\pball\\src\\pball\\pball\\wwwroot\\",
       "BasePath": "_content/pball",
-      "RelativePath": "runtime.3b2ac8c1adcf7f83.js",
+      "RelativePath": "runtime.e1b8707acf1fcdd2.js",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -133,7 +133,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\runtime.3b2ac8c1adcf7f83.js"
+      "OriginalItemSpec": "wwwroot\\runtime.e1b8707acf1fcdd2.js"
     },
     {
       "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\scripts.814f1cb817ae8c97.js",
@@ -153,12 +153,12 @@
       "OriginalItemSpec": "wwwroot\\scripts.814f1cb817ae8c97.js"
     },
     {
-      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\styles.68b2a3d9e76ca2bd.css",
+      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\styles.a353fd67950c4b03.css",
       "SourceId": "pball",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\pball\\src\\pball\\pball\\wwwroot\\",
       "BasePath": "_content/pball",
-      "RelativePath": "styles.68b2a3d9e76ca2bd.css",
+      "RelativePath": "styles.a353fd67950c4b03.css",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -167,7 +167,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\styles.68b2a3d9e76ca2bd.css"
+      "OriginalItemSpec": "wwwroot\\styles.a353fd67950c4b03.css"
     }
   ]
 }
