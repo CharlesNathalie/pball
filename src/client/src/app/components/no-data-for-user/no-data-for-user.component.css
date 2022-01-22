@@ -1,0 +1,9 @@
+  .formcenter{
+    display: flex;
+    justify-content: center;
+    min-width: 400px;
+  }
+
+  .mat-form-field {
+      width: 350px !important;
+  }

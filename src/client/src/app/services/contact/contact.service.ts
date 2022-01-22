@@ -12,6 +12,7 @@ import { LeagueContactService } from '../league-contact/league-contact.service';
 export class ContactService {
   GettingGames: string[] = ['Getting all contacts for league', 'Getting all contacts for league (fr)'];
   LeagueIDIsRequired: string[] = ['LeagueID is required', 'LeagueID est requis'];
+  UserNotLoggedIn: string[] = ['User not logged in', 'L\'utilisateur n\'a aucune connexion'];
 
   Status: string = '';
   Working: boolean = false;
@@ -27,6 +28,11 @@ export class ContactService {
   }
 
   GetAllPlayersForLeague() {
+    if (this.state.DemoVisible || this.state.User.ContactID == 0) {
+      this.Error = new HttpErrorResponse({ error: this.UserNotLoggedIn });
+      return;
+    }
+
     this.Status = `${this.GettingGames[this.state.LangID]}`;
     this.Working = true;
     this.Error = <HttpErrorResponse>{};
@@ -40,7 +46,6 @@ export class ContactService {
     this.Working = false;
     this.Error = <HttpErrorResponse>{};
     this.GetAllContactsForLeagueSuccess = false;
-
   }
 
   private DoGetAllPlayersForLeague() {

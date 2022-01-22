@@ -32,7 +32,9 @@ export class LogoffService {
     this.Working = true;
     this.Error = <HttpErrorResponse>{};
 
+    this.state.ClearDemoLocalStorage();
     this.state.ClearLocalStorage();
+    this.state.ClearDemoData();
     this.state.ClearData();
 
 

@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/app-state.service';
 import { ShellService } from './shell.service';
 import { LogoffService } from '../logoff/logoff.service';
-import { DemoDataService } from 'src/app/services/demo-data/demo-data.service';
+import { DataHelperService } from 'src/app/services/data/data-helper.service';
 
 @Component({
   selector: 'app-shell',

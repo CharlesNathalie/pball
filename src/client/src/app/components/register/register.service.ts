@@ -7,6 +7,7 @@ import { AppStateService } from 'src/app/app-state.service';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
 import { RegisterModel } from 'src/app/models/RegisterModel.model';
 import { User } from 'src/app/models/User.model';
+import { DataHelperService } from 'src/app/services/data/data-helper.service';
 
 @Injectable({
   providedIn: 'root'
@@ -60,6 +61,12 @@ export class RegisterService {
     this.Working = true;
     this.Error = <HttpErrorResponse>{};
 
+    this.state.ClearDemoData();
+    this.state.ClearData();
+    this.state.ClearDemoLocalStorage();
+    this.state.ClearLocalStorage();
+    
+    this.state.DemoUser = <User>{};
     this.state.User = <User>{};
 
     this.sub ? this.sub.unsubscribe() : null;
@@ -158,11 +165,10 @@ export class RegisterService {
     return this.GetErrorMessage(fieldName, form) == '' ? false : true;
   }
 
-  ResetLocals()
-  {
+  ResetLocals() {
     this.Status = '';
     this.Working = false;
-    this.Error = <HttpErrorResponse>{}; 
+    this.Error = <HttpErrorResponse>{};
     this.RegisterSuccess = false;
   }
 
@@ -183,8 +189,14 @@ export class RegisterService {
   private DoRegister(registerModel: RegisterModel) {
     let languageEnum = GetLanguageEnum();
 
-    localStorage.setItem('User', '');
-    this.state.ClearData();
+    if (this.state.DemoVisible) {
+      localStorage.setItem('DemoUser', '');
+      this.state.ClearDemoData();
+    }
+    else {
+      localStorage.setItem('User', '');
+      this.state.ClearData();
+    }
 
     const url: string = `${this.state.BaseApiUrl}${languageEnum[this.state.Language]}-CA/contact/register`;
 
@@ -205,7 +217,7 @@ export class RegisterService {
     this.Working = false;
     this.Error = <HttpErrorResponse>{};
     this.RegisterSuccess = true;
-    this.router.navigate([`/${ this.state.Culture }/login`]);
+    this.router.navigate([`/${this.state.Culture}/login`]);
     console.debug(boolRet);
   }
 

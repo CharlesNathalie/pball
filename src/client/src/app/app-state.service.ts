@@ -26,10 +26,20 @@ export class AppStateService {
   CurrentCols: string = '1';
   Screen: 'Small' | 'Large' = 'Small';
 
+  // Demo var
+  DemoEndDate: Date = new Date();
+  DemoLeagueID: number = 0;
+  DemoStartDate: Date = new Date(2020, 1, 1);
+  DemoUser: User = <User>{};
+
+  // Reality var
   EndDate: Date = new Date();
+  LeagueID: number = 0;
+  StartDate: Date = new Date(2020, 1, 1);
+  User: User = <User>{};
+
   GameList: Game[] = [];
   LeagueContactList: LeagueContact[] = [];
-  LeagueID: number = 0;
   LeagueList: League[] = [];
   LeagueStatsModelList: LeagueStatsModel[] = [];
   LeagueStatsModelSortProp: 'FullName' | 'NumberOfGames' | 'NumberOfWins' | 'WinningPercentage' = 'NumberOfGames';
@@ -38,13 +48,21 @@ export class AppStateService {
   PlayerGameModelSortProp: 'Partner' | 'Opponents' | 'GameDate' | 'Scores' = 'GameDate';
   PlayerGameModelSortAscDesc: AscDescEnum = AscDescEnum.Descending;
   PlayerList: Player[] = [];
+  
   DemoVisible: boolean = false;
-  StartDate: Date = new Date(2020, 1, 1);
-  User: User = <User>{};
-  DataTime: 'day' | 'week' | 'month' | 'year' | 'all' | 'between' = 'month';
+  DataTime: 'day' | 'week' | 'month' | 'year' | 'all' | 'between' = 'year';
 
   constructor() {
 
+  }
+
+  ClearDemoLocalStorage()
+  {
+    localStorage.removeItem('DemoUser');
+    localStorage.removeItem('DemoLeagueID');
+    localStorage.removeItem('DemoVisible');
+    localStorage.removeItem('DemoStartDate');
+    localStorage.removeItem('DemoEndDate');
   }
 
   ClearLocalStorage()
@@ -54,6 +72,20 @@ export class AppStateService {
     localStorage.removeItem('DemoVisible');
     localStorage.removeItem('StartDate');
     localStorage.removeItem('EndDate');
+  }
+
+  ClearDemoData() {
+    this.DemoVisible = false;
+    this.DemoEndDate = new Date();
+    this.GameList = [];
+    this.LeagueContactList = [];
+    this.DemoLeagueID = 0;
+    this.LeagueList = [];
+    this.LeagueStatsModelList = [];
+    this.PlayerGameModelList = [];
+    this.PlayerList = [];
+    this.DemoStartDate = new Date(2020, 1, 1);
+    this.DemoUser = <User>{};  
   }
 
   ClearData() {
@@ -69,7 +101,7 @@ export class AppStateService {
     this.StartDate = new Date(2020, 1, 1);
     this.User = <User>{};  
   }
-  
+
   SetLanguage(Language: LanguageEnum) {
     if (Language == LanguageEnum.fr) {
       this.Language = LanguageEnum.fr;

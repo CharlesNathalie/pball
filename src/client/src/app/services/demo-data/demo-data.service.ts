@@ -73,10 +73,10 @@ export class DemoDataService {
     this.GenerateDemoDataGameList();
 
     this.state.LeagueID = 1;
-    this.state.User = <User>{ ...this.state.PlayerList[0] };
+    this.state.DemoUser = <User>{ ...this.state.PlayerList[0] };
 
-    localStorage.setItem('User', JSON.stringify(this.state.User));
-    localStorage.setItem('LeagueID', JSON.stringify(this.state.LeagueID));
+    localStorage.setItem('DemoUser', JSON.stringify(this.state.DemoUser));
+    localStorage.setItem('DemoLeagueID', JSON.stringify(this.state.LeagueID));
     localStorage.setItem('DemoVisible', JSON.stringify(true));
   }
 

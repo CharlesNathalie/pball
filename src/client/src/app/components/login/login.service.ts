@@ -48,6 +48,8 @@ export class LoginService {
     this.Error = <HttpErrorResponse>{};
 
     localStorage.setItem('User', '');
+    localStorage.setItem('DemoUser', '');
+    this.state.ClearDemoData();
     this.state.ClearData();
 
     this.sub ? this.sub.unsubscribe() : null;
@@ -102,7 +104,9 @@ export class LoginService {
     let languageEnum = GetLanguageEnum();
 
     this.state.User = <User>{};
+    this.state.ClearDemoData();
     this.state.ClearData();
+    this.state.ClearDemoLocalStorage();
     this.state.ClearLocalStorage();
 
     const url: string = `${this.state.BaseApiUrl}${languageEnum[this.state.Language]}-CA/contact/login`;
@@ -125,6 +129,13 @@ export class LoginService {
     this.Error = <HttpErrorResponse>{};
     this.state.User = user;
     this.LoginSuccess = true;
+
+    localStorage.setItem('User', JSON.stringify(this.state.User));
+    localStorage.setItem('LeagueID', JSON.stringify(this.state.LeagueID));
+    localStorage.setItem('StartDate', JSON.stringify(this.state.StartDate));
+    localStorage.setItem('EndDate', JSON.stringify(this.state.EndDate));
+    localStorage.setItem('DemoVisible', JSON.stringify(this.state.DemoVisible));
+
     this.leagueService.GetPlayerLeagues();
     console.debug(user);
     this.router.navigate([`/${ this.state.Culture }/home`]);

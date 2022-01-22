@@ -10,6 +10,7 @@ export class TablePlayerGamesService {
   Opponents: string[] = ['Opponents', 'Adversaire'];
   GameDate: string[] = ['Game date', 'Date de la partie'];
   Scores: string[] = ['Scores', 'Pointages'];
+  GamesWon: string[] = ['Games won', 'parties gagnées'];
   
   constructor(public state: AppStateService,
     public sortService: SortService) {

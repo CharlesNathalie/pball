@@ -1,4 +1,7 @@
+<app-no-data-for-user></app-no-data-for-user>
 <div *ngIf="state.LeagueStatsModelList?.length">
+    <br>
+    <h2>{{ GetCurrentLeagueName() }} {{ tableLeagueStatsService.stats[state.LangID]}}</h2>
     <table mat-table [dataSource]="state.LeagueStatsModelList" class="mat-elevation-z8">
 
         <ng-container matColumnDef="Rank">
@@ -42,6 +45,6 @@
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns; let item"
-            [ngClass]="{ 'highlight': item.ContactID == state.User.ContactID }"></tr>
+            [ngClass]="{ 'highlight': item.ContactID == (state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID) }"></tr>
     </table>
 </div>

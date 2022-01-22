@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppStateService } from 'src/app/app-state.service';
 import { AscDescEnum, GetAscDescEnum } from 'src/app/enums/AscDescEnum';
+import { DataHelperService } from 'src/app/services/data/data-helper.service';
 import { DataLeagueStatService } from 'src/app/services/data/data-league-stats.service';
 import { DataPlayerGamesService } from 'src/app/services/data/data-player-games.service';
 import { SortService } from 'src/app/services/sort/sort.service';
@@ -16,7 +17,8 @@ export class TablePlayerGamesComponent implements OnInit, OnDestroy {
   constructor(public state: AppStateService,
     public tablePlayerGamesService: TablePlayerGamesService,
     public sortService: SortService,
-    public dataPlayerGameService: DataPlayerGamesService) {
+    public dataPlayerGameService: DataPlayerGamesService,
+    public dataHelperService: DataHelperService) {
   }
 
   ascDescEnum = GetAscDescEnum();
@@ -61,8 +63,24 @@ export class TablePlayerGamesComponent implements OnInit, OnDestroy {
           return '';
       }
     }
-    else{
+    else {
       return '';
+    }
+  }
+
+  GetLoggedInPlayerFullName(): string {
+    let ContactID: number = 0;
+    if (this.state.DemoVisible) {
+      ContactID = this.state.DemoUser.ContactID;
+    }
+    else {
+      ContactID = this.state.User.ContactID;
+    }
+    if (!ContactID) {
+      return '';
+    }
+    else {
+      return this.dataHelperService.GetPlayerFullName(ContactID);
     }
   }
 }

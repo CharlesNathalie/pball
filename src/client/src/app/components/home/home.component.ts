@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/app-state.service';
 import { DemoDataService } from 'src/app/services/demo-data/demo-data.service';
 import { LeagueService } from 'src/app/services/league/league.service';
@@ -11,12 +12,15 @@ import { HomeService } from './home.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  source: any;
+  dist: any;
 
   constructor(public state: AppStateService,
     public homeService: HomeService,
     public shellService: ShellService,
     public leagueService: LeagueService,
-    public demoDataService: DemoDataService) {
+    public demoDataService: DemoDataService,
+    public router: Router) {
   }
 
   ngOnInit(): void {
@@ -54,14 +58,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   HideDemo() {
-    this.state.ClearLocalStorage();
-    this.state.ClearData();
+    this.state.ClearDemoLocalStorage();
+    this.state.ClearDemoData();
+    this.leagueService.GetPlayerLeagues(); 
   }
 
   ShowDemo() {
     this.state.DemoVisible = true;
     this.demoDataService.GenerateDemoData();
-    this.homeService.Period('month');
+    this.homeService.Period('year');
   }
 
   GetDataTimeHighlight(dataTime: 'day' | 'week' | 'month' | 'year' | 'all' | 'between'): string {
@@ -72,8 +77,23 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.state.LeagueID == LeagueID ? 'highlight' : '';
   }
 
-  GetChecked(LeagueID: number): string
-  {
+  GetChecked(LeagueID: number): string {
     return this.state.LeagueID == LeagueID ? 'checked' : '';
+  }
+
+  DragStart(v: any) {
+    this.source = v.source;
+  }
+  DragMove(v: any) {
+    this.source = v.source;
+    this.dist = v.distance;
+  }
+  DragEnd(v: any) {
+    this.source = v.source;
+    this.dist = v.distance;
+
+    if (this.dist.x < -10) {
+      this.router.navigate([`/${this.state.Culture}/login`])
+    }
   }
 }

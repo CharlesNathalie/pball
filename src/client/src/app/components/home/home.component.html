@@ -1,7 +1,21 @@
-<mat-grid-list cols="{{state.CurrentCols}}" rowHeight="1:1">
-    <mat-grid-tile>
-        <div class="div-container">
-            <div *ngIf="!state.User?.ContactID">
+<mat-tab-group mat-align-tabs="start">
+    <mat-tab label="Home">
+        <div class="div-container" cdkDrag cdkDragLockAxis="x" (cdkDragStarted)="DragStart($event)"
+            (cdkDragMoved)="DragMove($event)" (cdkDragEnded)="DragEnd($event)">
+
+            <div>
+                <p>&nbsp;</p>
+                <button mat-button *ngIf="!state.DemoVisible" (click)="ShowDemo()">
+                    {{ shellService.ShowDemo[state.LangID] }}
+                </button>
+                <button mat-button *ngIf="state.DemoVisible" (click)="HideDemo()">
+                    {{ shellService.HideDemo[state.LangID] }}
+                </button>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+            </div>
+
+            <div *ngIf="!(state.DemoVisible ? state.DemoUser?.ContactID : state.User?.ContactID)">
                 <button mat-button routerLink="/{{ state.Culture }}/login">
                     <mat-icon>login</mat-icon>
                     {{ shellService.Login[state.LangID] }}
@@ -10,9 +24,11 @@
                     <mat-icon>person_add</mat-icon>
                     {{ shellService.Register[state.LangID] }}
                 </button>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
             </div>
 
-            <div *ngIf="state.User?.ContactID">
+            <div *ngIf="(state.DemoVisible ? state.DemoUser?.ContactID : state.User?.ContactID)">
                 <div *ngFor="let league of state.LeagueList">
                     <button mat-raised-button [ngClass]="GetLeagueHighlight(league.LeagueID)"
                         (click)="SetLeagueID(league.LeagueID)">
@@ -21,80 +37,64 @@
                     <br><br>
                 </div>
                 <div>
-                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('day')" (click)="Period('day')"
-                        title="{{ homeService.Today[state.LangID] }}">
-                        <span *ngIf="state.Screen == 'Small'">{{ homeService.TodayInit[state.LangID] }}</span>
-                        <span *ngIf="state.Screen != 'Small'">{{ homeService.Today[state.LangID] }}</span>
+                    <h2>{{ homeService.AnalyseResultsFrom[state.LangID] }}</h2>
+                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('day')" (click)="Period('day')">
+                        {{ homeService.Day[state.LangID] }}
                     </button>
-                    &nbsp;&nbsp;
-                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('week')" (click)="Period('week')"
-                        title="{{ homeService.Week[state.LangID] }}">
-                        <span *ngIf="state.Screen == 'Small'">{{ homeService.WeekInit[state.LangID] }}</span>
-                        <span *ngIf="state.Screen != 'Small'">{{ homeService.Week[state.LangID] }}</span>
+                    &nbsp;&nbsp;&nbsp;
+                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('week')" (click)="Period('week')">
+                        {{ homeService.LastWeek[state.LangID] }}
                     </button>
-                    &nbsp;&nbsp;
-                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('month')" (click)="Period('month')"
-                        title="{{ homeService.Month[state.LangID] }}">
-                        <span *ngIf="state.Screen == 'Small'">{{ homeService.MonthInit[state.LangID] }}</span>
-                        <span *ngIf="state.Screen != 'Small'">{{ homeService.Month[state.LangID] }}</span>
-                    </button>
-                    &nbsp;&nbsp;
-                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('year')" (click)="Period('year')"
-                        title="{{ homeService.Year[state.LangID] }}">
-                        <span *ngIf="state.Screen == 'Small'">{{ homeService.YearInit[state.LangID] }}</span>
-                        <span *ngIf="state.Screen != 'Small'">{{ homeService.Year[state.LangID] }}</span>
-                    </button>
-                    &nbsp;&nbsp;
-                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('all')" (click)="Period('all')"
-                        title="{{ homeService.All[state.LangID] }}">
-                        <span *ngIf="state.Screen == 'Small'">{{ homeService.AllInit[state.LangID] }}</span>
-                        <span *ngIf="state.Screen != 'Small'">{{ homeService.All[state.LangID] }}</span>
+                    &nbsp;&nbsp;&nbsp;
+                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('month')" (click)="Period('month')">
+                        {{ homeService.LastMonth[state.LangID] }}
                     </button>
                     <br><br>
+                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('year')" (click)="Period('year')">
+                        {{ homeService.LastYear[state.LangID] }}
+                    </button>
+                    &nbsp;&nbsp;&nbsp;
+                    <button mat-raised-button [ngClass]="GetDataTimeHighlight('all')" (click)="Period('all')">
+                        {{ homeService.All[state.LangID] }}
+                    </button>
                 </div>
                 <div>
-                    <h3>{{ homeService.BetweenDates[state.LangID]}}</h3>
-                    <mat-form-field [ngClass]="GetDataTimeHighlight('between')">
-                        <input matInput #startDate (dateChange)="ChangedStartDate(startDate)" [value]="state.StartDate"
-                            [matDatepicker]="pickerStart">
-                        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-                        <mat-datepicker #pickerStart></mat-datepicker>
-                    </mat-form-field>
-                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <mat-form-field [ngClass]="GetDataTimeHighlight('between')">
-                        <input matInput #endDate (dateChange)="ChangedEndDate(endDate)" [value]="state.EndDate"
-                            [matDatepicker]="pickerEnd">
-                        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-                        <mat-datepicker #pickerEnd></mat-datepicker>
-                    </mat-form-field>
+                    <br><br>
+                    <h3 [ngClass]="GetDataTimeHighlight('between')">
+                        <span (click)="pickerStart.open()">
+                            <mat-icon>calendar_today</mat-icon>
+                            <input style="opacity: 0; height: 1px !important; width: 1px !important" #startDate
+                                (dateChange)="ChangedStartDate(startDate)" [matDatepicker]="pickerStart">
+                            <mat-datepicker #pickerStart></mat-datepicker>
+                            {{ state.StartDate | date: 'yyyy/MM/dd' }}
+                        </span>
+                        <span> --- </span>
+                        <span (click)="pickerEnd.open()">
+                            {{ state.EndDate | date: 'yyyy/MM/dd' }}
+                            <input style="opacity: 0; height: 1px !important; width: 1px !important" #endDate
+                                (dateChange)="ChangedEndDate(endDate)" [matDatepicker]="pickerEnd">
+                            <mat-datepicker #pickerEnd></mat-datepicker>
+                            <mat-icon>calendar_today</mat-icon>
+                        </span>
+                    </h3>
                 </div>
             </div>
-            <br>
-            <hr color="blue" width="50%">
-            <div>
-                <button mat-button *ngIf="!state.DemoVisible" (click)="ShowDemo()">
-                    {{ shellService.ShowDemo[state.LangID] }}
-                </button>
-                <button mat-button *ngIf="state.DemoVisible" (click)="HideDemo()">
-                    {{ shellService.HideDemo[state.LangID] }}
-                </button>
-            </div>
-            <div *ngIf="state.User?.ContactID">
-                <h2>{{ homeService.ScrollToViewResults[state.LangID] }}</h2>
-            </div>
+
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
         </div>
-    </mat-grid-tile>
-    <mat-grid-tile *ngIf="state.LeagueStatsModelList.length">
+    </mat-tab>
+    <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)" label="Stats">
         <div class="div-container">
             <app-table-league-stats></app-table-league-stats>
         </div>
-    </mat-grid-tile>
-    <mat-grid-tile *ngIf="state.PlayerGameModelList.length">
+    </mat-tab>
+    <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)" label="Games">
         <div class="div-container">
             <app-table-player-games></app-table-player-games>
         </div>
-    </mat-grid-tile>
-    <mat-grid-tile *ngIf="false">
+    </mat-tab>
+    <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)" label="Json">
         <div class="div-container">
             <p>
                 Start Date: {{ state.StartDate | json }}
@@ -128,15 +128,5 @@
             </p>
 
         </div>
-    </mat-grid-tile>
-    <mat-grid-tile *ngIf="false">
-        <div class="div-container">
-            <h1>More content</h1>
-        </div>
-    </mat-grid-tile>
-    <mat-grid-tile *ngIf="false">
-        <div class="div-container">
-            <h1>More content</h1>
-        </div>
-    </mat-grid-tile>
-</mat-grid-list>
+    </mat-tab>
+</mat-tab-group>

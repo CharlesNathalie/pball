@@ -1,0 +1,7 @@
+<div *ngIf="!state.LeagueStatsModelList?.length">
+    <br>
+    <h2>{{ noDataForUserService.TheUser[state.LangID]}} 
+        {{ state.User.FirstName }} {{ state.User.LastName }}
+        {{ noDataForUserService.doesNotYetBelongToALeague[state.LangID]}} 
+    </h2>
+</div>

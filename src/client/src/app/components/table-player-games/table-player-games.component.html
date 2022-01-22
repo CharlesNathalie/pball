@@ -1,9 +1,12 @@
+<app-no-data-for-user></app-no-data-for-user>
 <div *ngIf="state.PlayerGameModelList?.length">
+    <br>
+    <h2>{{ GetLoggedInPlayerFullName() }}&nbsp;&nbsp;(<span class="highlight">{{ tablePlayerGamesService.GamesWon[state.LangID] }}</span>)</h2>
     <table mat-table [dataSource]="state.PlayerGameModelList" class="mat-elevation-z8">
 
         <ng-container matColumnDef="Rank">
-            <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
-            <td mat-cell *matCellDef="let item; let j = index"> {{j+1}} </td>
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let item; let j = index">{{j+1}}</td>
         </ng-container>
 
         <ng-container matColumnDef="Partner">
@@ -37,7 +40,7 @@
             <th mat-header-cell [ngClass]="GetSortingClass('GameDate')" *matHeaderCellDef
                 (click)="DoSortPlayerGames('GameDate')">{{ tablePlayerGamesService.GameDate[state.LangID] }}
             </th>
-            <td mat-cell *matCellDef="let item"> {{item?.GameDate | date:'yyyy-MM-dd'}} </td>
+            <td mat-cell *matCellDef="let item">{{ dataHelperService.GetDateFormat(item?.GameDate)}}</td>
         </ng-container>
 
         <ng-container matColumnDef="Scores">
@@ -45,11 +48,11 @@
                 (click)="DoSortPlayerGames('Scores')">{{ tablePlayerGamesService.Scores[state.LangID] }}
             </th>
             <td mat-cell *matCellDef="let item">
-                {{item?.Scores}} --- {{item?.OpponentScores}} </td>
+                {{item?.Scores}} - {{item?.OpponentScores}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns; let item"
-            [ngClass]="{ 'highlight': item.Scores > item.OpponentScores }"></tr>
+        [ngClass]="{ 'highlight': item.Scores > item.OpponentScores }"></tr>
     </table>
 </div>

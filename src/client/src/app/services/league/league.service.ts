@@ -11,6 +11,7 @@ import { ContactService } from '../contact/contact.service';
 })
 export class LeagueService {
   GettingUserLeagues: string[] = ['Getting user leagues', 'Getting user league (fr)'];
+  UserNotLoggedIn: string[] = ['User not logged in', 'L\'utilisateur n\'a aucune connexion'];
 
   Status: string = '';
   Working: boolean = false;
@@ -26,6 +27,11 @@ export class LeagueService {
   }
 
   GetPlayerLeagues() {
+    if (this.state.DemoVisible || this.state.User.ContactID == 0) {
+      this.Error = new HttpErrorResponse({ error: this.UserNotLoggedIn });
+      return;
+    }
+
     this.Status = `${this.GettingUserLeagues[this.state.LangID]}`;
     this.Working = true;
     this.Error = <HttpErrorResponse>{};

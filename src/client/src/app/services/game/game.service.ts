@@ -16,6 +16,7 @@ export class GameService {
   LeagueIDIsRequired: string[] = ['LeagueID is required', 'LeagueID est requis'];
   StartDateIsRequired: string[] = ['Start date is required', 'Date de départ est requis'];
   EndDateIsRequired: string[] = ['End date is required', 'Date de fin est requis'];
+  UserNotLoggedIn: string[] = ['User not logged in', 'L\'utilisateur n\'a aucune connexion'];
 
   Status: string = '';
   Working: boolean = false;
@@ -32,6 +33,11 @@ export class GameService {
   }
 
   GetAllLeagueGames() {
+    if (this.state.DemoVisible || this.state.User.ContactID == 0) {
+      this.Error = new HttpErrorResponse({ error: this.UserNotLoggedIn });
+      return;
+    }
+
     this.Status = `${this.GettingGames[this.state.LangID]}`;
     this.Working = true;
     this.Error = <HttpErrorResponse>{};

@@ -152,7 +152,13 @@ export class ProfileService {
   private DoProfile() {
     let languageEnum = GetLanguageEnum();
 
-    localStorage.setItem('User', '');
+    if (this.state.DemoVisible)
+    {
+      localStorage.setItem('DemoUser', '');
+    }
+    else{
+      localStorage.setItem('User', '');
+    }
 
     const url: string = `${this.state.BaseApiUrl}${languageEnum[this.state.Language]}-CA/contact`;
 

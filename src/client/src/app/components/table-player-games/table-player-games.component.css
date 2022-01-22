@@ -1,5 +1,5 @@
 .highlight{
-  font-weight: bold;
+  background-color: #ccffcc !important;
 }
 
 .sortedAsc {
@@ -19,6 +19,18 @@ table {
   width: 100%;
 }
 
+.mat-cell {
+  font-size: smaller !important;
+}
+
 th.mat-header-cell {
   text-align: center !important;
 }
+/*
+span {
+background-color: lightblue;
+border: 2px solid gray;
+border-radius: 30px;
+padding: 5px;
+}
+*/

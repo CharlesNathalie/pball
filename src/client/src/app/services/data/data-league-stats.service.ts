@@ -74,11 +74,20 @@ export class DataLeagueStatService {
 
     this.state.LeagueStatsModelList = this.sortService.SortLeagueStatsModelList(LeagueStatsModelList);
 
-    localStorage.setItem('User', JSON.stringify(this.state.User));
-    localStorage.setItem('LeagueID', JSON.stringify(this.state.LeagueID));
-    localStorage.setItem('StartDate', JSON.stringify(this.state.StartDate));
-    localStorage.setItem('EndDate', JSON.stringify(this.state.EndDate));
-    localStorage.setItem('DemoVisible', JSON.stringify(this.state.DemoVisible));
+    if (this.state.DemoVisible) {
+      localStorage.setItem('DemoUser', JSON.stringify(this.state.DemoUser));
+      localStorage.setItem('DemoLeagueID', JSON.stringify(this.state.LeagueID));
+      localStorage.setItem('DemoStartDate', JSON.stringify(this.state.StartDate));
+      localStorage.setItem('DemoEndDate', JSON.stringify(this.state.EndDate));
+      localStorage.setItem('DemoVisible', JSON.stringify(this.state.DemoVisible));
+    }
+    else {
+      localStorage.setItem('User', JSON.stringify(this.state.User));
+      localStorage.setItem('LeagueID', JSON.stringify(this.state.LeagueID));
+      localStorage.setItem('StartDate', JSON.stringify(this.state.StartDate));
+      localStorage.setItem('EndDate', JSON.stringify(this.state.EndDate));
+      localStorage.setItem('DemoVisible', JSON.stringify(this.state.DemoVisible));
+    }
 
     this.Status = '';
     this.Working = false;

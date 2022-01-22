@@ -33,19 +33,26 @@ export class DataPlayerGamesService {
     this.Error = <HttpErrorResponse>{};
     console.debug('Running player games');
 
+    let ContactID: number = 0;
+    if (this.state.DemoVisible) {
+      ContactID = this.state.DemoUser.ContactID;
+    }
+    else {
+      ContactID = this.state.User.ContactID;
+    }
     let tempGameList: Game[] = [];
     for (let i = 0, count = this.state.GameList.length; i < count; i++) {
       if (this.dateService.InRange(this.state.GameList[i].GameDate, this.state.StartDate, this.state.EndDate)) {
-        if (this.state.GameList[i].Team1Player1 == this.state.User.ContactID) {
+        if (this.state.GameList[i].Team1Player1 == ContactID) {
           tempGameList.push(this.state.GameList[i]);
         }
-        if (this.state.GameList[i].Team1Player2 == this.state.User.ContactID) {
+        if (this.state.GameList[i].Team1Player2 == ContactID) {
           tempGameList.push(this.state.GameList[i]);
         }
-        if (this.state.GameList[i].Team2Player1 == this.state.User.ContactID) {
+        if (this.state.GameList[i].Team2Player1 == ContactID) {
           tempGameList.push(this.state.GameList[i]);
         }
-        if (this.state.GameList[i].Team2Player2 == this.state.User.ContactID) {
+        if (this.state.GameList[i].Team2Player2 == ContactID) {
           tempGameList.push(this.state.GameList[i]);
         }
       }
@@ -58,7 +65,7 @@ export class DataPlayerGamesService {
         playerGameModel.GameID = tempGameList[i].GameID;
         playerGameModel.GameDate = tempGameList[i].GameDate;
 
-        if (tempGameList[i].Team1Player1 == this.state.User.ContactID) {
+        if (tempGameList[i].Team1Player1 == ContactID) {
           playerGameModel.PartnerID = tempGameList[i].Team1Player2;
           playerGameModel.PartnerFullName = this.dataHelperService.GetPlayerFullName(playerGameModel.PartnerID);
           playerGameModel.PartnerLastNameAndFirstNameInit = this.dataHelperService.GetPlayerLastNameAndFirstNameInit(playerGameModel.PartnerID);
@@ -71,7 +78,7 @@ export class DataPlayerGamesService {
           playerGameModel.Opponent2LastNameAndFirstNameInit = this.dataHelperService.GetPlayerLastNameAndFirstNameInit(playerGameModel.Opponent2ID);
           playerGameModel.OpponentScores = tempGameList[i].Team2Scores;
         }
-        else if (tempGameList[i].Team1Player2 == this.state.User.ContactID) {
+        else if (tempGameList[i].Team1Player2 == ContactID) {
           playerGameModel.PartnerID = tempGameList[i].Team1Player1;
           playerGameModel.PartnerFullName = this.dataHelperService.GetPlayerFullName(playerGameModel.PartnerID);
           playerGameModel.PartnerLastNameAndFirstNameInit = this.dataHelperService.GetPlayerLastNameAndFirstNameInit(playerGameModel.PartnerID);
@@ -84,7 +91,7 @@ export class DataPlayerGamesService {
           playerGameModel.Opponent2LastNameAndFirstNameInit = this.dataHelperService.GetPlayerLastNameAndFirstNameInit(playerGameModel.Opponent2ID);
           playerGameModel.OpponentScores = tempGameList[i].Team2Scores;
         }
-        else if (tempGameList[i].Team2Player1 == this.state.User.ContactID) {
+        else if (tempGameList[i].Team2Player1 == ContactID) {
           playerGameModel.PartnerID = tempGameList[i].Team2Player2;
           playerGameModel.PartnerFullName = this.dataHelperService.GetPlayerFullName(playerGameModel.PartnerID);
           playerGameModel.PartnerLastNameAndFirstNameInit = this.dataHelperService.GetPlayerLastNameAndFirstNameInit(playerGameModel.PartnerID);
@@ -97,7 +104,7 @@ export class DataPlayerGamesService {
           playerGameModel.Opponent2LastNameAndFirstNameInit = this.dataHelperService.GetPlayerLastNameAndFirstNameInit(playerGameModel.Opponent2ID);
           playerGameModel.OpponentScores = tempGameList[i].Team1Scores;
         }
-        else if (tempGameList[i].Team2Player2 == this.state.User.ContactID) {
+        else if (tempGameList[i].Team2Player2 == ContactID) {
           playerGameModel.PartnerID = tempGameList[i].Team2Player1;
           playerGameModel.PartnerFullName = this.dataHelperService.GetPlayerFullName(playerGameModel.PartnerID);
           playerGameModel.PartnerLastNameAndFirstNameInit = this.dataHelperService.GetPlayerLastNameAndFirstNameInit(playerGameModel.PartnerID);
