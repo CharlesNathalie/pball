@@ -1,0 +1,39 @@
+<div class="formcenter" *ngIf="!leagueAddService.LeagueAddSuccess">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ leagueAddService.LeagueAddTxt[state.LangID]}}
+            </mat-card-title>
+        </mat-card-header>
+
+        <form (ngSubmit)="OnSubmit()" [formGroup]="leagueAddForm">
+            <mat-card-content>
+                <mat-form-field>
+                    <mat-label>{{ leagueAddService.LeagueName[state.LangID] }}</mat-label>
+                    <input matInput type="text" placeholder="Name of league" formControlName="LeagueName">
+                    <mat-error *ngIf="GetHasError('LeagueName')">{{GetErrorMessage("LeagueName")}}</mat-error>
+                </mat-form-field>
+            </mat-card-content>
+
+            <mat-error>* {{ leagueAddService.required[state.LangID] }}</mat-error>
+            <br><br>
+            <a routerLink="/{{ state.Culture }}/home">{{ leagueAddService.Cancel[state.LangID] }}</a>
+            <br><br>
+            <mat-error *ngIf="leagueAddService.Error?.error">
+                <h3 *ngFor="let e of leagueAddService.Error?.error?.ErrList">{{ e }}</h3>
+            </mat-error>
+            <button mat-raised-button *ngIf="GetFormValid()">{{ leagueAddService.LeagueAddTxt[state.LangID] }}</button>
+            <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
+                leagueAddService.PleaseEnterRequiredInformation[state.LangID] }}</button>
+
+        </form>
+    </mat-card>
+</div>
+<div class="formcenter" *ngIf="leagueAddService.LeagueAddSuccess">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ leagueAddService.LeagueAddSuccessful[state.LangID ?? languageEnum.en]}}
+            </mat-card-title>
+        </mat-card-header>
+        <button mat-raised-button routerLink="/{{ state.Culture }}/home">{{ leagueAddService.ReturnToHomePage[state.LangID] }}</button>
+    </mat-card>
+</div>

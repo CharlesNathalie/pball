@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppStateService } from 'src/app/app-state.service';
 import { AscDescEnum, GetAscDescEnum } from 'src/app/enums/AscDescEnum';
 import { DataHelperService } from 'src/app/services/data/data-helper.service';
-import { DataLeagueStatService } from 'src/app/services/data/data-league-stats.service';
 import { DataPlayerGamesService } from 'src/app/services/data/data-player-games.service';
 import { SortService } from 'src/app/services/sort/sort.service';
 import { TablePlayerGamesService } from './table-player-games.service';

@@ -32,10 +32,10 @@
             </button>
         </span>
 
-        <button mat-button routerLink="/en-CA{{GetLastPartOfUrl()}}" *ngIf="state.Language != languageEnum.en">
+        <button mat-button (click)="NavigateToEn('en')" *ngIf="state.Language != languageEnum.en">
             {{ GetFirstLetters(shellService.English[state.LangID], 2) }}
         </button>
-        <button mat-button routerLink="/fr-CA{{GetLastPartOfUrl()}}" *ngIf="state.Language != languageEnum.fr">
+        <button mat-button (click)="NavigateToEn('fr')" *ngIf="state.Language != languageEnum.fr">
             {{ GetFirstLetters(shellService.Francais[state.LangID], 2) }}
         </button>
     </mat-toolbar-row>

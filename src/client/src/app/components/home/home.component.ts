@@ -12,8 +12,6 @@ import { HomeService } from './home.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  source: any;
-  dist: any;
 
   constructor(public state: AppStateService,
     public homeService: HomeService,
@@ -24,6 +22,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.homeService.LoadLocalStorage();
     this.homeService.LoadLocalStorage();
     if (this.state.LeagueList.length == 0) {
       if (this.state.DemoVisible) {
@@ -60,7 +59,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   HideDemo() {
     this.state.ClearDemoLocalStorage();
     this.state.ClearDemoData();
-    this.leagueService.GetPlayerLeagues(); 
+    this.leagueService.GetPlayerLeagues();
   }
 
   ShowDemo() {
@@ -81,19 +80,52 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.state.LeagueID == LeagueID ? 'checked' : '';
   }
 
-  DragStart(v: any) {
-    this.source = v.source;
-  }
-  DragMove(v: any) {
-    this.source = v.source;
-    this.dist = v.distance;
-  }
-  DragEnd(v: any) {
-    this.source = v.source;
-    this.dist = v.distance;
+  DragEnd(event: any) {
+    if (this.state.DemoVisible) {
+      if (event.distance.x < -20) {
+        if (this.state.DemoHomeTabIndex < (this.state.HomeTabCount - 1)) {
+          this.state.DemoHomeTabIndex += 1;
+        }
+      }
 
-    if (this.dist.x < -10) {
-      this.router.navigate([`/${this.state.Culture}/login`])
+      if (event.distance.x > +20) {
+        if (this.state.DemoHomeTabIndex > 0) {
+          this.state.DemoHomeTabIndex -= 1;
+        }
+      }
+
+      localStorage.setItem('DemoHomeTabIndex', JSON.stringify(this.state.DemoHomeTabIndex));
+    }
+    else {
+      if (event.distance.x < -20) {
+        if (this.state.HomeTabIndex < (this.state.HomeTabCount - 1)) {
+          this.state.HomeTabIndex += 1;
+        }
+      }
+
+      if (event.distance.x > +20) {
+        if (this.state.HomeTabIndex > 0) {
+          this.state.HomeTabIndex -= 1;
+        }
+      }
+
+      localStorage.setItem('HomeTabIndex', JSON.stringify(this.state.HomeTabIndex));
+    }
+
+    event.source.element.nativeElement.style.transform = 'none' // visually reset element to its origin
+    const source: any = event.source;
+    source._passiveTransform = { x: 0, y: 0 };
+
+  }
+
+  TabSelectedChanged(event: any) {
+    if (this.state.DemoVisible) {
+      this.state.DemoHomeTabIndex = event.index;
+      localStorage.setItem('DemoHomeTabIndex', JSON.stringify(this.state.DemoHomeTabIndex));
+    }
+    else {
+      this.state.HomeTabIndex = event.index;
+      localStorage.setItem('HomeTabIndex', JSON.stringify(this.state.HomeTabIndex));
     }
   }
 }

@@ -15,8 +15,8 @@ import { User } from './models/User.model';
 export class AppStateService {
   Version: string[] = ['Version: alpha-1.0.0.0', 'Version: alpha1.0.0.0'];
 
-  BaseApiUrl = 'https://pball.azurewebsites.net/api/'; 
-  //BaseApiUrl = 'https://localhost:7072/api/';
+  //BaseApiUrl = 'https://pball.azurewebsites.net/api/'; 
+  BaseApiUrl = 'https://localhost:7072/api/';
 
   languageEnum = GetLanguageEnum();
   Language: LanguageEnum = LanguageEnum.en;
@@ -52,6 +52,10 @@ export class AppStateService {
   DemoVisible: boolean = false;
   DataTime: 'day' | 'week' | 'month' | 'year' | 'all' | 'between' = 'year';
 
+  DemoHomeTabIndex: number = 0;
+  HomeTabIndex: number = 0;
+  HomeTabCount: number = 4;
+
   constructor() {
 
   }
@@ -63,6 +67,7 @@ export class AppStateService {
     localStorage.removeItem('DemoVisible');
     localStorage.removeItem('DemoStartDate');
     localStorage.removeItem('DemoEndDate');
+    localStorage.removeItem('DemoHomeTabIndex');
   }
 
   ClearLocalStorage()
@@ -72,6 +77,7 @@ export class AppStateService {
     localStorage.removeItem('DemoVisible');
     localStorage.removeItem('StartDate');
     localStorage.removeItem('EndDate');
+    localStorage.removeItem('HomeTabIndex');
   }
 
   ClearDemoData() {

@@ -135,6 +135,7 @@ export class LoginService {
     localStorage.setItem('StartDate', JSON.stringify(this.state.StartDate));
     localStorage.setItem('EndDate', JSON.stringify(this.state.EndDate));
     localStorage.setItem('DemoVisible', JSON.stringify(this.state.DemoVisible));
+    localStorage.setItem('HomeTabIndex', JSON.stringify(this.state.HomeTabIndex));
 
     this.leagueService.GetPlayerLeagues();
     console.debug(user);

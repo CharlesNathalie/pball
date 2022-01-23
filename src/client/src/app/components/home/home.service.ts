@@ -68,19 +68,22 @@ export class HomeService {
   LoadLocalStorage() {
     if (this.state.DemoVisible) {
       if (localStorage.getItem('DemoUser') != null) {
-        this.state.User = JSON.parse(localStorage.getItem('DemoUser') ?? '');
+        this.state.DemoUser = JSON.parse(localStorage.getItem('DemoUser') ?? '');
       }
       if (localStorage.getItem('DemoLeagueID') != null) {
-        this.state.LeagueID = JSON.parse(localStorage.getItem('DemoLeagueID') ?? '0');
+        this.state.DemoLeagueID = JSON.parse(localStorage.getItem('DemoLeagueID') ?? '0');
       }
       if (localStorage.getItem('DemoStartDate') != null) {
-        this.state.StartDate = JSON.parse(localStorage.getItem('DemoStartDate') ?? '');
+        this.state.DemoStartDate = JSON.parse(localStorage.getItem('DemoStartDate') ?? '');
       }
       if (localStorage.getItem('DemoEndDate') != null) {
-        this.state.EndDate = JSON.parse(localStorage.getItem('DemoEndDate') ?? '');
+        this.state.DemoEndDate = JSON.parse(localStorage.getItem('DemoEndDate') ?? '');
       }
       if (localStorage.getItem('DemoVisible') != null) {
         this.state.DemoVisible = JSON.parse(localStorage.getItem('DemoVisible') ?? 'false');
+      }
+      if (localStorage.getItem('DemoHomeTabIndex') != null) {
+        this.state.DemoHomeTabIndex = JSON.parse(localStorage.getItem('DemoHomeTabIndex') ?? '0');
       }
     }
     else {
@@ -98,6 +101,9 @@ export class HomeService {
       }
       if (localStorage.getItem('DemoVisible') != null) {
         this.state.DemoVisible = JSON.parse(localStorage.getItem('DemoVisible') ?? 'false');
+      }
+      if (localStorage.getItem('HomeTabIndex') != null) {
+        this.state.HomeTabIndex = JSON.parse(localStorage.getItem('HomeTabIndex') ?? '0');
       }
     }
   }

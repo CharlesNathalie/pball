@@ -76,10 +76,11 @@ export class DataLeagueStatService {
 
     if (this.state.DemoVisible) {
       localStorage.setItem('DemoUser', JSON.stringify(this.state.DemoUser));
-      localStorage.setItem('DemoLeagueID', JSON.stringify(this.state.LeagueID));
-      localStorage.setItem('DemoStartDate', JSON.stringify(this.state.StartDate));
-      localStorage.setItem('DemoEndDate', JSON.stringify(this.state.EndDate));
+      localStorage.setItem('DemoLeagueID', JSON.stringify(this.state.DemoLeagueID));
+      localStorage.setItem('DemoStartDate', JSON.stringify(this.state.DemoStartDate));
+      localStorage.setItem('DemoEndDate', JSON.stringify(this.state.DemoEndDate));
       localStorage.setItem('DemoVisible', JSON.stringify(this.state.DemoVisible));
+      localStorage.setItem('DemoHomeTabIndex', JSON.stringify(this.state.DemoHomeTabIndex));
     }
     else {
       localStorage.setItem('User', JSON.stringify(this.state.User));
@@ -87,6 +88,7 @@ export class DataLeagueStatService {
       localStorage.setItem('StartDate', JSON.stringify(this.state.StartDate));
       localStorage.setItem('EndDate', JSON.stringify(this.state.EndDate));
       localStorage.setItem('DemoVisible', JSON.stringify(this.state.DemoVisible));
+      localStorage.setItem('HomeTabIndex', JSON.stringify(this.state.HomeTabIndex));
     }
 
     this.Status = '';

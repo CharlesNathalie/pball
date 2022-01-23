@@ -7,6 +7,9 @@ import { MaterialModule } from 'src/app/app-material.module';
 import { ChartAllComponent } from './components/chart-all/chart-all.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { HomeComponent } from './components/home/home.component';
+import { LeagueAddComponent } from './components/league-add/league-add.component';
+import { LeagueListComponent } from './components/league-list/league-list.component';
+import { LeagueNotMemberComponent } from './components/league-not-member/league-not-member.component';
 import { LoginComponent } from './components/login/login.component';
 import { NoDataForUserComponent } from './components/no-data-for-user/no-data-for-user.component';
 import { PageNotFoundComponent } from './components/pagenotfound/pagenotfound.component';
@@ -21,6 +24,9 @@ import { TablePlayerGamesComponent } from './components/table-player-games/table
     ChartAllComponent,
     ForgotPasswordComponent,
     HomeComponent,
+    LeagueAddComponent,
+    LeagueListComponent,
+    LeagueNotMemberComponent,
     LoginComponent,
     NoDataForUserComponent,
     PageNotFoundComponent,
@@ -49,6 +55,9 @@ import { TablePlayerGamesComponent } from './components/table-player-games/table
     ChartAllComponent,
     ForgotPasswordComponent,
     HomeComponent,
+    LeagueAddComponent,
+    LeagueListComponent,
+    LeagueNotMemberComponent,
     LoginComponent,  
     NoDataForUserComponent,
     PageNotFoundComponent,

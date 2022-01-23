@@ -67,6 +67,11 @@ export class TableLeagueStatsComponent implements OnInit, OnDestroy {
 
   GetCurrentLeagueName()
   {
+    if (this.state.DemoVisible)
+    {
+      return this.state.LeagueList.filter(c => c.LeagueID == this.state.DemoLeagueID)[0].LeagueName;
+    }
+
     return this.state.LeagueList.filter(c => c.LeagueID == this.state.LeagueID)[0].LeagueName;
   }
 }

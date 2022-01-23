@@ -35,15 +35,17 @@ export class ShellComponent implements OnInit, OnDestroy {
     return this.shellService.GetFirstLetters(name, numberOfLetters);
   }
 
-  GetLastPartOfUrl(): string {
-    return this.shellService.GetLastPartOfUrl(this.router);
-  }
-
   Logoff() {
     this.logoffService.Logoff();
   }
 
   GetContactID() {
     return this.state.User.ContactID;
+  }
+
+  NavigateToEn(lang: 'en' | 'fr') {
+    this.state.ClearDemoData();
+    this.state.ClearDemoLocalStorage();
+    this.router.navigate([`/${lang}-CA${this.shellService.GetLastPartOfUrl(this.router)}`])
   }
 }
