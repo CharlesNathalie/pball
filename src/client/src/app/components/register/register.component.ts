@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
-import { AppStateService } from 'src/app/app-state.service';
-import { RegisterService } from './register.service';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { RegisterService } from '../../services/register.service';
 
 @Component({
   selector: 'app-register',
@@ -47,7 +47,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     return this.registerService.GetFormValid(this.registerForm);
   }
 
-  OnSubmit(): void {
-    this.registerService.SubmitForm(this.registerForm);
+  SubmitRegisterForm(): void {
+    this.registerService.SubmitRegisterForm(this.registerForm);
   }
 }

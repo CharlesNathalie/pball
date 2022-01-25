@@ -199,7 +199,7 @@ public partial class BaseServiceTests
                         LeagueID = i + 1,
                         LeagueName = leagueNameList[i],
                         PointsToWinners = 3,
-                        PointsToLoosers = 1,
+                        PointsToLosers = 1,
                         PercentPointsFactor = 0,
                         PlayerLevelFactor = 0,
                         Removed = false,

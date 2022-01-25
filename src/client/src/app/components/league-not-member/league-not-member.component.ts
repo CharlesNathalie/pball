@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AppStateService } from 'src/app/app-state.service';
-import { LeagueNotMemberService } from './league-not-member.service';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { LeagueNotMemberService } from '../../services/league-not-member.service';
 
 @Component({
   selector: 'app-league-not-member',

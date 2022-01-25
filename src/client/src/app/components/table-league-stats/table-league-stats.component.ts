@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AppStateService } from 'src/app/app-state.service';
+import { AppStateService } from 'src/app/services/app-state.service';
 import { AscDescEnum, GetAscDescEnum } from 'src/app/enums/AscDescEnum';
-import { DataLeagueStatService } from 'src/app/services/data/data-league-stats.service';
-import { SortService } from 'src/app/services/sort/sort.service';
-import { TableLeagueStatsService } from './table-league-stats.service';
+import { DataLeagueStatService } from 'src/app/services/data-league-stats.service';
+import { SortService } from 'src/app/services/sort.service';
+import { TableLeagueStatsService } from '../../services/table-league-stats.service';
 
 @Component({
   selector: 'app-table-league-stats',

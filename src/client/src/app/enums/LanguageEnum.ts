@@ -1,6 +1,6 @@
 
 import { EnumIDAndText } from 'src/app/models/EnumIDAndText.model';
-import { AppStateService } from '../app-state.service';
+import { AppStateService } from '../services/app-state.service';
 
 export enum LanguageEnum {
     en = 1,

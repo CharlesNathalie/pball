@@ -1,0 +1,19 @@
+<div class="formcenter">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ leagueService.Leagues[state.LangID] }}
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="center">
+                <mat-radio-group class="radio-group">
+                    <mat-radio-button class="radio-button" *ngFor="let league of state.LeagueList"
+                        checked="{{ GetIsSelected(league.LeagueID)}}" (click)="SetLeagueID(league.LeagueID)">
+                        {{ league.LeagueName }}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+<app-league-tabs></app-league-tabs>

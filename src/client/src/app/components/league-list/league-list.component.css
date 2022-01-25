@@ -1,0 +1,12 @@
+.div-container {
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+.highlight{
+    font-weight: bold !important;
+  }
+
+  :host ::ng-deep .mat-list-base .mat-list-item .mat-list-item-content {
+    justify-content: center;
+    }

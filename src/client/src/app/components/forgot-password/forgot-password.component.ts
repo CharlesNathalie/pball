@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AppStateService } from 'src/app/app-state.service';
+import { AppStateService } from 'src/app/services/app-state.service';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
-import { ForgotPasswordService } from './forgot-password.service';
+import { ForgotPasswordService } from 'src/app/services/forgot-password.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -10,8 +10,6 @@ import { ForgotPasswordService } from './forgot-password.service';
   styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent implements OnInit, OnDestroy {
-
-  languageEnum = GetLanguageEnum();
 
   forgotPasswordForm = this.formBuilder.group({
     LoginEmail: ['', [Validators.required, Validators.email]],
@@ -41,7 +39,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     return this.forgotPasswordService.GetFormValid(this.forgotPasswordForm);
   }
 
-  OnSubmit(): void {
-    this.forgotPasswordService.SubmitForm(this.forgotPasswordForm);
+  SubmitForgotPasswordForm(): void {
+    this.forgotPasswordService.SubmitForgotPasswordForm(this.forgotPasswordForm);
   }
 }

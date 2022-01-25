@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AppStateService } from 'src/app/app-state.service';
-import { NoDataForUserService } from './no-data-for-user.service';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { NoDataForUserService } from '../../services/no-data-for-user.service';
 
 @Component({
   selector: 'app-no-data-for-user',

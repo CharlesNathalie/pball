@@ -52,7 +52,7 @@ public partial class BaseServiceTests
                     LeagueName = $"League Name { random.Next(1, 1000) }",
                     PercentPointsFactor = 1.1D,
                     PlayerLevelFactor = 1.1D,
-                    PointsToLoosers = 1.1D,
+                    PointsToLosers = 1.1D,
                     PointsToWinners = 1.1D,
                     Removed = false,
                     LastUpdateDate_UTC = DateTime.UtcNow,

@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
-import { AppStateService } from 'src/app/app-state.service';
-import { LeagueAddService } from './league-add.service';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { LeagueAddService } from '../../services/league-add.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,8 +15,12 @@ export class LeagueAddComponent implements OnInit, OnDestroy {
   languageEnum = GetLanguageEnum();
 
   leagueAddForm = this.formBuilder.group({
-    LeagueAddEmail: ['', [Validators.required, Validators.email]],
-    Password: ['', [Validators.required]],
+    LeagueID: ['0', [Validators.required]],
+    LeagueName: ['', [Validators.required]],
+    PointsToWinners: ['', [Validators.required]],
+    PointsToLosers: ['', [Validators.required]],
+    PlayerLevelFactor: ['', [Validators.required]],
+    PercentPointsFactor: ['', [Validators.required]],
   });
 
   constructor(public state: AppStateService,
@@ -32,11 +36,11 @@ export class LeagueAddComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  GetHasError(fieldName: 'LeagueName'): boolean {
+  GetHasError(fieldName: 'LeagueID' | 'LeagueName' | 'PointsToWinners' | 'PointsToLosers' | 'PlayerLevelFactor' | 'PercentPointsFactor'): boolean {
     return this.leagueAddService.GetHasError(fieldName, this.leagueAddForm);
   }
 
-  GetErrorMessage(fieldName: 'LeagueName'): string {
+  GetErrorMessage(fieldName: 'LeagueID' | 'LeagueName' | 'PointsToWinners' | 'PointsToLosers' | 'PlayerLevelFactor' | 'PercentPointsFactor'): string {
     return this.leagueAddService.GetErrorMessage(fieldName, this.leagueAddForm);
   }
 

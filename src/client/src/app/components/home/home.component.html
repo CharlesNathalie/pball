@@ -1,7 +1,7 @@
-<mat-tab-group [selectedIndex]="state.DemoVisible ? state.DemoHomeTabIndex : state.HomeTabIndex" 
- (selectedTabChange)="TabSelectedChanged($event)" mat-align-tabs="start" previewClass="dragClass">
-    <mat-tab label="Home">
-        <div class="div-container" cdkDrag cdkDragLockAxis="x" (cdkDragEnded)="DragEnd($event)">
+<mat-tab-group [selectedIndex]="state.DemoVisible ? state.DemoHomeTabIndex : state.HomeTabIndex"
+    (selectedTabChange)="TabSelectedChanged($event)" mat-align-tabs="start">
+    <mat-tab label="{{ homeService.Home[state.LangID] }}">
+        <div class="div-container">
             <div>
                 <p>&nbsp;</p>
                 <button mat-button *ngIf="!state.DemoVisible" (click)="ShowDemo()">
@@ -28,13 +28,7 @@
             </div>
 
             <div *ngIf="(state.DemoVisible ? state.DemoUser?.ContactID : state.User?.ContactID)">
-                <div *ngFor="let league of state.LeagueList">
-                    <button mat-raised-button [ngClass]="GetLeagueHighlight(league.LeagueID)"
-                        (click)="SetLeagueID(league.LeagueID)">
-                        {{ league.LeagueName }}
-                    </button>
-                    <br><br>
-                </div>
+
                 <div>
                     <h2>{{ homeService.AnalyseResultsFrom[state.LangID] }}</h2>
                     <button mat-raised-button [ngClass]="GetDataTimeHighlight('day')" (click)="Period('day')">
@@ -83,40 +77,58 @@
             <p>&nbsp;</p>
         </div>
     </mat-tab>
-    <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)" label="Stats">
-        <div class="div-container" cdkDrag cdkDragLockAxis="x" (cdkDragEnded)="DragEnd($event)">
+    <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)"
+        label="{{ homeService.Leagues[state.LangID] }}">
+        <app-league></app-league>
+    </mat-tab>
+    <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)"
+        label="{{ homeService.Results[state.LangID] }}">
+        <div class="div-container">
             <app-table-league-stats></app-table-league-stats>
         </div>
     </mat-tab>
-    <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)" label="Games">
-        <div class="div-container" cdkDrag cdkDragLockAxis="x" (cdkDragEnded)="DragEnd($event)">
+    <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)"
+        label="{{ homeService.Games[state.LangID] }}">
+        <div class="div-container">
             <app-table-player-games></app-table-player-games>
         </div>
     </mat-tab>
     <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)" label="Json">
-        <div class="div-container" cdkDrag cdkDragLockAxis="x" (cdkDragEnded)="DragEnd($event)">
-            <p>
+        <div class="div-container">
+            <p *ngIf="state.DemoVisible">
+                Demo Start Date: {{ state.DemoStartDate | json }}
+            </p>
+            <p *ngIf="!state.DemoVisible">
                 Start Date: {{ state.StartDate | json }}
             </p>
-            <p>
+            <p *ngIf="state.DemoVisible">
+                Demo End Date: {{ state.DemoEndDate | json }}
+            </p>
+            <p *ngIf="!state.DemoVisible">
                 End Date: {{ state.EndDate | json }}
             </p>
-            <p>
+            <p *ngIf="state.DemoVisible">
+                Demo User: {{ state.DemoUser | json }}
+            </p>
+            <p *ngIf="!state.DemoVisible">
                 User: {{ state.User | json }}
             </p>
-            <p>
+            <p *ngIf="state.DemoVisible">
+                Demo LeagueID: {{ state.DemoLeagueID | json }}
+            </p>
+            <p *ngIf="!state.DemoVisible">
                 LeagueID: {{ state.LeagueID | json }}
             </p>
-            <p>
+            <!-- <p>
                 LeagueStatsModel: {{ state.LeagueStatsModelList | json }}
             </p>
             <p>
                 PlayerGameModel: {{ state.PlayerGameModelList | json }}
-            </p>
+            </p> -->
             <p>
                 LeagueList: {{ state.LeagueList | json }}
             </p>
-            <p>
+            <!-- <p>
                 PlayerList: {{ state.PlayerList | json }}
             </p>
             <p>
@@ -124,7 +136,7 @@
             </p>
             <p>
                 GameList: {{ state.GameList | json }}
-            </p>
+            </p> -->
 
         </div>
     </mat-tab>

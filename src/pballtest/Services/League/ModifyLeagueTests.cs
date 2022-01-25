@@ -49,7 +49,7 @@ public partial class LeagueServiceTests : BaseServiceTests
                             LeagueName = leagueInDB.LeagueName + " more",
                             PercentPointsFactor = leagueInDB.PercentPointsFactor + 0.1D,
                             PlayerLevelFactor = leagueInDB.PlayerLevelFactor + 0.1D,
-                            PointsToLoosers = leagueInDB.PointsToLoosers + 0.1D,
+                            PointsToLosers = leagueInDB.PointsToLosers + 0.1D,
                             PointsToWinners = leagueInDB.PointsToWinners + 0.1D,
                         };
 
@@ -61,7 +61,7 @@ public partial class LeagueServiceTests : BaseServiceTests
                             Assert.Equal(leagueToModify.LeagueID, leagueRet.LeagueID);
                             Assert.Equal(leagueToModify.LeagueName, leagueRet.LeagueName);
                             Assert.Equal(leagueToModify.PercentPointsFactor, leagueRet.PercentPointsFactor);
-                            Assert.Equal(leagueToModify.PointsToLoosers, leagueRet.PointsToLoosers);
+                            Assert.Equal(leagueToModify.PointsToLosers, leagueRet.PointsToLosers);
                             Assert.Equal(leagueToModify.PointsToWinners, leagueRet.PointsToWinners);
                             Assert.Equal(leagueToModify.PlayerLevelFactor, leagueRet.PlayerLevelFactor);
 
@@ -71,7 +71,7 @@ public partial class LeagueServiceTests : BaseServiceTests
                                 LeagueName = leagueInDB.LeagueName,
                                 PercentPointsFactor = leagueInDB.PercentPointsFactor,
                                 PlayerLevelFactor = leagueInDB.PlayerLevelFactor,
-                                PointsToLoosers = leagueInDB.PointsToLoosers,
+                                PointsToLosers = leagueInDB.PointsToLosers,
                                 PointsToWinners = leagueInDB.PointsToWinners,
                             };
 
@@ -83,7 +83,7 @@ public partial class LeagueServiceTests : BaseServiceTests
                                 Assert.Equal(leagueToModify2.LeagueID, leagueRet2.LeagueID);
                                 Assert.Equal(leagueToModify2.LeagueName, leagueRet2.LeagueName);
                                 Assert.Equal(leagueToModify2.PercentPointsFactor, leagueRet2.PercentPointsFactor);
-                                Assert.Equal(leagueToModify2.PointsToLoosers, leagueRet2.PointsToLoosers);
+                                Assert.Equal(leagueToModify2.PointsToLosers, leagueRet2.PointsToLosers);
                                 Assert.Equal(leagueToModify2.PointsToWinners, leagueRet2.PointsToWinners);
                                 Assert.Equal(leagueToModify2.PlayerLevelFactor, leagueRet2.PlayerLevelFactor);
                             }
@@ -140,7 +140,7 @@ public partial class LeagueServiceTests : BaseServiceTests
                             LeagueName = leagueInDB.LeagueName + " more",
                             PercentPointsFactor = leagueInDB.PercentPointsFactor + 0.1D,
                             PlayerLevelFactor = leagueInDB.PlayerLevelFactor + 0.1D,
-                            PointsToLoosers = leagueInDB.PointsToLoosers + 0.1D,
+                            PointsToLosers = leagueInDB.PointsToLosers + 0.1D,
                             PointsToWinners = leagueInDB.PointsToWinners + 0.1D,
                         };
 
@@ -200,7 +200,7 @@ public partial class LeagueServiceTests : BaseServiceTests
                             LeagueName = leagueInDB.LeagueName + " more",
                             PercentPointsFactor = leagueInDB.PercentPointsFactor + 0.1D,
                             PlayerLevelFactor = leagueInDB.PlayerLevelFactor + 0.1D,
-                            PointsToLoosers = leagueInDB.PointsToLoosers + 0.1D,
+                            PointsToLosers = leagueInDB.PointsToLosers + 0.1D,
                             PointsToWinners = leagueInDB.PointsToWinners + 0.1D,
                         };
 
@@ -269,7 +269,7 @@ public partial class LeagueServiceTests : BaseServiceTests
                             LeagueName = leagueInDB.LeagueName + " more",
                             PercentPointsFactor = leagueInDB.PercentPointsFactor + 0.1D,
                             PlayerLevelFactor = leagueInDB.PlayerLevelFactor + 0.1D,
-                            PointsToLoosers = leagueInDB.PointsToLoosers + 0.1D,
+                            PointsToLosers = leagueInDB.PointsToLosers + 0.1D,
                             PointsToWinners = leagueInDB.PointsToWinners + 0.1D,
                         };
 
@@ -331,7 +331,7 @@ public partial class LeagueServiceTests : BaseServiceTests
                             LeagueName = leagueInDB.LeagueName + " more",
                             PercentPointsFactor = leagueInDB.PercentPointsFactor + 0.1D,
                             PlayerLevelFactor = leagueInDB.PlayerLevelFactor + 0.1D,
-                            PointsToLoosers = leagueInDB.PointsToLoosers + 0.1D,
+                            PointsToLosers = leagueInDB.PointsToLosers + 0.1D,
                             PointsToWinners = leagueInDB.PointsToWinners + 0.1D,
                         };
 

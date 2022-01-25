@@ -47,13 +47,13 @@ public partial class GameService : ControllerBase, IGameService
         {
             Player1CalculatedPoints = group.PointsToWinners - (Team1Player1Level - (Team2Player1Level + Team2Player2Level) / 2) * (group.PlayerLevelFactor - PercPointsMade * group.PercentPointsFactor);
             Player2CalculatedPoints = group.PointsToWinners - (Team1Player2Level - (Team2Player1Level + Team2Player2Level) / 2) * (group.PlayerLevelFactor - PercPointsMade * group.PercentPointsFactor);
-            Player3CalculatedPoints = group.PointsToLoosers - (Team2Player1Level - (Team1Player1Level + Team1Player2Level) / 2) * (group.PlayerLevelFactor - PercPointsMade * group.PercentPointsFactor);
-            Player4CalculatedPoints = group.PointsToLoosers - (Team2Player2Level - (Team1Player1Level + Team1Player2Level) / 2) * (group.PlayerLevelFactor - PercPointsMade * group.PercentPointsFactor);
+            Player3CalculatedPoints = group.PointsToLosers - (Team2Player1Level - (Team1Player1Level + Team1Player2Level) / 2) * (group.PlayerLevelFactor - PercPointsMade * group.PercentPointsFactor);
+            Player4CalculatedPoints = group.PointsToLosers - (Team2Player2Level - (Team1Player1Level + Team1Player2Level) / 2) * (group.PlayerLevelFactor - PercPointsMade * group.PercentPointsFactor);
         }
         else
         {
-            Player1CalculatedPoints = group.PointsToLoosers - (Team1Player1Level - (Team2Player1Level + Team2Player2Level) / 2) * (group.PlayerLevelFactor - PercPointsMade * group.PercentPointsFactor);
-            Player2CalculatedPoints = group.PointsToLoosers - (Team1Player2Level - (Team2Player1Level + Team2Player2Level) / 2) * (group.PlayerLevelFactor - PercPointsMade * group.PercentPointsFactor);
+            Player1CalculatedPoints = group.PointsToLosers - (Team1Player1Level - (Team2Player1Level + Team2Player2Level) / 2) * (group.PlayerLevelFactor - PercPointsMade * group.PercentPointsFactor);
+            Player2CalculatedPoints = group.PointsToLosers - (Team1Player2Level - (Team2Player1Level + Team2Player2Level) / 2) * (group.PlayerLevelFactor - PercPointsMade * group.PercentPointsFactor);
             Player3CalculatedPoints = group.PointsToWinners - (Team2Player1Level - (Team1Player1Level + Team1Player2Level) / 2) * (group.PlayerLevelFactor - PercPointsMade * group.PercentPointsFactor);
             Player4CalculatedPoints = group.PointsToWinners - (Team2Player2Level - (Team1Player1Level + Team1Player2Level) / 2) * (group.PlayerLevelFactor - PercPointsMade * group.PercentPointsFactor);
         }

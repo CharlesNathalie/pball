@@ -1,48 +1,52 @@
-<div class="formcenter" *ngIf="!loginService.LoginSuccess">
+<div class="formcenter">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>{{ loginService.LoginTxt[state.LangID]}}
+            <mat-card-title>
+                {{ loginService.LoginTxt[state.LangID]}}
             </mat-card-title>
         </mat-card-header>
-
-        <form (ngSubmit)="OnSubmit()" [formGroup]="loginForm">
-            <mat-card-content>
-                <mat-form-field>
-                    <mat-label>{{ loginService.LoginEmail[state.LangID] }}</mat-label>
-                    <input matInput type="email" placeholder="john@gmail.com" formControlName="LoginEmail">
-                    <mat-error *ngIf="GetHasError('LoginEmail')">{{GetErrorMessage("LoginEmail")}}</mat-error>
-                </mat-form-field>
-                <br>
-                <mat-form-field>
-                    <mat-label>{{ loginService.Password[state.LangID] }}</mat-label>
-                    <input matInput type="password" formControlName="Password">
-                    <mat-error *ngIf="GetHasError('Password')">{{GetErrorMessage("Password")}}</mat-error>
-                </mat-form-field>
-            </mat-card-content>
-
+        <form (ngSubmit)="SubmitLoginForm()" [formGroup]="loginForm">
             <mat-error>* {{ loginService.required[state.LangID] }}</mat-error>
-            <br><br>
-            <a routerLink="/{{ state.Culture }}/register">{{ loginService.No_account[state.LangID] }}</a>
-            <br><br>
-            <a routerLink="/{{ state.Culture }}/forgotpassword">{{ loginService.Cant_access_your_account[state.LangID]
-                }}</a>
-            <br><br>
-            <mat-error *ngIf="loginService.Error?.error">
-                <h3 *ngFor="let e of loginService.Error?.error?.ErrList">{{ e }}</h3>
-            </mat-error>
-            <button mat-raised-button *ngIf="GetFormValid()">{{ loginService.LoginTxt[state.LangID] }}</button>
-            <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
-                loginService.PleaseEnterRequiredInformation[state.LangID] }}</button>
-
+            <mat-card-content>
+                <div class="center">
+                    <mat-form-field>
+                        <mat-label>{{ loginService.LoginEmail[state.LangID] }}</mat-label>
+                        <input matInput type="email" placeholder="john@gmail.com" formControlName="LoginEmail">
+                        <mat-error *ngIf="GetHasError('LoginEmail')">{{GetErrorMessage("LoginEmail")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ loginService.Password[state.LangID] }}</mat-label>
+                        <input matInput type="password" formControlName="Password">
+                        <mat-error *ngIf="GetHasError('Password')">{{GetErrorMessage("Password")}}</mat-error>
+                    </mat-form-field>
+                    <mat-error *ngIf="loginService.Error?.error">
+                        <h3 *ngFor="let e of loginService.Error?.error?.ErrList">{{ e }}</h3>
+                    </mat-error>
+                    <button mat-raised-button *ngIf="GetFormValid()">{{ loginService.LoginTxt[state.LangID] }}</button>
+                    <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
+                        loginService.PleaseEnterRequiredInformation[state.LangID] }}</button>
+                    <p>&nbsp;</p>
+                    <button mat-button routerLink="/{{ state.Culture }}/register">
+                        <mat-icon>person_add</mat-icon>&nbsp;
+                        {{ loginService.ReturnToRegister[state.LangID] }}
+                    </button>
+                    <button mat-button routerLink="/{{ state.Culture }}/forgotpassword">
+                        <mat-icon>password</mat-icon>&nbsp;
+                        {{ loginService.ForgotYourPassword[state.LangID] }}
+                    </button>
+                </div>
+            </mat-card-content>
         </form>
     </mat-card>
 </div>
-<div class="formcenter" *ngIf="loginService.LoginSuccess">
+<!-- <div class="formcenter" *ngIf="loginService.LoginSuccess">
     <mat-card>
         <mat-card-header>
             <mat-card-title>{{ loginService.LoginSuccessful[state.LangID ?? languageEnum.en]}}
             </mat-card-title>
         </mat-card-header>
-        <button mat-raised-button routerLink="/{{ state.Culture }}/home">{{ loginService.ReturnToHomePage[state.LangID] }}</button>
+        <button mat-raised-button routerLink="/{{ state.Culture }}/home">{{ loginService.ReturnHome[state.LangID]
+            }}</button>
     </mat-card>
-</div>
+</div> -->

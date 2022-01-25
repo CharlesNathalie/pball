@@ -2,10 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
 import { Router } from '@angular/router';
-import { AppStateService } from 'src/app/app-state.service';
-import { ShellService } from './shell.service';
-import { LogoffService } from '../logoff/logoff.service';
-import { DataHelperService } from 'src/app/services/data/data-helper.service';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { ShellService } from '../../services/shell.service';
+import { LogoffService } from '../../services/logoff.service';
+import { DataHelperService } from 'src/app/services/data-helper.service';
 
 @Component({
   selector: 'app-shell',

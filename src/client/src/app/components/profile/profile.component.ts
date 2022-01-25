@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
-import { AppStateService } from 'src/app/app-state.service';
-import { ProfileService } from './profile.service';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { ProfileService } from '../../services/profile.service';
 
 @Component({
   selector: 'app-profile',
@@ -24,6 +24,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.profileService.ResetLocals();
 
     this.profileForm = this.formBuilder.group({
+      ContactID: [this.state.User.ContactID, [Validators.required]],
       LoginEmail: [this.state.User.LoginEmail, [Validators.required, Validators.email, Validators.maxLength(100)]],
       FirstName: [this.state.User.FirstName, [Validators.required, Validators.maxLength(50)]],
       Initial: [this.state.User.Initial, [Validators.maxLength(20)]],
@@ -35,11 +36,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  GetHasError(fieldName: 'LoginEmail' | 'FirstName' | 'Initial' | 'LastName' | 'PlayerLevel'): boolean {
+  GetHasError(fieldName: 'ContactID' | 'LoginEmail' | 'FirstName' | 'Initial' | 'LastName' | 'PlayerLevel'): boolean {
     return this.profileService.GetHasError(fieldName, this.profileForm);
   }
 
-  GetErrorMessage(fieldName: 'LoginEmail' | 'FirstName' | 'Initial' | 'LastName' | 'PlayerLevel'): string {
+  GetErrorMessage(fieldName: 'ContactID' | 'LoginEmail' | 'FirstName' | 'Initial' | 'LastName' | 'PlayerLevel'): string {
     return this.profileService.GetErrorMessage(fieldName, this.profileForm);
   }
 
@@ -47,7 +48,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     return this.profileService.GetFormValid(this.profileForm);
   }
 
-  OnSubmit(): void {
-    this.profileService.SubmitForm(this.profileForm);
+  SubmitProfileForm(): void {
+    this.profileService.SubmitProfileForm(this.profileForm);
   }
 }

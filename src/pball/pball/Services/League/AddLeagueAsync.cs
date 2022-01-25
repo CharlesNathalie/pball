@@ -35,7 +35,7 @@ public partial class LeagueService : ControllerBase, ILeagueService
             LeagueName = league.LeagueName,
             PercentPointsFactor = league.PercentPointsFactor,
             PlayerLevelFactor = league.PlayerLevelFactor,
-            PointsToLoosers = league.PointsToLoosers,
+            PointsToLosers = league.PointsToLosers,
             PointsToWinners = league.PointsToWinners,
             Removed = false,
             LastUpdateDate_UTC = DateTime.UtcNow,

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AppStateService } from 'src/app/app-state.service';
-import { LeagueListService } from './league-list.service';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { LeagueListService } from '../../services/league-list.service';
 
 @Component({
   selector: 'app-league-list',
@@ -15,13 +15,18 @@ export class LeagueListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.leagueListService.ResetLocals();
-    this.leagueListService.LeagueList();
+    this.leagueListService.GetLeagueList();
  }
 
   ngOnDestroy(): void {
   }
 
-  LeagueList() {
-    this.leagueListService.LeagueList();
+ 
+  GetLeagueHighlight(LeagueID: number): string {
+    return this.state.LeagueID == LeagueID ? 'highlight' : '';
+  }
+
+  SetLeagueID(LeagueID: number) {
+    this.leagueListService.SetLeagueID(LeagueID);
   }
 }

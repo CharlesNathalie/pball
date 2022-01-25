@@ -1,4 +1,4 @@
-import { AppStateService } from "../app-state.service";
+import { AppStateService } from "../services/app-state.service";
 import { EnumIDAndText } from "../models/EnumIDAndText.model";
 import { LanguageEnum } from "./LanguageEnum";
 

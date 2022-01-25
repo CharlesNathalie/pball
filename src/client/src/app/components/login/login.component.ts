@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
 import { LoginModel } from 'src/app/models/LoginModel.model';
-import { AppStateService } from 'src/app/app-state.service';
-import { LoginService } from './login.service';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     return this.loginService.GetFormValid(this.loginForm);
   }
 
-  OnSubmit(): void {
-    this.loginService.SubmitForm(this.loginForm);
+  SubmitLoginForm(): void {
+    this.loginService.SubmitLoginForm(this.loginForm);
   }
 }

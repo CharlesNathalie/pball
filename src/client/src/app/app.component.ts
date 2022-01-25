@@ -2,7 +2,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { AppStateService } from './app-state.service';
+import { AppStateService } from './services/app-state.service';
 
 @Component({
   selector: 'app-root',

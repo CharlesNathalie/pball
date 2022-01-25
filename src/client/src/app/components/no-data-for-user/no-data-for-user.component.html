@@ -1,7 +1,17 @@
-<div *ngIf="!state.LeagueStatsModelList?.length">
-    <br>
-    <h2>{{ noDataForUserService.TheUser[state.LangID]}} 
-        {{ state.User.FirstName }} {{ state.User.LastName }}
-        {{ noDataForUserService.doesNotYetBelongToALeague[state.LangID]}} 
-    </h2>
+<div class="formcenter" *ngIf="!state.LeagueStatsModelList?.length">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                <h2>
+                    {{ state.User.FirstName }} {{ state.User.LastName }}
+                    
+                </h2>
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="center">
+                {{ noDataForUserService.doesNotYetBelongToALeague[state.LangID]}}
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>

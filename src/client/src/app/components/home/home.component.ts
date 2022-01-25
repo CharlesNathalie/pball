@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AppStateService } from 'src/app/app-state.service';
-import { DemoDataService } from 'src/app/services/demo-data/demo-data.service';
-import { LeagueService } from 'src/app/services/league/league.service';
-import { ShellService } from '../shell/shell.service';
-import { HomeService } from './home.service';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { DemoDataService } from 'src/app/services/demo-data.service';
+import { GetPlayerLeaguesService } from 'src/app/services/get-player-leagues.service';
+import { ShellService } from '../../services/shell.service';
+import { HomeService } from '../../services/home.service';
 
 @Component({
   selector: 'app-home',
@@ -15,31 +15,24 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(public state: AppStateService,
     public homeService: HomeService,
+    public getPlayerLeaguesService: GetPlayerLeaguesService,
     public shellService: ShellService,
-    public leagueService: LeagueService,
     public demoDataService: DemoDataService,
     public router: Router) {
   }
 
   ngOnInit(): void {
-    this.homeService.LoadLocalStorage();
-    this.homeService.LoadLocalStorage();
     if (this.state.LeagueList.length == 0) {
       if (this.state.DemoVisible) {
         this.ShowDemo();
       }
       else {
-        this.leagueService.GetPlayerLeagues();
+        this.getPlayerLeaguesService.Run();
       }
     }
   }
 
   ngOnDestroy(): void {
-  }
-
-
-  SetLeagueID(LeagueID: number) {
-    this.homeService.SetLeagueID(LeagueID);
   }
 
   Period(time: 'day' | 'week' | 'month' | 'year' | 'all' | 'between') {
@@ -59,7 +52,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   HideDemo() {
     this.state.ClearDemoLocalStorage();
     this.state.ClearDemoData();
-    this.leagueService.GetPlayerLeagues();
+    this.getPlayerLeaguesService.Run();
   }
 
   ShowDemo() {
@@ -72,50 +65,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.state.DataTime == dataTime ? 'highlight' : '';
   }
 
-  GetLeagueHighlight(LeagueID: number): string {
-    return this.state.LeagueID == LeagueID ? 'highlight' : '';
-  }
 
   GetChecked(LeagueID: number): string {
     return this.state.LeagueID == LeagueID ? 'checked' : '';
-  }
-
-  DragEnd(event: any) {
-    if (this.state.DemoVisible) {
-      if (event.distance.x < -20) {
-        if (this.state.DemoHomeTabIndex < (this.state.HomeTabCount - 1)) {
-          this.state.DemoHomeTabIndex += 1;
-        }
-      }
-
-      if (event.distance.x > +20) {
-        if (this.state.DemoHomeTabIndex > 0) {
-          this.state.DemoHomeTabIndex -= 1;
-        }
-      }
-
-      localStorage.setItem('DemoHomeTabIndex', JSON.stringify(this.state.DemoHomeTabIndex));
-    }
-    else {
-      if (event.distance.x < -20) {
-        if (this.state.HomeTabIndex < (this.state.HomeTabCount - 1)) {
-          this.state.HomeTabIndex += 1;
-        }
-      }
-
-      if (event.distance.x > +20) {
-        if (this.state.HomeTabIndex > 0) {
-          this.state.HomeTabIndex -= 1;
-        }
-      }
-
-      localStorage.setItem('HomeTabIndex', JSON.stringify(this.state.HomeTabIndex));
-    }
-
-    event.source.element.nativeElement.style.transform = 'none' // visually reset element to its origin
-    const source: any = event.source;
-    source._passiveTransform = { x: 0, y: 0 };
-
   }
 
   TabSelectedChanged(event: any) {

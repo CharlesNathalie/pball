@@ -1,0 +1,34 @@
+<div class="formcenter">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                {{ leagueMembersService.Members[state.LangID] }}
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="center">
+                <p>&nbsp;</p>
+                <div *ngFor="let player of state.PlayerList">
+                    <p *ngIf="GetIsAdmin(player.ContactID)">
+                        <span *ngIf="player.Initial">
+                            <strong>{{ player.LastName }}, {{ player.FirstName }} {{ player.Initial }}. Admin</strong>
+                        </span>
+                        <span *ngIf="!player.Initial">
+                            <strong>{{ player.LastName }}, {{ player.FirstName }} Admin</strong>
+                        </span>
+                    </p>
+                </div>
+                <div *ngFor="let player of state.PlayerList">
+                    <p *ngIf="!GetIsAdmin(player.ContactID)">
+                        <span *ngIf="player.Initial">
+                            {{ player.LastName }}, {{ player.FirstName }} {{ player.Initial }}.
+                        </span>
+                        <span *ngIf="!player.Initial">
+                            {{ player.LastName }}, {{ player.FirstName }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -3,3 +3,13 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 h2 {color: indigo}
+
+.formcenter{
+    display: flex;
+    justify-content: center;
+    min-width: 320px;
+  }
+
+  .mat-form-field {
+      width: 300px !important;
+  }

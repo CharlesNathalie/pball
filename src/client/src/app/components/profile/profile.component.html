@@ -1,68 +1,63 @@
-<div class="formcenter" *ngIf="!profileService.profileSuccess">
+<div class="formcenter">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>{{ profileService.ChangingProfile[state.LangID ?? languageEnum.en]}}
+            <mat-card-title>
+                {{ profileService.ChangingProfile[state.LangID ?? languageEnum.en]}}
             </mat-card-title>
         </mat-card-header>
-
-        <form (ngSubmit)="OnSubmit()" [formGroup]="profileForm">
-            <mat-card-content>
-                <mat-form-field>
-                    <mat-label>{{ profileService.LoginEmail[state.LangID] }}</mat-label>
-                    <input matInput type="email" placeholder="john@gmail.com" formControlName="LoginEmail">
-                    <mat-error *ngIf="GetHasError('LoginEmail')">{{GetErrorMessage("LoginEmail")}}</mat-error>
-                </mat-form-field>
-                <br>
-                <mat-form-field>
-                    <mat-label>{{ profileService.FirstName[state.LangID] }}</mat-label>
-                    <input matInput placeholder="john" formControlName="FirstName">
-                    <mat-error *ngIf="GetHasError('FirstName')">{{GetErrorMessage("FirstName")}}</mat-error>
-                </mat-form-field>
-                <br>
-                <mat-form-field>
-                    <mat-label>{{ profileService.Initial[state.LangID] }}</mat-label>
-                    <input matInput placeholder="j" formControlName="Initial">
-                    <mat-error *ngIf="GetHasError('Initial')">{{GetErrorMessage("Initial")}}</mat-error>
-                </mat-form-field>
-                <br>
-                <mat-form-field>
-                    <mat-label>{{ profileService.LastName[state.LangID] }}</mat-label>
-                    <input matInput placeholder="Doe" formControlName="LastName">
-                    <mat-error *ngIf="GetHasError('LastName')">{{GetErrorMessage("LastName")}}</mat-error>
-                </mat-form-field>
-                <br>
-                <mat-form-field>
-                    <mat-label>{{ profileService.PlayerLevel[state.LangID] }}</mat-label>
-                    <input matInput type="number" step="0.1" max="5" min="1" formControlName="PlayerLevel">
-                    <mat-error *ngIf="GetHasError('PlayerLevel')">{{GetErrorMessage("PlayerLevel")}}</mat-error>
-                </mat-form-field>
-                <br>
-
-            </mat-card-content>
-
+        <form (ngSubmit)="SubmitProfileForm()" [formGroup]="profileForm">
             <mat-error>* {{ profileService.required[state.LangID] }}</mat-error>
-            <br><br>
-            <a routerLink="/{{ state.Culture }}/home">{{ profileService.ReturnToHomePage[state.LangID] }}</a>
-            <br><br>
+            <input type="hidden" formControlName="ContactID">
+            <mat-card-content>
+                <div class="center">
+                    <mat-form-field>
+                        <mat-label>{{ profileService.LoginEmail[state.LangID] }}</mat-label>
+                        <input matInput type="email" placeholder="john@gmail.com" formControlName="LoginEmail">
+                        <mat-error *ngIf="GetHasError('LoginEmail')">{{GetErrorMessage("LoginEmail")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ profileService.FirstName[state.LangID] }}</mat-label>
+                        <input matInput placeholder="john" formControlName="FirstName">
+                        <mat-error *ngIf="GetHasError('FirstName')">{{GetErrorMessage("FirstName")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ profileService.Initial[state.LangID] }}</mat-label>
+                        <input matInput placeholder="j" formControlName="Initial">
+                        <mat-error *ngIf="GetHasError('Initial')">{{GetErrorMessage("Initial")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ profileService.LastName[state.LangID] }}</mat-label>
+                        <input matInput placeholder="Doe" formControlName="LastName">
+                        <mat-error *ngIf="GetHasError('LastName')">{{GetErrorMessage("LastName")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ profileService.PlayerLevel[state.LangID] }}</mat-label>
+                        <input matInput type="number" step="0.1" max="5" min="1" formControlName="PlayerLevel">
+                        <mat-error *ngIf="GetHasError('PlayerLevel')">{{GetErrorMessage("PlayerLevel")}}</mat-error>
+                    </mat-form-field>
+                    <mat-error *ngIf="profileService.Error?.error">
+                        <h3 *ngFor="let e of profileService.Error?.error?.ErrList">{{ e }}</h3>
+                    </mat-error>
+                    <button mat-raised-button *ngIf="GetFormValid()">{{ profileService.UpdateProfile[state.LangID]
+                        }}</button>
+                    <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
+                        profileService.PleaseEnterRequiredInformation[state.LangID] }}</button>
 
-            <mat-error *ngIf="profileService.Error?.error">
-                <br><br>
-                <h3 *ngFor="let e of profileService.Error?.error?.ErrList">{{ e }}</h3>
-            </mat-error>
-
-            <button mat-raised-button *ngIf="GetFormValid()">{{ profileService.UpdateProfile[state.LangID] }}</button>
-            <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
-                profileService.PleaseEnterRequiredInformation[state.LangID] }}</button>
-
+                    <div *ngIf="profileService.profileSuccess">
+                        <h2>{{ profileService.Success[state.LangID] }}</h2>
+                    </div>
+                    <p>&nbsp;</p>
+                    <button mat-button routerLink="/{{ state.Culture }}/home">
+                        <mat-icon>home</mat-icon>
+                        {{ profileService.ReturnHome[state.LangID] }}
+                    </button>
+                    <br><br>
+                </div>
+            </mat-card-content>
         </form>
-    </mat-card>
-</div>
-<div class="formcenter" *ngIf="profileService.profileSuccess">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>{{ profileService.ProfileUpdatedSuccessfully[state.LangID ?? languageEnum.en]}}
-            </mat-card-title>
-        </mat-card-header>
-        <button mat-raised-button routerLink="/{{ state.Culture }}/home">{{ profileService.ReturnToHomePage[state.LangID] }}</button>
     </mat-card>
 </div>

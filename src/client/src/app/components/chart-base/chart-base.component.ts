@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
-import { AppStateService } from 'src/app/app-state.service';
-import { ChartBaseService } from './chart-base.service';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { ChartBaseService } from '../../services/chart-base.service';
 
 Chart.register(...registerables);
 
