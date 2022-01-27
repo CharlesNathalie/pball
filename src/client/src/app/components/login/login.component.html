@@ -20,17 +20,21 @@
                         <input matInput type="password" formControlName="Password">
                         <mat-error *ngIf="GetHasError('Password')">{{GetErrorMessage("Password")}}</mat-error>
                     </mat-form-field>
+                    <br>
                     <mat-error *ngIf="loginService.Error?.error">
                         <h3 *ngFor="let e of loginService.Error?.error?.ErrList">{{ e }}</h3>
+                        <br>
                     </mat-error>
-                    <button mat-raised-button *ngIf="GetFormValid()">{{ loginService.LoginTxt[state.LangID] }}</button>
+                    <button mat-raised-button *ngIf="GetFormValid()">{{ loginService.LoginTxt[state.LangID]
+                        }}</button>
                     <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
                         loginService.PleaseEnterRequiredInformation[state.LangID] }}</button>
-                    <p>&nbsp;</p>
+                    <br><br>
                     <button mat-button routerLink="/{{ state.Culture }}/register">
                         <mat-icon>person_add</mat-icon>&nbsp;
                         {{ loginService.ReturnToRegister[state.LangID] }}
                     </button>
+                    <br>
                     <button mat-button routerLink="/{{ state.Culture }}/forgotpassword">
                         <mat-icon>password</mat-icon>&nbsp;
                         {{ loginService.ForgotYourPassword[state.LangID] }}
@@ -40,13 +44,3 @@
         </form>
     </mat-card>
 </div>
-<!-- <div class="formcenter" *ngIf="loginService.LoginSuccess">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>{{ loginService.LoginSuccessful[state.LangID ?? languageEnum.en]}}
-            </mat-card-title>
-        </mat-card-header>
-        <button mat-raised-button routerLink="/{{ state.Culture }}/home">{{ loginService.ReturnHome[state.LangID]
-            }}</button>
-    </mat-card>
-</div> -->

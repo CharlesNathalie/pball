@@ -6,6 +6,8 @@ import { AppStateService } from 'src/app/services/app-state.service';
 })
 export class LeagueAdminsService {
   Administrators: string[] = ['Administrators', 'Administrateurs'];
+  EmailSubject: string[] = ['Email subject', 'Sujet du courriel'];
+  EmailBody: string[] = ['Email body', 'corps du courriel'];
 
   constructor(public state: AppStateService) {
   }

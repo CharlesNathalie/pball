@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LanguageEnum } from 'src/app/enums/LanguageEnum';
 import { AppStateService } from 'src/app/services/app-state.service';
-import { HomeService } from './home.service';
+import { ProgressService } from './progress.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,12 +22,12 @@ export class ShellService {
   ShowDemo: string[] = ['Show demo', 'Montrer demo'];
 
   constructor(public state: AppStateService,
-    public homeService: HomeService) {
+    public progressService: ProgressService) {
   }
 
   Init(title: Title, router: Router) {
-    this.homeService.LoadLocalStorage();
-    this.homeService.LoadLocalStorage();
+    this.progressService.LoadLocalStorage();
+    this.progressService.LoadLocalStorage();
     title.setTitle(this.ApplicationName[this.state.LangID ?? 0]);
     router.url.startsWith("/fr-CA") ?
       this.state.SetLanguage(LanguageEnum.fr) :

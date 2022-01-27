@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { LeagueModifyService } from '../../services/league-modify.service';
@@ -12,17 +12,16 @@ import { League } from 'src/app/models/League.model';
   styleUrls: ['./league-modify.component.css']
 })
 export class LeagueModifyComponent implements OnInit, OnDestroy {
-  @Input() league: League = <League>{};
 
   languageEnum = GetLanguageEnum();
 
-  leagueAddForm = this.formBuilder.group({
-    LeagueID: [this.league.LeagueID, [Validators.required]],
-    LeagueName: [this.league.LeagueName, [Validators.required]],
-    PointsToWinners: [this.league.PointsToWinners, [Validators.required]],
-    PointsToLosers: [this.league.PointsToLosers, [Validators.required]],
-    PlayerLevelFactor: [this.league.PlayerLevelFactor, [Validators.required]],
-    PercentPointsFactor: [this.league.PercentPointsFactor, [Validators.required]],
+  leagueModifyForm: FormGroup = this.formBuilder.group({
+    LeagueID: [this.state.CurrentLeague.LeagueID, [Validators.required]],
+    LeagueName: [this.state.CurrentLeague.LeagueName, [Validators.required]],
+    PointsToWinners: [this.state.CurrentLeague.PointsToWinners, [Validators.required]],
+    PointsToLosers: [this.state.CurrentLeague.PointsToLosers, [Validators.required]],
+    PlayerLevelFactor: [this.state.CurrentLeague.PlayerLevelFactor, [Validators.required]],
+    PercentPointsFactor: [this.state.CurrentLeague.PercentPointsFactor, [Validators.required]],
   });
 
   constructor(public state: AppStateService,
@@ -33,24 +32,24 @@ export class LeagueModifyComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.leagueModifyService.ResetLocals();
-  }
+    }
 
   ngOnDestroy(): void {
   }
 
   GetHasError(fieldName: 'LeagueID' | 'LeagueName' | 'PointsToWinners' | 'PointsToLosers' | 'PlayerLevelFactor' | 'PercentPointsFactor'): boolean {
-    return this.leagueModifyService.GetHasError(fieldName, this.leagueAddForm);
+    return this.leagueModifyService.GetHasError(fieldName, this.leagueModifyForm);
   }
 
   GetErrorMessage(fieldName: 'LeagueID' | 'LeagueName' | 'PointsToWinners' | 'PointsToLosers' | 'PlayerLevelFactor' | 'PercentPointsFactor'): string {
-    return this.leagueModifyService.GetErrorMessage(fieldName, this.leagueAddForm);
+    return this.leagueModifyService.GetErrorMessage(fieldName, this.leagueModifyForm);
   }
 
   GetFormValid(): boolean {
-    return this.leagueModifyService.GetFormValid(this.leagueAddForm);
+    return this.leagueModifyService.GetFormValid(this.leagueModifyForm);
   }
 
   OnSubmit(): void {
-    this.leagueModifyService.SubmitForm(this.leagueAddForm);
+    this.leagueModifyService.SubmitForm(this.leagueModifyForm);
   }
 }

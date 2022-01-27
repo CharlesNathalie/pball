@@ -8,6 +8,7 @@ import { Player } from 'src/app/models/Player.model';
 import { User } from 'src/app/models/User.model';
 import * as moment from 'moment';
 import { SortService } from './sort.service';
+import { ProgressService } from './progress.service';
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +57,8 @@ export class DemoDataService {
   GenerateDemoDataSuccess: boolean = false;
 
   constructor(public state: AppStateService,
-    public sortService: SortService) {
+    public sortService: SortService,
+    public progressService: ProgressService) {
   }
 
   GenerateDemoData() {
@@ -75,6 +77,7 @@ export class DemoDataService {
     this.GenerateDemoDataGameList();
 
     this.state.DemoLeagueID = 1;
+    this.state.CurrentLeague = this.state.LeagueList[0];
     this.state.DemoVisible = true;
     this.state.DemoUser = <User>{ ...this.state.PlayerList[0] };
 
@@ -82,6 +85,8 @@ export class DemoDataService {
     localStorage.setItem('DemoLeagueID', JSON.stringify(this.state.LeagueID));
     localStorage.setItem('DemoVisible', JSON.stringify(true));
     localStorage.setItem('DemoHomeTabIndex', JSON.stringify(this.state.DemoHomeTabIndex));
+  
+    this.progressService.Period('year');
   }
 
   GenerateDemoDataGameList() {
@@ -184,8 +189,8 @@ export class DemoDataService {
         LeagueName: '',
         PointsToWinners: 3,
         PointsToLosers: 1,
-        PercentPointsFactor: 0,
-        PlayerLevelFactor: 0,
+        PercentPointsFactor: 0.5,
+        PlayerLevelFactor: 0.5,
         Removed: false,
         LastUpdateContactID: this.state.PlayerList[0].ContactID,
         LastUpdateDate_UTC: new Date(),

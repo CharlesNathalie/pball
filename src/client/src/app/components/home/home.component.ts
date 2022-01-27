@@ -35,19 +35,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  Period(time: 'day' | 'week' | 'month' | 'year' | 'all' | 'between') {
-    this.homeService.Period(time);
-  }
-
-  ChangedStartDate(startDate: HTMLInputElement) {
-    this.homeService.ChangedStartDate(startDate)
-    this.state.DataTime = 'between';
-  }
-
-  ChangedEndDate(endDate: HTMLInputElement) {
-    this.homeService.ChangedEndDate(endDate);
-    this.state.DataTime = 'between';
-  }
 
   HideDemo() {
     this.state.ClearDemoLocalStorage();
@@ -58,19 +45,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   ShowDemo() {
     this.state.DemoVisible = true;
     this.demoDataService.GenerateDemoData();
-    this.homeService.Period('year');
   }
 
-  GetDataTimeHighlight(dataTime: 'day' | 'week' | 'month' | 'year' | 'all' | 'between'): string {
-    return this.state.DataTime == dataTime ? 'highlight' : '';
-  }
-
-
-  GetChecked(LeagueID: number): string {
-    return this.state.LeagueID == LeagueID ? 'checked' : '';
-  }
-
-  TabSelectedChanged(event: any) {
+  HomeTabSelectedChanged(event: any) {
     if (this.state.DemoVisible) {
       this.state.DemoHomeTabIndex = event.index;
       localStorage.setItem('DemoHomeTabIndex', JSON.stringify(this.state.DemoHomeTabIndex));

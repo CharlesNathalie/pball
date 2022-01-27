@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
 import { GetLanguageEnum, LanguageEnum } from 'src/app/enums/LanguageEnum';
 import { AscDescEnum } from '../enums/AscDescEnum';
+import { DatePlayerPointsModel } from '../models/DatePlayerPointsModel.model';
 import { Game } from '../models/Game.model';
 import { League } from '../models/League.model';
 import { LeagueContact } from '../models/LeagueContact.model';
+import { LeaguePointExampleModel } from '../models/LeaguePointExampleModel.model';
 import { LeagueStatsModel } from '../models/LeagueStatsModel';
 import { Player } from '../models/Player.model';
 import { PlayerGameModel } from '../models/PlayerGameModel';
+import { PlayerPointsModel } from '../models/PlayerPointsModel.model';
 import { User } from '../models/User.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppStateService {
-  Version: string[] = ['Version: alpha-1.0.0.0', 'Version: alpha1.0.0.0'];
+  Version: string[] = ['Version: alpha-1.0.0.0', 'Version: alpha-1.0.0.0'];
 
   //BaseApiUrl = 'https://pball.azurewebsites.net/api/'; 
   BaseApiUrl = 'https://localhost:7072/api/';
@@ -38,6 +41,14 @@ export class AppStateService {
   StartDate: Date = new Date(2020, 1, 1);
   User: User = <User>{};
 
+  CurrentLeague: League = <League>{};
+  LeagueTabsIndex: number = 0;
+
+  ProgressTabsIndex: number = 0;
+
+  ReturnToPage: string = '';
+  ReturnToPage2: string = '';
+
   GameList: Game[] = [];
   LeagueContactList: LeagueContact[] = [];
   LeagueList: League[] = [];
@@ -50,35 +61,40 @@ export class AppStateService {
   PlayerList: Player[] = [];
   PlayerListSortProp: 'FullName' = 'FullName';
   PlayerListSortAscDesc: AscDescEnum = AscDescEnum.Ascending;
-  
+
   DemoVisible: boolean = false;
   DataTime: 'day' | 'week' | 'month' | 'year' | 'all' | 'between' = 'year';
 
   DemoHomeTabIndex: number = 0;
   HomeTabIndex: number = 0;
 
+  LeaguePointExampleModelList: LeaguePointExampleModel[] = [];
+  DatePlayerPointsModelList: DatePlayerPointsModel[] = [];
+
   constructor() {
 
   }
 
-  ClearDemoLocalStorage()
-  {
+  ClearDemoLocalStorage() {
     localStorage.removeItem('DemoUser');
     localStorage.removeItem('DemoLeagueID');
     localStorage.removeItem('DemoVisible');
     localStorage.removeItem('DemoStartDate');
     localStorage.removeItem('DemoEndDate');
     localStorage.removeItem('DemoHomeTabIndex');
+    localStorage.removeItem('LeagueTabsIndex');
+    localStorage.removeItem('ProgressTabsIndex');
   }
 
-  ClearLocalStorage()
-  {
+  ClearLocalStorage() {
     localStorage.removeItem('User');
     localStorage.removeItem('LeagueID');
     localStorage.removeItem('DemoVisible');
     localStorage.removeItem('StartDate');
     localStorage.removeItem('EndDate');
     localStorage.removeItem('HomeTabIndex');
+    localStorage.removeItem('LeagueTabsIndex');
+    localStorage.removeItem('ProgressTabsIndex');
   }
 
   ClearDemoData() {
@@ -92,7 +108,7 @@ export class AppStateService {
     this.PlayerGameModelList = [];
     this.PlayerList = [];
     this.DemoStartDate = new Date(2020, 1, 1);
-    this.DemoUser = <User>{};  
+    this.DemoUser = <User>{};
   }
 
   ClearData() {
@@ -106,7 +122,7 @@ export class AppStateService {
     this.PlayerGameModelList = [];
     this.PlayerList = [];
     this.StartDate = new Date(2020, 1, 1);
-    this.User = <User>{};  
+    this.User = <User>{};
   }
 
   SetLanguage(Language: LanguageEnum) {

@@ -21,7 +21,23 @@ export class DataHelperService {
       ['Sep.', 'sept.'],
       ['Oct.', 'oct.'],
       ['Nov.', 'nov.'],
-      ['Dec.', 'dec.'],
+      ['Dec.', 'déc.'],
+    ];
+
+    MonthList: string[][] =
+    [
+      ['Janvier', 'janvier'],
+      ['February', 'février'],
+      ['March', 'mars'],
+      ['April', 'avril'],
+      ['May', 'mai'],
+      ['Junn', 'juin'],
+      ['Jully', 'juillet'],
+      ['August', 'août'],
+      ['September', 'septembre'],
+      ['October', 'octobre'],
+      ['November', 'novembre'],
+      ['December', 'décembre'],
     ];
 
   constructor(public state: AppStateService) {
@@ -54,6 +70,16 @@ export class DataHelperService {
     if (mDate.isValid()) {
       let month = mDate.month();
       return '' + mDate.year() + '-' + this.MonthAbbrList[month][this.state.LangID] + '-' + mDate.date();
+    }
+
+    return '';
+  }
+
+  GetMonthDayFormat(gameDate: Date): string {
+    let mDate = moment(gameDate);
+    if (mDate.isValid()) {
+      let month = mDate.month();
+      return '' + this.MonthList[month][this.state.LangID] + '-' + mDate.date();
     }
 
     return '';

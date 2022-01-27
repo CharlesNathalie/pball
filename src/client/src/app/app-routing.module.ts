@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { HomeComponent } from './components/home/home.component';
+import { LeagueAddComponent } from './components/league-add/league-add.component';
+import { LeagueFactorsExampleComponent } from './components/league-factors-example/league-factors-example.component';
+import { LeagueModifyComponent } from './components/league-modify/league-modify.component';
 import { LoginComponent } from './components/login/login.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -19,6 +22,9 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'register', component: RegisterComponent },
+      { path: 'leagueadd', component: LeagueAddComponent },
+      { path: 'leaguemodify', component: LeagueModifyComponent },
+      { path: 'leaguefactorsexample', component: LeagueFactorsExampleComponent },
     ]
   },
   {
@@ -30,6 +36,9 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'register', component: RegisterComponent },
+      { path: 'leagueadd', component: LeagueAddComponent },
+      { path: 'leaguemodify', component: LeagueModifyComponent },
+      { path: 'leaguefactorsexample', component: LeagueFactorsExampleComponent },
     ]
   },
   { path: '**', component: PageNotFoundComponent },

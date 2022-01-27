@@ -6,6 +6,7 @@ import { LeagueStatsModel } from 'src/app/models/LeagueStatsModel';
 import { PlayerGameModel } from 'src/app/models/PlayerGameModel';
 import * as moment from 'moment';
 import { Player } from '../models/Player.model';
+import { Game } from '../models/Game.model';
 
 @Injectable({
   providedIn: 'root'
@@ -176,6 +177,37 @@ export class SortService {
     }
 
     return PlayerListSorted;
+  }
+
+  SortGameByDateAscendingList(arr: Game[]): Game[] {
+    if (typeof (arr) == "undefined" || !arr || arr?.length == 0 || arr == null) return [];
+
+    let GameSorted: Game[] = [];
+    let arr2: IDNumbOrTextSort[] = [];
+    let sortable: IDNumbOrTextSort[] = [];
+
+    for (let i = 0, count = arr?.length; i < count; i++) {
+      let numbOrText: number | string = '';
+      numbOrText = moment(arr[i].GameDate).format('yyyy-MM-DD');
+
+      sortable.push(<IDNumbOrTextSort>{
+        ID: arr[i].GameID,
+        NumbOrText: numbOrText,
+      });
+    }
+
+      arr2 = sortable.sort(this.PredicateAscBy('NumbOrText'));
+
+    for (let i = 0, count = sortable?.length; i < count; i++) {
+      for (let j = 0; j < arr?.length; j++) {
+        if (arr2[i].ID == arr[j].GameID) {
+          GameSorted.push(arr[j]);
+          break;
+        }
+      }
+    }
+
+    return GameSorted;
   }
 
   private PredicateAscBy(prop: any) {

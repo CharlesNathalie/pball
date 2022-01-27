@@ -70,15 +70,18 @@ export class GetPlayerLeaguesService {
     this.Error = <HttpErrorResponse>{};
     this.GetPlayerLeaguesSuccess = true;
     this.state.LeagueList = leagueList;
-    if (this.state.LeagueList.length > 0)
-    {
+    if (this.state.LeagueList.length > 0) {
       let leagueArr: League[] = this.state.LeagueList.filter(c => c.LeagueID == this.state.LeagueID);
-      if (!leagueArr.length)
-      {
+      if (leagueArr.length) {
+        this.state.LeagueID = leagueArr[0].LeagueID;
+        this.state.CurrentLeague = leagueArr[0];
+      }
+      else {
         this.state.LeagueID = this.state.LeagueList[0].LeagueID;
+        this.state.CurrentLeague = this.state.LeagueList[0];
       }
       this.contactService.GetAllPlayersForLeague()
-    }   
+    }
     console.debug(leagueList);
   }
 

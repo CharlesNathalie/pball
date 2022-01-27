@@ -17,7 +17,7 @@ export class DataPlayerGamesService {
   Working: boolean = false;
   Error: HttpErrorResponse = <HttpErrorResponse>{};
 
-  WorkingTheStatSuccess: boolean = false;
+  DataPlayerGamesSuccess: boolean = false;
 
   constructor(public state: AppStateService,
     public dateService: DateService,

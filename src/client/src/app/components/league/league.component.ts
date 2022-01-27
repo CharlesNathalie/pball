@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { LeagueContact } from 'src/app/models/LeagueContact.model';
-import { Player } from 'src/app/models/Player.model';
+import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { LeagueService } from 'src/app/services/league.service';
 
@@ -12,7 +11,8 @@ import { LeagueService } from 'src/app/services/league.service';
 export class LeagueComponent implements OnInit, OnDestroy {
 
   constructor(public state: AppStateService,
-    public leagueService: LeagueService) {
+    public leagueService: LeagueService,
+    public router: Router) {
   }
 
   ngOnInit(): void {
@@ -21,26 +21,26 @@ export class LeagueComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  GetLeagueHighlight(LeagueID: number): string {
-    if (this.state.DemoVisible) {
-      return this.state.DemoLeagueID == LeagueID ? 'highlight' : '';
-    }
-    else {
-      return this.state.LeagueID == LeagueID ? 'highlight' : '';
-    }
-  }
-
   SetLeagueID(LeagueID: number) {
     this.leagueService.SetLeagueID(LeagueID);
   }
 
-  GetIsSelected(LeagueID: number): string {
+  GetIsSelected(LeagueID: number): boolean {
     if (this.state.DemoVisible) {
-      return this.state.DemoLeagueID == LeagueID ? 'checked' : '';
+      return this.state.DemoLeagueID == LeagueID;
     }
     else {
-      return this.state.LeagueID == LeagueID ? 'checked' : '';
+      return this.state.LeagueID == LeagueID;
     }
   }
 
+  ModifyTheLeague() {
+    this.state.ReturnToPage = this.router.url;
+    this.router.navigate([`/${ this.state.Culture }/leaguemodify`]);
+  }
+
+  AddANewLeague() {
+    this.state.ReturnToPage = this.router.url;
+    this.router.navigate([`/${ this.state.Culture }/leagueadd`]);
+  }
 }

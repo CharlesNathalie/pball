@@ -1,0 +1,12 @@
+<mat-accordion multi>
+    <mat-expansion-panel *ngFor="let item of state | keyvalue">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{ item.key }}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-card>
+            {{ item.value | json }}
+        </mat-card>
+    </mat-expansion-panel>
+</mat-accordion>

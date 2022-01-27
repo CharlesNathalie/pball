@@ -4,9 +4,9 @@ import { catchError, map, of, Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
 import { Game } from 'src/app/models/Game.model';
-import { LeagueGamesModel } from 'src/app/models/LeagueGamesModel.model';
 import { DataLeagueStatService } from './data-league-stats.service';
 import { DataPlayerGamesService } from './data-player-games.service';
+import { DataPlayerPointsService } from './data-player-points.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +29,8 @@ export class GameService {
   constructor(public state: AppStateService,
     public httpClient: HttpClient,
     public dataLeagueStatService: DataLeagueStatService,
-    public dataPlayerGameService: DataPlayerGamesService) {
+    public dataPlayerGamesService: DataPlayerGamesService,
+    public dataPlayerPointsService: DataPlayerPointsService) {
   }
 
   GetAllLeagueGames() {
@@ -78,7 +79,8 @@ export class GameService {
     this.GetAllLeagueGamesSuccess = true;
     this.state.GameList = gameList;
     this.dataLeagueStatService.Run();
-    this.dataPlayerGameService.Run();
+    this.dataPlayerGamesService.Run();
+    this.dataPlayerPointsService.Run();
     console.debug(gameList);
   }
 

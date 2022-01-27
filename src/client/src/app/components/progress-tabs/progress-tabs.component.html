@@ -1,0 +1,12 @@
+<mat-tab-group [selectedIndex]="state.ProgressTabsIndex" (selectedTabChange)="ProgressTabSelectedChanged($event)" mat-align-tabs="start">
+    <mat-tab label="Stats">
+        <div class="div-container">
+            <app-table-league-stats></app-table-league-stats>
+        </div>
+    </mat-tab>
+    <mat-tab label="Games">
+        <div class="div-container">
+            <app-table-player-games></app-table-player-games>
+        </div>
+    </mat-tab>
+</mat-tab-group>

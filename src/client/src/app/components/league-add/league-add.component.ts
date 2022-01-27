@@ -23,6 +23,8 @@ export class LeagueAddComponent implements OnInit, OnDestroy {
     PercentPointsFactor: ['', [Validators.required]],
   });
 
+  leagueAddHelp: boolean = false;
+
   constructor(public state: AppStateService,
     public formBuilder: FormBuilder,
     public leagueAddService: LeagueAddService,
@@ -31,6 +33,7 @@ export class LeagueAddComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.leagueAddService.ResetLocals();
+    this.leagueAddHelp = false;
   }
 
   ngOnDestroy(): void {
@@ -48,7 +51,18 @@ export class LeagueAddComponent implements OnInit, OnDestroy {
     return this.leagueAddService.GetFormValid(this.leagueAddForm);
   }
 
-  OnSubmit(): void {
-    this.leagueAddService.SubmitForm(this.leagueAddForm);
+  SubmitLeagueAddForm(): void {
+    this.leagueAddService.SubmitLeagueAddForm(this.leagueAddForm);
   }
+
+  ReturnToPreviousPage()
+  {
+    this.router.navigate([this.state.ReturnToPage]);
+  }
+
+  LeagueFactorsExample() {
+    this.state.ReturnToPage2 = this.router.url;
+    this.router.navigate([`/${ this.state.Culture }/leaguefactorsexample`]);
+  }
+
 }

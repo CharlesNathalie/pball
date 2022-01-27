@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LeagueContact } from 'src/app/models/LeagueContact.model';
+import { Player } from 'src/app/models/Player.model';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { LeagueAdminsService } from 'src/app/services/league-admins.service';
 
@@ -11,7 +12,7 @@ import { LeagueAdminsService } from 'src/app/services/league-admins.service';
 export class LeagueAdminsComponent implements OnInit, OnDestroy {
 
   constructor(public state: AppStateService,
-    public leagueMembersService: LeagueAdminsService) {
+    public leagueAdminsService: LeagueAdminsService) {
   }
 
   ngOnInit(): void {
@@ -30,5 +31,10 @@ export class LeagueAdminsComponent implements OnInit, OnDestroy {
     }
 
     return false;
+  }
+
+  GetMailTo(player: Player)
+  {
+    return `mailto:${player.LoginEmail}?subject=${ this.leagueAdminsService.EmailSubject[this.state.LangID] }&body=${ this.leagueAdminsService.EmailBody[this.state.LangID] }`;
   }
 }

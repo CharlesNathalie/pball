@@ -16,7 +16,7 @@ export class TablePlayerGamesComponent implements OnInit, OnDestroy {
   constructor(public state: AppStateService,
     public tablePlayerGamesService: TablePlayerGamesService,
     public sortService: SortService,
-    public dataPlayerGameService: DataPlayerGamesService,
+    public dataPlayerGamesService: DataPlayerGamesService,
     public dataHelperService: DataHelperService) {
   }
 
@@ -26,7 +26,7 @@ export class TablePlayerGamesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.state.LeagueID > 0) {
       if (this.state.PlayerGameModelList.length == 0) {
-        this.dataPlayerGameService.Run();
+        this.dataPlayerGamesService.Run();
       }
     }
   }

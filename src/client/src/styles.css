@@ -13,3 +13,7 @@ h2 {color: indigo}
   .mat-form-field {
       width: 300px !important;
   }
+  
+  .center {
+    text-align: center;
+}

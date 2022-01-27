@@ -14,7 +14,7 @@ export class LeagueModifyService {
   Cancel: string[] = ['Cancel', 'Annuler'];
   LeagueIDIsRequired: string[] = ['League ID is required', 'L\'identité de ligue est requis'];
   LeagueModifySuccessful: string[] = ['League added successful', 'L\'ajout de la ligue réussie'];
-  LeagueModifyTxt: string[] = ['Add league', 'Ajoute une ligue'];
+  LeagueModifyTxt: string[] = ['Modify league', 'Modifier une ligue'];
   LeagueName: string[] = ['League name', 'Nom de la ligue'];
   LeagueNameIsRequired: string[] = ['League name is required', 'Nom de la ligue est requis'];
   ModifyingLeague: string[] = ['Modifying league', 'Modification de la ligue en cour'];

@@ -13,6 +13,9 @@ import { League } from 'src/app/models/League.model';
 export class LeagueAddService {
   AddingNewLeague: string[] = ['Adding new league', 'L\'ajout d\'une nouvelle ligue en cour'];
   Cancel: string[] = ['Cancel', 'Annuler'];
+  ChangesWillNotBePermanantlySavedOnTheServer: string[] = ['Changes will not be permanantly saved on the server.', 'Les changements ne seront pas sauvegardé de manière permanante au serveur.'];
+  DemoVersionRunning: string[] = ['Demo version running.', 'Version démo en cours.'];
+  Example: string[] = ['Example', 'Exemple'];
   LeagueIDIsRequired: string[] = ['League ID is required', 'L\'identité de ligue est requis'];
   LeagueAddSuccessful: string[] = ['League added successful', 'L\'ajout de la ligue réussie'];
   LeagueAddTxt: string[] = ['Add league', 'Ajoute une ligue'];
@@ -102,7 +105,7 @@ export class LeagueAddService {
           }
 
           return '';
-        }      default:
+        } default:
         return '';
     }
   }
@@ -122,16 +125,16 @@ export class LeagueAddService {
     this.LeagueAddSuccess = false;
   }
 
-  SubmitForm(form: FormGroup) {
+  SubmitLeagueAddForm(form: FormGroup) {
     if (form.valid) {
-      let league: League = <League>{ 
+      let league: League = <League>{
         LeagueID: form.controls['LeagueID'].value,
         LeagueName: form.controls['LeagueName'].value,
         PointsToWinners: form.controls['PointsToWinners'].value,
         PointsToLosers: form.controls['PointsToLosers'].value,
         PlayerLevelFactor: form.controls['PlayerLevelFactor'].value,
         PercentPointsFactor: form.controls['PercentPointsFactor'].value,
-        };
+      };
       this.LeagueAdd(league);
     }
   }

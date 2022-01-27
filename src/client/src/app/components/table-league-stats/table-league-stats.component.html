@@ -1,50 +1,53 @@
-<app-no-data-for-user></app-no-data-for-user>
-<div *ngIf="state.LeagueStatsModelList?.length">
-    <br>
-    <h2>{{ GetCurrentLeagueName() }} {{ tableLeagueStatsService.stats[state.LangID]}}</h2>
-    <table mat-table [dataSource]="state.LeagueStatsModelList" class="mat-elevation-z8">
+<div class="div-container">
+    <app-no-data-for-user></app-no-data-for-user>
+    <div *ngIf="state.LeagueStatsModelList?.length">
+        <br>
+        <h2>{{ GetCurrentLeagueName() }} {{ tableLeagueStatsService.stats[state.LangID]}}</h2>
+        <table mat-table [dataSource]="state.LeagueStatsModelList" class="mat-elevation-z8">
 
-        <ng-container matColumnDef="Rank">
-            <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
-            <td mat-cell *matCellDef="let item; let j = index"> {{j+1}} </td>
-        </ng-container>
+            <ng-container matColumnDef="Rank">
+                <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+                <td mat-cell *matCellDef="let item; let j = index"> {{j+1}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="FullName">
-            <th mat-header-cell [ngClass]="GetSortingClass('FullName')" *matHeaderCellDef
-                (click)="DoSortLeagueStats('FullName')">{{ tableLeagueStatsService.Name[state.LangID] }}
-            </th>
-            <td mat-cell *matCellDef="let item">
-                <span *ngIf="state.Screen == 'Small'">{{item?.LastNameAndNameFirstLetter}}</span>
-                <span *ngIf="state.Screen != 'Small'">{{item?.FullName}}</span>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="FullName">
+                <th mat-header-cell [ngClass]="GetSortingClass('FullName')" *matHeaderCellDef
+                    (click)="DoSortLeagueStats('FullName')">{{ tableLeagueStatsService.Name[state.LangID] }}
+                </th>
+                <td mat-cell *matCellDef="let item">
+                    <span *ngIf="state.Screen == 'Small'">{{item?.LastNameAndNameFirstLetter}}</span>
+                    <span *ngIf="state.Screen != 'Small'">{{item?.FullName}}</span>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="NumberOfGames">
-            <th mat-header-cell [ngClass]="GetSortingClass('NumberOfGames')" *matHeaderCellDef
-                (click)="DoSortLeagueStats('NumberOfGames')">{{ tableLeagueStatsService.Games[state.LangID] }}
-            </th>
-            <td mat-cell *matCellDef="let item"> {{item?.NumberOfGames}} </td>
-        </ng-container>
+            <ng-container matColumnDef="NumberOfGames">
+                <th mat-header-cell [ngClass]="GetSortingClass('NumberOfGames')" *matHeaderCellDef
+                    (click)="DoSortLeagueStats('NumberOfGames')">{{ tableLeagueStatsService.Games[state.LangID] }}
+                </th>
+                <td mat-cell *matCellDef="let item"> {{item?.NumberOfGames}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="NumberOfWins">
-            <th mat-header-cell [ngClass]="GetSortingClass('NumberOfWins')" *matHeaderCellDef
-                (click)="DoSortLeagueStats('NumberOfWins')">{{ tableLeagueStatsService.Wins[state.LangID] }}
-            </th>
-            <td mat-cell *matCellDef="let item"> {{item?.NumberOfWins}} </td>
-        </ng-container>
+            <ng-container matColumnDef="NumberOfWins">
+                <th mat-header-cell [ngClass]="GetSortingClass('NumberOfWins')" *matHeaderCellDef
+                    (click)="DoSortLeagueStats('NumberOfWins')">{{ tableLeagueStatsService.Wins[state.LangID] }}
+                </th>
+                <td mat-cell *matCellDef="let item"> {{item?.NumberOfWins}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="WinningPercentage">
-            <th mat-header-cell [ngClass]="GetSortingClass('WinningPercentage')" *matHeaderCellDef
-                (click)="DoSortLeagueStats('WinningPercentage')">% {{ tableLeagueStatsService.Win[state.LangID] }}
-            </th>
-            <td mat-cell *matCellDef="let item">
-                <span *ngIf="state.LangID == 0">{{item?.WinningPercentage | number:'1.1-1':'en-CA'}} %</span>
-                <span *ngIf="state.LangID == 1">{{item?.WinningPercentage | number:'1.1-1':'fr-CA'}} %</span>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="WinningPercentage">
+                <th mat-header-cell [ngClass]="GetSortingClass('WinningPercentage')" *matHeaderCellDef
+                    (click)="DoSortLeagueStats('WinningPercentage')">% {{ tableLeagueStatsService.Win[state.LangID] }}
+                </th>
+                <td mat-cell *matCellDef="let item">
+                    <span *ngIf="state.LangID == 0">{{item?.WinningPercentage | number:'1.1-1':'en-CA'}} %</span>
+                    <span *ngIf="state.LangID == 1">{{item?.WinningPercentage | number:'1.1-1':'fr-CA'}} %</span>
+                </td>
+            </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns; let item"
-            [ngClass]="{ 'highlight': item.ContactID == (state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID) }"></tr>
-    </table>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns; let item"
+                [ngClass]="{ 'highlight': item.ContactID == (state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID) }">
+            </tr>
+        </table>
+    </div>
 </div>

@@ -1,0 +1,97 @@
+<div class="formcenter">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                {{ leagueFactorsExampleService.Example[state.LangID] }}
+                <button mat-raised-button (click)="ReturnToPreviousPage()">{{
+                    leagueFactorsExampleService.Cancel[state.LangID] }}</button>
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="center">
+                <mat-form-field>
+                    <mat-label>
+                        {{ leagueFactorsExampleService.Team1Player1Level[state.LangID] }}
+                    </mat-label>
+                    <input matInput type="number" min="1" max="5" step="0.1" [value]="Team1Player1Level"
+                        (change)="ValueChanged('Team1Player1Level', $event)">
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>
+                        {{ leagueFactorsExampleService.Team1Player2Level[state.LangID] }}
+                    </mat-label>
+                    <input matInput type="number" min="1" max="5" step="0.1" [value]="Team1Player2Level"
+                        (change)="ValueChanged('Team1Player2Level', $event)">
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>
+                        {{ leagueFactorsExampleService.Team2Player1Level[state.LangID] }}
+                    </mat-label>
+                    <input matInput type="number" min="1" max="5" step="0.1" [value]="Team2Player1Level"
+                        (change)="ValueChanged('Team2Player1Level', $event)">
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>
+                        {{ leagueFactorsExampleService.Team2Player2Level[state.LangID] }}
+                    </mat-label>
+                    <input matInput type="number" min="1" max="5" step="0.1" [value]="Team2Player2Level"
+                        (change)="ValueChanged('Team2Player2Level', $event)">
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>
+                        {{ leagueFactorsExampleService.PointsToWinners[state.LangID] }}
+                    </mat-label>
+                    <input matInput type="number" min="0" max="10" step="1" [value]="PointsToWinners"
+                        (change)="ValueChanged('PointsToWinners', $event)">
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>
+                        {{ leagueFactorsExampleService.PointsToLosers[state.LangID] }}
+                    </mat-label>
+                    <input matInput type="number" min="0" max="10" step="1" [value]="PointsToLosers"
+                        (change)="ValueChanged('PointsToLosers', $event)">
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>
+                        {{ leagueFactorsExampleService.PlayerLevelFactor[state.LangID] }}
+                    </mat-label>
+                    <input matInput type="number" min="0" max="2" step="0.1" [value]="PlayerLevelFactor"
+                        (change)="ValueChanged('PlayerLevelFactor', $event)">
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>
+                        {{ leagueFactorsExampleService.PercentPointsFactor[state.LangID] }}
+                    </mat-label>
+                    <input matInput type="number" min="0" max="2" step="0.1" [value]="PercentPointsFactor"
+                        (change)="ValueChanged('PercentPointsFactor', $event)">
+                </mat-form-field>
+                <br>
+            </div>
+            <app-table-league-factor-example></app-table-league-factor-example>
+            <br>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <h2>{{ leagueFactorsExampleService.CalculationOfPoints[state.LangID] }}</h2>
+                </mat-expansion-panel-header>
+                <div>
+                    <strong>{{ leagueFactorsExampleService.WinnersPoints[state.LangID] }}</strong>
+                    <br>
+                    = ({{ leagueFactorsExampleService.PointsToWinners[state.LangID] }})
+                    <br>
+                    + (6 - {{ leagueFactorsExampleService.AverageTeamPlayerLevel[state.LangID] }})
+                    * {{ leagueFactorsExampleService.PlayerLevelFactor[state.LangID] }}
+                    <br>
+                    + ({{ leagueFactorsExampleService.TeamPercentageOfPoints[state.LangID] }})
+                    * {{ leagueFactorsExampleService.PercentPointsFactor[state.LangID] }}
+                </div>
+            </mat-expansion-panel>
+        </mat-card-content>
+    </mat-card>
+</div>

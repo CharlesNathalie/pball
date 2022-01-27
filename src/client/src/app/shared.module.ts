@@ -9,18 +9,21 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { HomeComponent } from './components/home/home.component';
 import { LeagueAddComponent } from './components/league-add/league-add.component';
 import { LeagueAdminsComponent } from './components/league-admins/league-admins.component';
-import { LeagueListComponent } from './components/league-list/league-list.component';
+import { LeagueFactorsExampleComponent } from './components/league-factors-example/league-factors-example.component';
 import { LeagueMembersComponent } from './components/league-members/league-members.component';
 import { LeagueModifyComponent } from './components/league-modify/league-modify.component';
-import { LeagueNotMemberComponent } from './components/league-not-member/league-not-member.component';
 import { LeagueTabsComponent } from './components/league-tabs/league-tabs.component';
 import { LeagueComponent } from './components/league/league.component';
 import { LoginComponent } from './components/login/login.component';
 import { NoDataForUserComponent } from './components/no-data-for-user/no-data-for-user.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { ProgressTabsComponent } from './components/progress-tabs/progress-tabs.component';
+import { ProgressComponent } from './components/progress/progress.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ShellComponent } from './components/shell/shell.component';
+import { StateJsonComponent } from './components/state-json/state-json.component';
+import { TableLeagueFactorExampleComponent } from './components/table-league-factor-example/table-league-factor-example.component';
 import { TableLeagueStatsComponent } from './components/table-league-stats/table-league-stats.component';
 import { TablePlayerGamesComponent } from './components/table-player-games/table-player-games.component';
 
@@ -32,17 +35,20 @@ import { TablePlayerGamesComponent } from './components/table-player-games/table
     LeagueComponent,
     LeagueAddComponent,
     LeagueAdminsComponent,
-    LeagueListComponent,
+    LeagueFactorsExampleComponent,
     LeagueMembersComponent,
     LeagueModifyComponent,
-    LeagueNotMemberComponent,
     LeagueTabsComponent,
     LoginComponent,
     NoDataForUserComponent,
     PageNotFoundComponent,
     ProfileComponent,
+    ProgressComponent,
+    ProgressTabsComponent,
     RegisterComponent,
     ShellComponent,
+    StateJsonComponent,
+    TableLeagueFactorExampleComponent,
     TableLeagueStatsComponent,
     TablePlayerGamesComponent,
   ],
@@ -68,17 +74,20 @@ import { TablePlayerGamesComponent } from './components/table-player-games/table
     LeagueComponent,
     LeagueAddComponent,
     LeagueAdminsComponent,
-    LeagueListComponent,
+    LeagueFactorsExampleComponent,
     LeagueMembersComponent,
     LeagueModifyComponent,
-    LeagueNotMemberComponent,
     LeagueTabsComponent,
     LoginComponent,  
     NoDataForUserComponent,
     PageNotFoundComponent,
     ProfileComponent,
+    ProgressComponent,
+    ProgressTabsComponent,
     RegisterComponent,
     ShellComponent,
+    StateJsonComponent,
+    TableLeagueFactorExampleComponent,
     TableLeagueStatsComponent,
     TablePlayerGamesComponent,
   ]

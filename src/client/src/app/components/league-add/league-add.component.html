@@ -1,68 +1,110 @@
-<div class="formcenter" *ngIf="!leagueAddService.LeagueAddSuccess">
+<div class="formcenter">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>{{ leagueAddService.LeagueAddTxt[state.LangID]}}
+            <mat-card-title>
+                {{ leagueAddService.LeagueAddTxt[state.LangID]}}
+                <button mat-button>
+                    <mat-icon (click)="leagueAddHelp = !leagueAddHelp">help_outline</mat-icon>
+                </button>
             </mat-card-title>
+            <mat-card-subtitle *ngIf="state.DemoVisible">
+                {{ leagueAddService.DemoVersionRunning[state.LangID]}}
+                {{ leagueAddService.ChangesWillNotBePermanantlySavedOnTheServer[state.LangID]}}
+            </mat-card-subtitle>
         </mat-card-header>
-
-        <form (ngSubmit)="OnSubmit()" [formGroup]="leagueAddForm">
-            <input matInput type="hidden" formControlName="LeagueID">
-            <mat-card-content>
-                <mat-form-field>
-                    <mat-label>{{ leagueAddService.LeagueName[state.LangID] }}</mat-label>
-                    <input matInput type="text" placeholder="Name of league" formControlName="LeagueName">
-                    <mat-error *ngIf="GetHasError('LeagueName')">{{GetErrorMessage("LeagueName")}}</mat-error>
-                </mat-form-field>
-            </mat-card-content>
-            <mat-card-content>
-                <mat-form-field>
-                    <mat-label>{{ leagueAddService.PointsToWinners[state.LangID] }}</mat-label>
-                    <input matInput type="number" step="0.1" max="10" min="0"  placeholder="Points to winners" formControlName="PointsToWinners">
-                    <mat-error *ngIf="GetHasError('PointsToWinners')">{{GetErrorMessage("PointsToWinners")}}</mat-error>
-                </mat-form-field>
-            </mat-card-content>
-            <mat-card-content>
-                <mat-form-field>
-                    <mat-label>{{ leagueAddService.PointsToLosers[state.LangID] }}</mat-label>
-                    <input matInput type="number" step="0.1" max="10" min="0"  placeholder="Points to losers" formControlName="PointsToLosers">
-                    <mat-error *ngIf="GetHasError('PointsToLosers')">{{GetErrorMessage("PointsToLosers")}}</mat-error>
-                </mat-form-field>
-            </mat-card-content>
-            <mat-card-content>
-                <mat-form-field>
-                    <mat-label>{{ leagueAddService.PlayerLevelFactor[state.LangID] }}</mat-label>
-                    <input matInput type="number" step="0.1" max="10" min="0"  placeholder="Player level factor" formControlName="PlayerLevelFactor">
-                    <mat-error *ngIf="GetHasError('PlayerLevelFactor')">{{GetErrorMessage("PlayerLevelFactor")}}</mat-error>
-                </mat-form-field>
-            </mat-card-content>
-            <mat-card-content>
-                <mat-form-field>
-                    <mat-label>{{ leagueAddService.PercentPointsFactor[state.LangID] }}</mat-label>
-                    <input matInput type="number" step="0.1" max="10" min="0"  placeholder="Percent points factor" formControlName="PercentPointsFactor">
-                    <mat-error *ngIf="GetHasError('PercentPointsFactor')">{{GetErrorMessage("PercentPointsFactor")}}</mat-error>
-                </mat-form-field>
-            </mat-card-content>
-
+        <div *ngIf="leagueAddHelp">
+            <mat-card *ngIf="state.Culture == 'en-CA'">
+                Once registered, anybody can add a new league.
+                The league name must be unique and you should try to not make it too long,
+                but descriptive enough for your pickleball friends to recognize it.
+                This league name can still be changed later.
+                <br>
+                Points to winners should be a positive number larger than the points to losers.
+                The player level factor and the percent point factor are used to ballance (at least try)
+                the potential uneven players level that you might encounter within your league.
+                <br>
+                There is nothing like an example to show these number effects.
+                <br><br>
+                <button mat-raised-button (click)="LeagueFactorsExample()">{{
+                    leagueAddService.Example[state.LangID]}}</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button mat-raised-button (click)="leagueAddHelp = !leagueAddHelp">Close</button>
+            </mat-card>
+            <mat-card *ngIf="state.Culture == 'fr-CA'">
+                Une fois inscrit, n'importe qui peut ajouter une nouvelle ligue.
+                Le nom de la ligue doit être unique et vous devriez essayer de ne pas l'inscrire trop long,
+                mais suffisamment descriptif pour que vos amis de pickleball le reconnaissent.
+                Ce nom de la ligue peut encore être changé plus tard.
+                <br>
+                Les points aux gagnants doivent être un nombre positif supérieur aux points aux perdants.
+                Le facteur de niveau du joueur et le facteur de points de pourcentage sont utilisés pour équilibrer (au
+                moins essayer)
+                le niveau potentiel de joueurs inégaux que vous pourriez rencontrer au sein de votre ligue.
+                <br>
+                Rien de tel qu'un exemple pour montrer ces effets de nombre.
+                <br><br>
+                <button mat-raised-button (click)="LeagueFactorsExample()">{{
+                    leagueAddService.Example[state.LangID]}}</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button mat-raised-button (click)="leagueAddHelp = !leagueAddHelp">Fermer</button>
+            </mat-card>
+        </div>
+        <form (ngSubmit)="SubmitLeagueAddForm()" [formGroup]="leagueAddForm">
             <mat-error>* {{ leagueAddService.required[state.LangID] }}</mat-error>
-            <br><br>
-            <a routerLink="/{{ state.Culture }}/home">{{ leagueAddService.Cancel[state.LangID] }}</a>
-            <br><br>
-            <mat-error *ngIf="leagueAddService.Error?.error">
-                <h3 *ngFor="let e of leagueAddService.Error?.error?.ErrList">{{ e }}</h3>
-            </mat-error>
-            <button mat-raised-button *ngIf="GetFormValid()">{{ leagueAddService.LeagueAddTxt[state.LangID] }}</button>
-            <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
-                leagueAddService.PleaseEnterRequiredInformation[state.LangID] }}</button>
-
+            <input type="hidden" formControlName="LeagueID">
+            <mat-card-content>
+                <div class="center">
+                    <mat-form-field>
+                        <mat-label>{{ leagueAddService.LeagueName[state.LangID] }}</mat-label>
+                        <input matInput type="text" placeholder="Name of league" formControlName="LeagueName">
+                        <mat-error *ngIf="GetHasError('LeagueName')">{{GetErrorMessage("LeagueName")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ leagueAddService.PointsToWinners[state.LangID] }}</mat-label>
+                        <input matInput type="number" step="0.1" max="10" min="0" placeholder="Points to winners"
+                            formControlName="PointsToWinners">
+                        <mat-error *ngIf="GetHasError('PointsToWinners')">{{GetErrorMessage("PointsToWinners")}}
+                        </mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ leagueAddService.PointsToLosers[state.LangID] }}</mat-label>
+                        <input matInput type="number" step="0.1" max="10" min="0" placeholder="Points to losers"
+                            formControlName="PointsToLosers">
+                        <mat-error *ngIf="GetHasError('PointsToLosers')">{{GetErrorMessage("PointsToLosers")}}
+                        </mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ leagueAddService.PlayerLevelFactor[state.LangID] }}</mat-label>
+                        <input matInput type="number" step="0.1" max="10" min="0" placeholder="Player level factor"
+                            formControlName="PlayerLevelFactor">
+                        <mat-error *ngIf="GetHasError('PlayerLevelFactor')">{{GetErrorMessage("PlayerLevelFactor")}}
+                        </mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ leagueAddService.PercentPointsFactor[state.LangID] }}</mat-label>
+                        <input matInput type="number" step="0.1" max="10" min="0" placeholder="Percent points factor"
+                            formControlName="PercentPointsFactor">
+                        <mat-error *ngIf="GetHasError('PercentPointsFactor')">{{GetErrorMessage("PercentPointsFactor")}}
+                        </mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-error *ngIf="leagueAddService.Error?.error">
+                        <h3 *ngFor="let e of leagueAddService.Error?.error?.ErrList">{{ e }}</h3>
+                        <br>
+                    </mat-error>
+                    <button mat-raised-button *ngIf="GetFormValid()">{{ leagueAddService.LeagueAddTxt[state.LangID]
+                        }}</button>
+                    <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
+                        leagueAddService.PleaseEnterRequiredInformation[state.LangID] }}</button>
+                    <br><br>
+                    <button mat-raised-button (click)="ReturnToPreviousPage()">{{
+                        leagueAddService.Cancel[state.LangID] }}</button>
+                </div>
+            </mat-card-content>
         </form>
-    </mat-card>
-</div>
-<div class="formcenter" *ngIf="leagueAddService.LeagueAddSuccess">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>{{ leagueAddService.LeagueAddSuccessful[state.LangID ?? languageEnum.en]}}
-            </mat-card-title>
-        </mat-card-header>
-        <button mat-raised-button routerLink="/{{ state.Culture }}/home">{{ leagueAddService.ReturnToHomePage[state.LangID] }}</button>
     </mat-card>
 </div>

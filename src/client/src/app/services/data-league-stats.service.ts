@@ -17,7 +17,7 @@ export class DataLeagueStatService {
   Working: boolean = false;
   Error: HttpErrorResponse = <HttpErrorResponse>{};
 
-  WorkingTheStatSuccess: boolean = false;
+  DataLeagueStatsSuccess: boolean = false;
 
   constructor(public state: AppStateService,
     public dateService: DateService,
@@ -81,6 +81,8 @@ export class DataLeagueStatService {
       localStorage.setItem('DemoEndDate', JSON.stringify(this.state.DemoEndDate));
       localStorage.setItem('DemoVisible', JSON.stringify(this.state.DemoVisible));
       localStorage.setItem('DemoHomeTabIndex', JSON.stringify(this.state.DemoHomeTabIndex));
+      localStorage.setItem('LeagueTabsIndex', JSON.stringify(this.state.LeagueTabsIndex));
+      localStorage.setItem('ProgressTabsIndex', JSON.stringify(this.state.ProgressTabsIndex));
     }
     else {
       localStorage.setItem('User', JSON.stringify(this.state.User));
@@ -89,6 +91,8 @@ export class DataLeagueStatService {
       localStorage.setItem('EndDate', JSON.stringify(this.state.EndDate));
       localStorage.setItem('DemoVisible', JSON.stringify(this.state.DemoVisible));
       localStorage.setItem('HomeTabIndex', JSON.stringify(this.state.HomeTabIndex));
+      localStorage.setItem('LeagueTabsIndex', JSON.stringify(this.state.LeagueTabsIndex));
+      localStorage.setItem('ProgressTabsIndex', JSON.stringify(this.state.ProgressTabsIndex));
     }
 
     this.Status = '';

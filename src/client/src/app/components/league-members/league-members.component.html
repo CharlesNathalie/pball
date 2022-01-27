@@ -9,22 +9,16 @@
             <div class="center">
                 <p>&nbsp;</p>
                 <div *ngFor="let player of state.PlayerList">
-                    <p *ngIf="GetIsAdmin(player.ContactID)">
-                        <span *ngIf="player.Initial">
-                            <strong>{{ player.LastName }}, {{ player.FirstName }} {{ player.Initial }}. Admin</strong>
-                        </span>
-                        <span *ngIf="!player.Initial">
-                            <strong>{{ player.LastName }}, {{ player.FirstName }} Admin</strong>
-                        </span>
-                    </p>
-                </div>
-                <div *ngFor="let player of state.PlayerList">
                     <p *ngIf="!GetIsAdmin(player.ContactID)">
                         <span *ngIf="player.Initial">
+                            {{ player.ContactID }}
                             {{ player.LastName }}, {{ player.FirstName }} {{ player.Initial }}.
+                            {{ player.PlayerLevel }}
                         </span>
                         <span *ngIf="!player.Initial">
+                            {{ player.ContactID }}
                             {{ player.LastName }}, {{ player.FirstName }}
+                            {{ player.PlayerLevel }}
                         </span>
                     </p>
                 </div>

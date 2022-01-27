@@ -1,12 +1,15 @@
-<div class="formcenter" *ngIf="!leagueModifyService.LeagueModifySuccess">
+<div *ngIf="!state.CurrentLeague">
+    No Current League
+</div>
+<div class="formcenter" *ngIf="state.CurrentLeague">
     <mat-card>
         <mat-card-header>
             <mat-card-title>{{ leagueModifyService.LeagueModifyTxt[state.LangID]}}
             </mat-card-title>
         </mat-card-header>
 
-        <form (ngSubmit)="OnSubmit()" [formGroup]="leagueAddForm">
-            <input matInput type="hidden" formControlName="LeagueID">
+        <form (ngSubmit)="OnSubmit()" [formGroup]="leagueModifyForm">
+            <input type="hidden" formControlName="LeagueID">
             <mat-card-content>
                 <mat-form-field>
                     <mat-label>{{ leagueModifyService.LeagueName[state.LangID] }}</mat-label>

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LeagueListComponent } from 'src/app/components/league-list/league-list.component';
+import { ProgressComponent } from 'src/app/components/progress/progress.component';
 
-describe('LeagueListComponent', () => {
-  let component: LeagueListComponent;
-  let fixture: ComponentFixture<LeagueListComponent>;
+describe('ProgressComponent', () => {
+  let component: ProgressComponent;
+  let fixture: ComponentFixture<ProgressComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ LeagueListComponent ]
+      declarations: [ ProgressComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LeagueListComponent);
+    fixture = TestBed.createComponent(ProgressComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

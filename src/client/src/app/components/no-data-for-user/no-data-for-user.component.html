@@ -4,13 +4,19 @@
             <mat-card-title>
                 <h2>
                     {{ state.User.FirstName }} {{ state.User.LastName }}
-                    
+                    {{ noDataForUserService.doesNotYetBelongToALeague[state.LangID]}}                   
                 </h2>
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <div class="center">
-                {{ noDataForUserService.doesNotYetBelongToALeague[state.LangID]}}
+                <p>{{ noDataForUserService.PleaseContactAKnownLeagueAdministrator[state.LangID]}}
+                    {{ noDataForUserService.toBeAddedToHisLeague[state.LangID]}}
+                </p>
+                <h3>{{ noDataForUserService.or[state.LangID]}}</h3>
+                <button mat-raised-button (click)="AddANewLeague()">{{ noDataForUserService.Add[state.LangID]}}</button>
+                <span> {{ noDataForUserService.aNewLeague[state.LangID]}} </span>
+                <span>{{ noDataForUserService.andAddYourPickleballFriends[state.LangID]}}</span>
             </div>
         </mat-card-content>
     </mat-card>

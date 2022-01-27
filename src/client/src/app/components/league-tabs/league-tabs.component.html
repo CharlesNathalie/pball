@@ -1,7 +1,13 @@
-<mat-tab-group mat-align-tabs="start">
+<mat-tab-group [selectedIndex]="state.LeagueTabsIndex" (selectedTabChange)="LeagueTabSelectedChanged($event)" mat-align-tabs="start">
     <mat-tab label="Members">
         <div class="div-container">
+            <app-league-admins></app-league-admins>
             <app-league-members></app-league-members>
+        </div>
+    </mat-tab>
+    <mat-tab label="Another">
+        <div class="div-container">
+            Something else
         </div>
     </mat-tab>
 </mat-tab-group>
