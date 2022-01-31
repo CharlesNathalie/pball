@@ -84,4 +84,14 @@ export class DataHelperService {
 
     return '';
   }
+
+  GetMonthAbbrDayFormat(gameDate: Date): string {
+    let mDate = moment(gameDate);
+    if (mDate.isValid()) {
+      let month = mDate.month();
+      return '' + this.MonthAbbrList[month][this.state.LangID] + '-' + mDate.date();
+    }
+
+    return '';
+  }
 }

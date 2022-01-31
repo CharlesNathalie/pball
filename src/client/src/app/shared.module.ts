@@ -4,7 +4,14 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/app-material.module';
-import { ChartAllComponent } from './components/chart-all/chart-all.component';
+import { ChartAveragePlayerLevelOfOpponentsComponent } from './components/chart-average-player-level-of-opponents/chart-average-player-level-of-opponents.component';
+import { ChartAveragePlayerLevelOfPartnersComponent } from './components/chart-average-player-level-of-partners/chart-average-player-level-of-partners.component';
+import { ChartGamesPercentWonComponent } from './components/chart-games-percent-won/chart-games-percent-won.component';
+import { ChartGamesPlayedComponent } from './components/chart-games-played/chart-games-played.component';
+import { ChartGamesWonComponent } from './components/chart-games-won/chart-games-won.component';
+import { ChartPointsComponent } from './components/chart-points/chart-points.component';
+import { ChartTotalNumberOfOpponentsComponent } from './components/chart-total-number-of-opponents/chart-total-number-of-opponents.component';
+import { ChartTotalNumberOfPartnersComponent } from './components/chart-total-number-of-partners/chart-total-number-of-partners.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { HomeComponent } from './components/home/home.component';
 import { LeagueAddComponent } from './components/league-add/league-add.component';
@@ -29,7 +36,14 @@ import { TablePlayerGamesComponent } from './components/table-player-games/table
 
 @NgModule({
   declarations: [
-    ChartAllComponent,
+    ChartAveragePlayerLevelOfPartnersComponent,
+    ChartAveragePlayerLevelOfOpponentsComponent,
+    ChartGamesPlayedComponent,
+    ChartGamesPercentWonComponent,
+    ChartGamesWonComponent,
+    ChartPointsComponent,
+    ChartTotalNumberOfOpponentsComponent,
+    ChartTotalNumberOfPartnersComponent,
     ForgotPasswordComponent,
     HomeComponent,
     LeagueComponent,
@@ -68,7 +82,14 @@ import { TablePlayerGamesComponent } from './components/table-player-games/table
     ReactiveFormsModule,
     RouterModule,
 
-    ChartAllComponent,
+    ChartAveragePlayerLevelOfPartnersComponent,
+    ChartAveragePlayerLevelOfOpponentsComponent,
+    ChartGamesPlayedComponent,
+    ChartGamesPercentWonComponent,
+    ChartGamesWonComponent,
+    ChartPointsComponent,
+    ChartTotalNumberOfOpponentsComponent,
+    ChartTotalNumberOfPartnersComponent,
     ForgotPasswordComponent,
     HomeComponent,
     LeagueComponent,

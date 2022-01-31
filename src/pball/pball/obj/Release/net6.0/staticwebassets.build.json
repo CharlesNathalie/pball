@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "E2T8so3RbT21LZMuMe/WefqLxQ6sNMBtZ2cHyE9V0E8=",
+  "Hash": "Qkm8t0b4YYmEv+Jtdqi7+Ys5NKmQWoh5Quz7OjzBo9o=",
   "Source": "pball",
   "BasePath": "_content/pball",
   "Mode": "Default",
@@ -85,12 +85,12 @@
       "OriginalItemSpec": "wwwroot\\index.html"
     },
     {
-      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\main.8e620fe368ccb419.js",
+      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\main.371871dd5f3c274f.js",
       "SourceId": "pball",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\pball\\src\\pball\\pball\\wwwroot\\",
       "BasePath": "_content/pball",
-      "RelativePath": "main.8e620fe368ccb419.js",
+      "RelativePath": "main.371871dd5f3c274f.js",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -99,7 +99,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\main.8e620fe368ccb419.js"
+      "OriginalItemSpec": "wwwroot\\main.371871dd5f3c274f.js"
     },
     {
       "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\polyfills.802c96d72624ff5a.js",
@@ -119,12 +119,12 @@
       "OriginalItemSpec": "wwwroot\\polyfills.802c96d72624ff5a.js"
     },
     {
-      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\runtime.e1b8707acf1fcdd2.js",
+      "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\runtime.adf6bed68b772210.js",
       "SourceId": "pball",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\pball\\src\\pball\\pball\\wwwroot\\",
       "BasePath": "_content/pball",
-      "RelativePath": "runtime.e1b8707acf1fcdd2.js",
+      "RelativePath": "runtime.adf6bed68b772210.js",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -133,7 +133,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\runtime.e1b8707acf1fcdd2.js"
+      "OriginalItemSpec": "wwwroot\\runtime.adf6bed68b772210.js"
     },
     {
       "Identity": "C:\\pball\\src\\pball\\pball\\wwwroot\\scripts.814f1cb817ae8c97.js",

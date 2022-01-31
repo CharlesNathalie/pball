@@ -1,12 +1,11 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { ContactService } from './contact.service';
-import { DataLeagueStatService } from './data-league-stats.service';
 import { DataPlayerGamesService } from './data-player-games.service';
 import * as moment from 'moment';
-import { DataPlayerPointsService } from './data-player-points.service';
+import { DataDatePlayerStatService } from './data-date-player-stat.service';
 
 @Injectable({
   providedIn: 'root'
@@ -52,9 +51,9 @@ export class ProgressService {
 
   constructor(public state: AppStateService,
     public contactService: ContactService,
-    public dataLeagueStatService: DataLeagueStatService,
+    //public dataLeagueStatService: DataLeagueStatService,
     public dataPlayerGamesService: DataPlayerGamesService,
-    public dataPlayerPointsService: DataPlayerPointsService) {
+    public dataDatePlayerStatService: DataDatePlayerStatService) {
   }
 
   ChangedStartDate(startDate: HTMLInputElement) {
@@ -65,9 +64,9 @@ export class ProgressService {
     else {
       localStorage.setItem('StartDate', JSON.stringify(this.state.StartDate));
     }
-    this.dataLeagueStatService.Run();
+    //this.dataLeagueStatService.Run();
     this.dataPlayerGamesService.Run();
-    this.dataPlayerPointsService.Run();
+    this.dataDatePlayerStatService.Run();
   }
 
   ChangedEndDate(endDate: HTMLInputElement) {
@@ -78,9 +77,9 @@ export class ProgressService {
     else {
       localStorage.setItem('EndDate', JSON.stringify(this.state.EndDate));
     }
-    this.dataLeagueStatService.Run();
+    //this.dataLeagueStatService.Run();
     this.dataPlayerGamesService.Run();
-    this.dataPlayerPointsService.Run();
+    this.dataDatePlayerStatService.Run();
   }
 
   LoadLocalStorage() {
@@ -170,9 +169,9 @@ export class ProgressService {
       localStorage.setItem('StartDate', JSON.stringify(this.state.StartDate));
       localStorage.setItem('EndDate', JSON.stringify(this.state.EndDate));
       }
-    this.dataLeagueStatService.Run();
+    //this.dataLeagueStatService.Run();
     this.dataPlayerGamesService.Run();
-    this.dataPlayerPointsService.Run();
+    this.dataDatePlayerStatService.Run();
   }
 
 

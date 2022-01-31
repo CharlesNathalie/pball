@@ -4,9 +4,8 @@ import { Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { Router } from '@angular/router';
 import { ContactService } from './contact.service';
-import { DataLeagueStatService } from './data-league-stats.service';
 import { DataPlayerGamesService } from './data-player-games.service';
-import { DataPlayerPointsService } from './data-player-points.service';
+import { DataDatePlayerStatService } from './data-date-player-stat.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,9 +27,9 @@ export class LeagueService {
     public httpClient: HttpClient,
     public router: Router,
     public contactService: ContactService,
-    public dataLeagueStatService: DataLeagueStatService,
+    //public dataLeagueStatService: DataLeagueStatService,
     public dataPlayerGamesService: DataPlayerGamesService,
-    public dataPlayerPointsService: DataPlayerPointsService) {
+    public dataDatePlayerStatService: DataDatePlayerStatService) {
   }
 
   SetLeagueID(LeagueID: number) {
@@ -47,9 +46,9 @@ export class LeagueService {
       this.contactService.GetAllPlayersForLeague();
     }
     else {
-      this.dataLeagueStatService.Run();
+      //this.dataLeagueStatService.Run();
       this.dataPlayerGamesService.Run();
-      this.dataPlayerPointsService.Run();
+      this.dataDatePlayerStatService.Run();
     }
 
     if (this.state.DemoVisible)

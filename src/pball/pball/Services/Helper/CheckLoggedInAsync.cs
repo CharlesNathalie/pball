@@ -13,33 +13,40 @@ public partial class HelperService : ControllerBase, IHelperService
 
         token = token.Replace("Bearer ", "");
 
-        JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-        JwtSecurityToken jwtSecurityToken = tokenHandler.ReadJwtToken(token);
-
-        if (jwtSecurityToken != null)
+        try
         {
-            if (jwtSecurityToken.Header["alg"].ToString() == "HS256" && jwtSecurityToken.Header["typ"].ToString() == "JWT")
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            JwtSecurityToken jwtSecurityToken = tokenHandler.ReadJwtToken(token);
+
+            if (jwtSecurityToken != null)
             {
-                if (LoggedInService != null)
+                if (jwtSecurityToken.Header["alg"].ToString() == "HS256" && jwtSecurityToken.Header["typ"].ToString() == "JWT")
                 {
-                    string? LoginEmail = jwtSecurityToken.Payload["name"].ToString();
-
-                    Contact? contact = (from c in LoggedInService.LoggedInContactList
-                                        where c.LoginEmail == LoginEmail
-                                        && c.Token == token
-                                        select c).FirstOrDefault();
-
-                    if (contact != null)
+                    if (LoggedInService != null)
                     {
-                        if (UserService != null)
-                        {
-                            UserService.User = contact;
-                        }
+                        string? LoginEmail = jwtSecurityToken.Payload["name"].ToString();
 
-                        return await Task.FromResult(true);
+                        Contact? contact = (from c in LoggedInService.LoggedInContactList
+                                            where c.LoginEmail == LoginEmail
+                                            && c.Token == token
+                                            select c).FirstOrDefault();
+
+                        if (contact != null)
+                        {
+                            if (UserService != null)
+                            {
+                                UserService.User = contact;
+                            }
+
+                            return await Task.FromResult(true);
+                        }
                     }
                 }
             }
+        }
+        catch (Exception)
+        {
+            return await Task.FromResult(false);
         }
 
         return await Task.FromResult(false);

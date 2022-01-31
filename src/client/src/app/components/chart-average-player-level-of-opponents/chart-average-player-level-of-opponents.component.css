@@ -1,0 +1,9 @@
+
+.chartSize {
+  width: 95%;
+  height: 400px;
+  max-width: 600px;
+  min-width: 300px;
+  max-height: 500px;
+  min-height: 200px;
+}

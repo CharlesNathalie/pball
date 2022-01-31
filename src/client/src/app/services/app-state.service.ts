@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { GetLanguageEnum, LanguageEnum } from 'src/app/enums/LanguageEnum';
 import { AscDescEnum } from '../enums/AscDescEnum';
-import { DatePlayerPointsModel } from '../models/DatePlayerPointsModel.model';
+import { DatePlayerStatModel } from '../models/DatePlayerStatModel.model';
 import { Game } from '../models/Game.model';
 import { League } from '../models/League.model';
 import { LeagueContact } from '../models/LeagueContact.model';
 import { LeaguePointExampleModel } from '../models/LeaguePointExampleModel.model';
-import { LeagueStatsModel } from '../models/LeagueStatsModel';
+//import { LeagueStatsModel } from '../models/LeagueStatsModel';
 import { Player } from '../models/Player.model';
 import { PlayerGameModel } from '../models/PlayerGameModel';
-import { PlayerPointsModel } from '../models/PlayerPointsModel.model';
+import { PlayerStatModel } from '../models/PlayerStatModel.model';
 import { User } from '../models/User.model';
 
 @Injectable({
@@ -52,9 +52,6 @@ export class AppStateService {
   GameList: Game[] = [];
   LeagueContactList: LeagueContact[] = [];
   LeagueList: League[] = [];
-  LeagueStatsModelList: LeagueStatsModel[] = [];
-  LeagueStatsModelSortProp: 'FullName' | 'NumberOfGames' | 'NumberOfWins' | 'WinningPercentage' = 'NumberOfGames';
-  LeagueStatsModelSortAscDesc: AscDescEnum = AscDescEnum.Descending;
   PlayerGameModelList: PlayerGameModel[] = [];
   PlayerGameModelSortProp: 'Partner' | 'Opponents' | 'GameDate' | 'Scores' = 'GameDate';
   PlayerGameModelSortAscDesc: AscDescEnum = AscDescEnum.Descending;
@@ -69,7 +66,15 @@ export class AppStateService {
   HomeTabIndex: number = 0;
 
   LeaguePointExampleModelList: LeaguePointExampleModel[] = [];
-  DatePlayerPointsModelList: DatePlayerPointsModel[] = [];
+  DatePlayerStatModelList: DatePlayerStatModel[] = [];
+
+  CurrentDatePlayerStatModelList: PlayerStatModel[] = [];
+  CurrentPlayerDateID: number = 0;
+
+  PlayerStatModelSortProp: 'FullName' | 'GamesPlayed' | 'Points' | 'GamesWon' 
+  | 'WinningPercentage' | 'TotalNumberOfPartners' | 'TotalNumberOfOpponents'
+  | 'AveragePlayerLevelOfPartners' | 'AveragePlayerLevelOfOpponents' = 'GamesPlayed';
+  PlayerStatModelSortAscDesc: AscDescEnum = AscDescEnum.Descending;
 
   constructor() {
 
@@ -104,7 +109,8 @@ export class AppStateService {
     this.LeagueContactList = [];
     this.DemoLeagueID = 0;
     this.LeagueList = [];
-    this.LeagueStatsModelList = [];
+    this.DatePlayerStatModelList = [];
+    this.CurrentDatePlayerStatModelList = [];
     this.PlayerGameModelList = [];
     this.PlayerList = [];
     this.DemoStartDate = new Date(2020, 1, 1);
@@ -118,7 +124,8 @@ export class AppStateService {
     this.LeagueContactList = [];
     this.LeagueID = 0;
     this.LeagueList = [];
-    this.LeagueStatsModelList = [];
+    this.DatePlayerStatModelList = [];
+    this.CurrentDatePlayerStatModelList = [];
     this.PlayerGameModelList = [];
     this.PlayerList = [];
     this.StartDate = new Date(2020, 1, 1);

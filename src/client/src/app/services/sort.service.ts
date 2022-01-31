@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { AscDescEnum } from 'src/app/enums/AscDescEnum';
 import { IDNumbOrTextSort } from 'src/app/models/IDNumbSort';
-import { LeagueStatsModel } from 'src/app/models/LeagueStatsModel';
 import { PlayerGameModel } from 'src/app/models/PlayerGameModel';
 import * as moment from 'moment';
-import { Player } from '../models/Player.model';
-import { Game } from '../models/Game.model';
+import { Player } from 'src/app/models/Player.model';
+import { Game } from 'src/app/models/Game.model';
+import { PlayerStatModel } from 'src/app/models/PlayerStatModel.model';
+import { DataHelperService } from 'src/app/services/data-helper.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,37 +15,58 @@ import { Game } from '../models/Game.model';
 export class SortService {
   Junk: string[] = ['Junk', 'Junk (fr)'];
 
-  constructor(public state: AppStateService) {
+  constructor(public state: AppStateService,
+    public dataHelperService: DataHelperService) {
   }
 
-  SortLeagueStatsModelList(arr: LeagueStatsModel[]): LeagueStatsModel[] {
+  SortPlayerStatModelList(arr: PlayerStatModel[]): PlayerStatModel[] {
     if (typeof (arr) == "undefined" || !arr || arr?.length == 0 || arr == null) return [];
 
-    let LeagueStatsModelSorted: LeagueStatsModel[] = [];
+    let PlayerStatModelSorted: PlayerStatModel[] = [];
     let arr2: IDNumbOrTextSort[] = [];
     let sortable: IDNumbOrTextSort[] = [];
 
     for (let i = 0, count = arr?.length; i < count; i++) {
       let numbOrText: number | string = '';
-      switch (this.state.LeagueStatsModelSortProp) {
+      switch (this.state.PlayerStatModelSortProp) {
         case 'FullName':
           {
-            numbOrText = arr[i].FullName;
+            numbOrText = this.dataHelperService.GetPlayerFullName(arr[i].PlayerID);
           }
           break;
-        case 'NumberOfGames':
+        case 'GamesPlayed':
           {
-            numbOrText = arr[i].NumberOfGames;
+            numbOrText = arr[i].GamesPlayed;
           }
           break;
-        case 'NumberOfWins':
+        case 'GamesWon':
           {
-            numbOrText = arr[i].NumberOfWins;
+            numbOrText = arr[i].GamesWon;
           }
           break;
         case 'WinningPercentage':
           {
-            numbOrText = arr[i].WinningPercentage;
+            numbOrText = arr[i].GamesWon / arr[i].GamesPlayed;
+          }
+          break;
+        case 'TotalNumberOfPartners':
+          {
+            numbOrText = arr[i].TotalNumberOfPartners;
+          }
+          break;
+        case 'TotalNumberOfOpponents':
+          {
+            numbOrText = arr[i].TotalNumberOfOpponents;
+          }
+          break;
+        case 'AveragePlayerLevelOfPartners':
+          {
+            numbOrText = arr[i].TotalNumberOfOpponents;
+          }
+          break;
+        case 'AveragePlayerLevelOfOpponents':
+          {
+            numbOrText = arr[i].AveragePlayerLevelOfOpponents;
           }
           break;
         default:
@@ -52,12 +74,12 @@ export class SortService {
       }
 
       sortable.push(<IDNumbOrTextSort>{
-        ID: arr[i].ContactID,
+        ID: arr[i].PlayerID,
         NumbOrText: numbOrText,
       });
     }
 
-    if (this.state.LeagueStatsModelSortAscDesc === AscDescEnum.Ascending) {
+    if (this.state.PlayerStatModelSortAscDesc === AscDescEnum.Ascending) {
       arr2 = sortable.sort(this.PredicateAscBy('NumbOrText'));
     }
     else {
@@ -66,14 +88,14 @@ export class SortService {
 
     for (let i = 0, count = sortable?.length; i < count; i++) {
       for (let j = 0; j < arr?.length; j++) {
-        if (arr2[i].ID == arr[j].ContactID) {
-          LeagueStatsModelSorted.push(arr[j]);
+        if (arr2[i].ID == arr[j].PlayerID) {
+          PlayerStatModelSorted.push(arr[j]);
           break;
         }
       }
     }
 
-    return LeagueStatsModelSorted;
+    return PlayerStatModelSorted;
   }
 
   SortPlayerGameModelList(arr: PlayerGameModel[]): PlayerGameModel[] {
@@ -196,7 +218,7 @@ export class SortService {
       });
     }
 
-      arr2 = sortable.sort(this.PredicateAscBy('NumbOrText'));
+    arr2 = sortable.sort(this.PredicateAscBy('NumbOrText'));
 
     for (let i = 0, count = sortable?.length; i < count; i++) {
       for (let j = 0; j < arr?.length; j++) {
