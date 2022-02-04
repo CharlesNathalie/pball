@@ -19,7 +19,7 @@ public partial class LeagueContactService : ControllerBase, ILeagueContactServic
         }
 
         LeagueContact? leagueContactToModify = (from c in db.LeagueContacts
-                                                where c.LeagueID == leagueContact.LeagueID
+                                                where c.LeagueContactID == leagueContact.LeagueContactID
                                                 select c).FirstOrDefault();
 
         if (leagueContactToModify == null)
@@ -32,6 +32,8 @@ public partial class LeagueContactService : ControllerBase, ILeagueContactServic
         if (leagueContactToModify != null)
         {
             leagueContactToModify.IsLeagueAdmin = leagueContact.IsLeagueAdmin;
+            leagueContactToModify.Active = leagueContact.Active;
+            leagueContactToModify.PlayingToday = leagueContact.PlayingToday;
             leagueContactToModify.LastUpdateDate_UTC = leagueContact.LastUpdateDate_UTC;
             leagueContactToModify.LastUpdateContactID = leagueContact.LastUpdateContactID;
         }

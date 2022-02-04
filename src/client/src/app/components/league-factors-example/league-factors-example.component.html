@@ -91,6 +91,18 @@
                     + ({{ leagueFactorsExampleService.TeamPercentageOfPoints[state.LangID] }})
                     * {{ leagueFactorsExampleService.PercentPointsFactor[state.LangID] }}
                 </div>
+                <br>
+                <div>
+                    <strong>{{ leagueFactorsExampleService.LosersPoints[state.LangID] }}</strong>
+                    <br>
+                    = ({{ leagueFactorsExampleService.PointsToLosers[state.LangID] }})
+                    <br>
+                    + (6 - {{ leagueFactorsExampleService.AverageTeamPlayerLevel[state.LangID] }})
+                    * {{ leagueFactorsExampleService.PlayerLevelFactor[state.LangID] }}
+                    <br>
+                    + ({{ leagueFactorsExampleService.TeamPercentageOfPoints[state.LangID] }})
+                    * {{ leagueFactorsExampleService.PercentPointsFactor[state.LangID] }}
+                </div>
             </mat-expansion-panel>
         </mat-card-content>
     </mat-card>

@@ -4,6 +4,7 @@ import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { LeagueAddService } from '../../services/league-add.service';
 import { Router } from '@angular/router';
+import { DemoDataService } from 'src/app/services/demo-data.service';
 
 @Component({
   selector: 'app-league-add',
@@ -28,6 +29,7 @@ export class LeagueAddComponent implements OnInit, OnDestroy {
   constructor(public state: AppStateService,
     public formBuilder: FormBuilder,
     public leagueAddService: LeagueAddService,
+    public demoDataService: DemoDataService,
     public router: Router) {
   }
 
@@ -53,6 +55,7 @@ export class LeagueAddComponent implements OnInit, OnDestroy {
 
   SubmitLeagueAddForm(): void {
     this.leagueAddService.SubmitLeagueAddForm(this.leagueAddForm);
+    this.router.navigate([`/${ this.state.Culture }/home`]);
   }
 
   ReturnToPreviousPage()

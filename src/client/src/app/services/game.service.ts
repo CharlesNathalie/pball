@@ -77,7 +77,6 @@ export class GameService {
     this.Error = <HttpErrorResponse>{};
     this.GetAllLeagueGamesSuccess = true;
     this.state.GameList = gameList;
-    //this.dataLeagueStatService.Run();
     this.dataPlayerGamesService.Run();
     this.dataDatePlayerStatService.Run();
     console.debug(gameList);

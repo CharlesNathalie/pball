@@ -12,5 +12,6 @@ public partial interface IContactService
     Task<ActionResult<bool>> LogoffAsync(int ContactID);
     Task<ActionResult<Contact>> ModifyContactAsync(Contact contact);
     Task<ActionResult<Contact>> RegisterAsync(RegisterModel registerModel);
+    Task<ActionResult<List<Player>>> SearchContactsAsync(int LeagueID, string SearchTerms);
 }
 

@@ -94,16 +94,6 @@ export class ChartGamesPercentWonService {
         },
         responsive: true,
         maintainAspectRatio: false,
-        scales: {
-          y: {
-            type: 'linear',
-            display: true,
-            position: 'left',
-          },
-          xAxes: [{
-            type: 'time',
-          }]
-        }
       }
     };
   }

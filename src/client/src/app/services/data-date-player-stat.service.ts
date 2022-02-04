@@ -9,6 +9,7 @@ import { PlayerStatModel } from '../models/PlayerStatModel.model';
 import { Player } from '../models/Player.model';
 import { GamePoints } from '../models/GamePoints.model';
 import { PlayerPlayerListModel } from '../models/PlayerPlayerListModel.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,8 @@ export class DataDatePlayerStatService {
   constructor(public state: AppStateService,
     public dateService: DateService,
     public sortService: SortService,
-    public dataHelperService: DataHelperService) {
+    public dataHelperService: DataHelperService,
+    public router: Router) {
   }
 
   Run(): void {

@@ -5,42 +5,28 @@
         <table mat-table [dataSource]="state.LeaguePointExampleModelList" class="mat-elevation-z8">
 
             <ng-container matColumnDef="Team1Scores">
-                <th mat-header-cell *matHeaderCellDef>{{ tableLeagueFactorExampleService.T1S[state.LangID] }}&nbsp;&nbsp;&nbsp;&nbsp;
+                <th mat-header-cell *matHeaderCellDef>{{ tableLeagueFactorExampleService.Team1[state.LangID] }}&nbsp;&nbsp;&nbsp;&nbsp;
                 </th>
                 <td mat-cell *matCellDef="let item">{{item?.Team1Scores | number:'1.0-0'}}
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="Team2Scores">
-                <th mat-header-cell *matHeaderCellDef>{{ tableLeagueFactorExampleService.T2S[state.LangID] }}&nbsp;&nbsp;&nbsp;&nbsp;
+                <th mat-header-cell *matHeaderCellDef>{{ tableLeagueFactorExampleService.Team2[state.LangID] }}&nbsp;&nbsp;&nbsp;&nbsp;
                 </th>
                 <td mat-cell *matCellDef="let item">{{item?.Team2Scores | number:'1.0-0'}}
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="Team1Player1Points">
-                <th mat-header-cell *matHeaderCellDef>{{ tableLeagueFactorExampleService.T1P1[state.LangID] }}&nbsp;&nbsp;&nbsp;&nbsp;
+            <ng-container matColumnDef="Team1Points">
+                <th mat-header-cell *matHeaderCellDef>{{ tableLeagueFactorExampleService.Points1[state.LangID] }}&nbsp;&nbsp;&nbsp;&nbsp;
                 </th>
                 <td mat-cell *matCellDef="let item">{{item?.Team1Player1Points | number:'1.1-2'}}
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="Team1Player2Points">
-                <th mat-header-cell *matHeaderCellDef>{{ tableLeagueFactorExampleService.T1P2[state.LangID] }}&nbsp;&nbsp;&nbsp;&nbsp;
-                </th>
-                <td mat-cell *matCellDef="let item">{{item?.Team1Player2Points | number:'1.1-2'}}
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="Team2Player1Points">
-                <th mat-header-cell *matHeaderCellDef>{{ tableLeagueFactorExampleService.T2P1[state.LangID] }}&nbsp;&nbsp;&nbsp;&nbsp;
-                </th>
-                <td mat-cell *matCellDef="let item">{{item?.Team2Player1Points | number:'1.1-2'}}
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="Team2Player2Points">
-                <th mat-header-cell *matHeaderCellDef>{{ tableLeagueFactorExampleService.T2P2[state.LangID] }}
+            <ng-container matColumnDef="Team2Points">
+                <th mat-header-cell *matHeaderCellDef>{{ tableLeagueFactorExampleService.Points2[state.LangID] }}&nbsp;&nbsp;&nbsp;&nbsp;
                 </th>
                 <td mat-cell *matCellDef="let item">{{item?.Team2Player2Points | number:'1.1-2'}}
                 </td>

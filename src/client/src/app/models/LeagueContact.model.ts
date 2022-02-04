@@ -5,5 +5,7 @@ export class LeagueContact extends LastUpdate {
     LeagueID: number = 0;
     ContactID: number = 0;
     IsLeagueAdmin: boolean = false;
+    Active: boolean = false;
+    PlayingToday: boolean = false;
     Removed: boolean = false;
 }

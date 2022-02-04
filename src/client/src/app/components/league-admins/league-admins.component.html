@@ -1,26 +1,52 @@
-<div class="formcenter">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>
-                {{ leagueAdminsService.Administrators[state.LangID] }}
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <div>
-                <div *ngFor="let player of state.PlayerList">
-                    <div *ngIf="GetIsAdmin(player.ContactID)">
-                        <span *ngIf="player.Initial">
-                            {{ player.LastName }}, {{ player.FirstName }} {{ player.Initial }}.
-                        </span>
-                        <span *ngIf="!player.Initial">
-                            {{ player.LastName }}, {{ player.FirstName }}
-                        </span>
-                        <a mat-button href="{{ GetMailTo(player) }}">
-                            <mat-icon>email</mat-icon>
-                        </a>
-                    </div>
-                </div>
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        {{ leagueAdminsService.Administrators[state.LangID] }}
+    </mat-expansion-panel-header>
+    <div>
+        <a mat-button href="{{ GetMailToForAllAdmin() }}">
+            <mat-icon>email</mat-icon>&nbsp;&nbsp;
+            <span>{{ leagueAdminsService.EmailAllAdministrators[state.LangID]}}</span>
+        </a>
+        <br>
+        <div *ngFor="let player of state.PlayerList">
+            <div *ngIf="GetIsAdmin(player.ContactID)">
+                <a mat-button href="{{ GetMailTo(player) }}">
+                    <mat-icon>email</mat-icon>
+                </a>
+                <span>
+                    {{ player.LastName }}, {{ player.FirstName }}
+                    <span *ngIf="player.Initial"> {{ player.Initial }}.</span>
+                </span>
             </div>
-        </mat-card-content>
-    </mat-card>
-</div>
+        </div>
+        <br>
+        <div *ngIf="UserIsAdminOfLeague()">
+            <p *ngIf="state.DemoVisible">
+                {{ demoDataService.DemoVersionRunning[state.LangID]}}
+                {{ demoDataService.ChangesWillNotBePermanantlySavedOnTheServer[state.LangID]}}
+            </p>
+
+            <div>
+                <strong>{{ leagueAdminsService.Note[state.LangID] }}</strong>&nbsp;
+                {{ leagueAdminsService.OneCannotRemoveItself[state.LangID] }}.
+                {{ leagueAdminsService.YouNeedToAskAnotherAdministrator[state.LangID] }}.
+            </div>
+            <div *ngIf="leagueAdminsService.Working">
+                Working...
+            </div>
+            <div *ngIf="leagueAdminsService.Working">
+                {{ leagueAdminsService.Error | json }}
+            </div>
+
+            <mat-selection-list>
+                <mat-list-option (click)="SelectionClicked(player.ContactID)" [disabled]="IsUser(player.ContactID)"
+                    [selected]="GetIsAdmin(player.ContactID)" *ngFor="let player of state.PlayerList">
+                    <span>
+                        {{ player.LastName }}, {{ player.FirstName }}
+                        <span *ngIf="player.Initial"> {{ player.Initial }}.</span>
+                    </span>
+                </mat-list-option>
+            </mat-selection-list>
+        </div>
+    </div>
+</mat-expansion-panel>

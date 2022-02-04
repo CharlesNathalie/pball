@@ -246,6 +246,8 @@ public partial class BaseServiceTests
                             ContactID = ContactID,
                             IsLeagueAdmin = IsLeagueAdmin,
                             LeagueID = league.LeagueID,
+                            Active = true,
+                            PlayingToday = true,
                             Removed = false,
                             LastUpdateContactID = ContactID,
                             LastUpdateDate_UTC = DateTime.UtcNow,

@@ -34,7 +34,8 @@ export class AppStateService {
   DemoLeagueID: number = 0;
   DemoStartDate: Date = new Date(2020, 1, 1);
   DemoUser: User = <User>{};
-
+  DemoIsAdmin: boolean = true;
+  
   // Reality var
   EndDate: Date = new Date();
   LeagueID: number = 0;
@@ -59,6 +60,8 @@ export class AppStateService {
   PlayerListSortProp: 'FullName' = 'FullName';
   PlayerListSortAscDesc: AscDescEnum = AscDescEnum.Ascending;
 
+  DemoExtraPlayerList: Player[] = [];
+  
   DemoVisible: boolean = false;
   DataTime: 'day' | 'week' | 'month' | 'year' | 'all' | 'between' = 'year';
 
@@ -71,11 +74,13 @@ export class AppStateService {
   CurrentDatePlayerStatModelList: PlayerStatModel[] = [];
   CurrentPlayerDateID: number = 0;
 
+  PlayerStatModelSortAscDesc: AscDescEnum = AscDescEnum.Descending;
   PlayerStatModelSortProp: 'FullName' | 'GamesPlayed' | 'Points' | 'GamesWon' 
   | 'WinningPercentage' | 'TotalNumberOfPartners' | 'TotalNumberOfOpponents'
-  | 'AveragePlayerLevelOfPartners' | 'AveragePlayerLevelOfOpponents' = 'GamesPlayed';
-  PlayerStatModelSortAscDesc: AscDescEnum = AscDescEnum.Descending;
+  | 'AveragePlayerLevelOfPartners' | 'AveragePlayerLevelOfOpponents' | '' = '';
 
+  SearchPlayerList: Player[] = [];
+  
   constructor() {
 
   }
@@ -87,6 +92,7 @@ export class AppStateService {
     localStorage.removeItem('DemoStartDate');
     localStorage.removeItem('DemoEndDate');
     localStorage.removeItem('DemoHomeTabIndex');
+    localStorage.removeItem('DemoIsAdmin');
     localStorage.removeItem('LeagueTabsIndex');
     localStorage.removeItem('ProgressTabsIndex');
   }

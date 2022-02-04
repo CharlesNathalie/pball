@@ -15,6 +15,8 @@ import { ProgressService } from './progress.service';
 })
 export class DemoDataService {
   GeneratingDemoData: string[] = ['Generating demo data', 'Génération de données de démonstration'];
+  ChangesWillNotBePermanantlySavedOnTheServer: string[] = ['Changes will not be permanantly saved on the server.', 'Les changements ne seront pas sauvegardé de manière permanante au serveur.'];
+  DemoVersionRunning: string[] = ['Demo version running.', 'Version démo en cours.'];
 
   private NumberOfPlayers: number = 25;
   private NumberOfGames: number = 500;
@@ -72,6 +74,7 @@ export class DemoDataService {
     this.state.GameList = [];
 
     this.GenerateDemoDataPlayerList();
+    this.GenerateDemoDataDemoExtraPlayerList();
     this.GenerateDemoDataLeagueList();
     this.GenerateDemoDataLeagueContactList();
     this.GenerateDemoDataGameList();
@@ -79,12 +82,19 @@ export class DemoDataService {
     this.state.DemoLeagueID = 1;
     this.state.CurrentLeague = this.state.LeagueList[0];
     this.state.DemoVisible = true;
-    this.state.DemoUser = <User>{ ...this.state.PlayerList[0] };
+    if (this.state.DemoIsAdmin)
+    {
+      this.state.DemoUser = <User>{ ...this.state.PlayerList.find(c => c.ContactID == this.state.LeagueContactList.find(c => c.IsLeagueAdmin == true)?.ContactID) };
+    }
+    else{
+      this.state.DemoUser = <User>{ ...this.state.PlayerList.find(c => c.ContactID == this.state.LeagueContactList.find(c => c.IsLeagueAdmin == false)?.ContactID) };
+    }
 
     localStorage.setItem('DemoUser', JSON.stringify(this.state.DemoUser));
-    localStorage.setItem('DemoLeagueID', JSON.stringify(this.state.LeagueID));
+    localStorage.setItem('DemoLeagueID', JSON.stringify(this.state.DemoLeagueID));
     localStorage.setItem('DemoVisible', JSON.stringify(true));
     localStorage.setItem('DemoHomeTabIndex', JSON.stringify(this.state.DemoHomeTabIndex));
+    localStorage.setItem('DemoIsAdmin', JSON.stringify(this.state.DemoIsAdmin));
   
     this.progressService.Period('year');
   }
@@ -221,6 +231,7 @@ export class DemoDataService {
 
   GenerateDemoDataLeagueContactList() {
     let leagueContactID: number = 1;
+    let maxLeagueAdminCount: number = 3;
     let IsLeagueAdmin: boolean = true;
 
     for (let j = 0; j < this.NumberOfLeagues; j++) {
@@ -235,6 +246,8 @@ export class DemoDataService {
                 LeagueContactID: leagueContactID,
                 ContactID: ContactID,
                 IsLeagueAdmin: IsLeagueAdmin,
+                Active: true,
+                PlayingToday: true,
                 LeagueID: this.state.LeagueList[j].LeagueID,
                 Removed: false,
                 LastUpdateContactID: ContactID,
@@ -247,7 +260,7 @@ export class DemoDataService {
 
         leagueContactID += 1;
 
-        if (IsLeagueAdmin) {
+        if (IsLeagueAdmin && leagueContactID > maxLeagueAdminCount) {
           IsLeagueAdmin = false;
         }
       }
@@ -287,5 +300,40 @@ export class DemoDataService {
     }
 
     this.state.PlayerList = this.sortService.SortPlayerList(this.state.PlayerList);
+  }
+
+  GenerateDemoDataDemoExtraPlayerList() {
+    for (let i = 0; i < this.NumberOfPlayers; i++) {
+      let done: boolean = false;
+      while (!done) {
+        let firstName: string = this.firstNameList[Math.floor(Math.random() * (this.firstNameList.length))];
+        let lastName: string = this.lastNameList[Math.floor(Math.random() * (this.lastNameList.length))];
+        let count: number = this.state.PlayerList.filter(c => c.FirstName == firstName && c.LastName == lastName).length;
+        let count2: number = this.state.DemoExtraPlayerList.filter(c => c.FirstName == firstName && c.LastName == lastName).length;
+        if (count == 0 && count2 == 0) {
+          this.state.DemoExtraPlayerList.push(<Player>{
+
+            ContactID: this.state.PlayerList.length + i + 1,
+            FirstName: firstName,
+            LastName: lastName,
+            PlayerLevel: +1 + (Math.floor(Math.random() * 4)) + (Math.random() * 1),
+          });
+
+          done = true;
+        }
+      }
+    }
+
+    for (let i = 0, count = this.state.DemoExtraPlayerList.length; i < count; i++) {
+      let initial: boolean = Math.floor(Math.random() * 4) > 3 ? true : false;
+
+      this.state.DemoExtraPlayerList[i].LoginEmail = `${this.state.DemoExtraPlayerList[i].FirstName}.${this.state.DemoExtraPlayerList[i].LastName}@${this.emailList[Math.floor(Math.random() * (this.emailList.length + 1))]}`;
+      this.state.DemoExtraPlayerList[i].Removed = false;
+      this.state.DemoExtraPlayerList[i].LastUpdateContactID = this.state.DemoExtraPlayerList[i].ContactID;
+      this.state.DemoExtraPlayerList[i].LastUpdateDate_UTC = new Date();
+      this.state.DemoExtraPlayerList[i].Initial = initial == true ? this.initialList[Math.floor(Math.random() * (this.initialList.length))] : '';
+    }
+
+    this.state.DemoExtraPlayerList = this.sortService.SortPlayerList(this.state.DemoExtraPlayerList);
   }
 }

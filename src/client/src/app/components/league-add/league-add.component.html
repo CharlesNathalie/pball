@@ -8,8 +8,8 @@
                 </button>
             </mat-card-title>
             <mat-card-subtitle *ngIf="state.DemoVisible">
-                {{ leagueAddService.DemoVersionRunning[state.LangID]}}
-                {{ leagueAddService.ChangesWillNotBePermanantlySavedOnTheServer[state.LangID]}}
+                {{ demoDataService.DemoVersionRunning[state.LangID]}}
+                {{ demoDataService.ChangesWillNotBePermanantlySavedOnTheServer[state.LangID]}}
             </mat-card-subtitle>
         </mat-card-header>
         <div *ngIf="leagueAddHelp">

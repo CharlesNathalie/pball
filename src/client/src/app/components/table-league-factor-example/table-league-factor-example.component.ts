@@ -13,7 +13,7 @@ export class TableLeagueFactorExampleComponent implements OnInit, OnDestroy {
     public tableLeagueFactorExampleService: TableLeagueFactorExampleService) {
   }
 
-  displayedColumns: string[] = ['Team1Scores', 'Team2Scores', 'Team1Player1Points', 'Team1Player2Points', 'Team2Player1Points', 'Team2Player2Points'];
+  displayedColumns: string[] = ['Team1Scores', 'Team2Scores', 'Team1Points', 'Team2Points'];
 
   ngOnInit(): void {
   }

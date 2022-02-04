@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(public state: AppStateService,
     public homeService: HomeService,
     public getPlayerLeaguesService: GetPlayerLeaguesService,
-    public shellService: ShellService,
+    //public shellService: ShellService,
     public demoDataService: DemoDataService,
     public router: Router) {
   }
@@ -24,7 +24,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.state.LeagueList.length == 0) {
       if (this.state.DemoVisible) {
-        this.ShowDemo();
+        if (this.state.DemoIsAdmin)
+        {
+          this.ShowDemoAsLeagueAdmin();
+        }
+        else{
+          this.ShowDemoAsNormalUser();
+        }
       }
       else {
         this.getPlayerLeaguesService.Run();
@@ -42,8 +48,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.getPlayerLeaguesService.Run();
   }
 
-  ShowDemo() {
+  ShowDemoAsNormalUser() {
     this.state.DemoVisible = true;
+    this.state.DemoIsAdmin = false;
+    this.demoDataService.GenerateDemoData();
+  }
+
+  ShowDemoAsLeagueAdmin() {
+    this.state.DemoVisible = true;
+    this.state.DemoIsAdmin = true;
     this.demoDataService.GenerateDemoData();
   }
 

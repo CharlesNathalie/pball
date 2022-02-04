@@ -1,28 +1,100 @@
-<div class="formcenter">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>
-                {{ leagueMembersService.Members[state.LangID] }}
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <div class="center">
-                <p>&nbsp;</p>
-                <div *ngFor="let player of state.PlayerList">
-                    <p *ngIf="!GetIsAdmin(player.ContactID)">
-                        <span *ngIf="player.Initial">
-                            {{ player.ContactID }}
-                            {{ player.LastName }}, {{ player.FirstName }} {{ player.Initial }}.
-                            {{ player.PlayerLevel }}
-                        </span>
-                        <span *ngIf="!player.Initial">
-                            {{ player.ContactID }}
-                            {{ player.LastName }}, {{ player.FirstName }}
-                            {{ player.PlayerLevel }}
-                        </span>
-                    </p>
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        {{ leagueMembersService.Members[state.LangID] }}
+    </mat-expansion-panel-header>
+    <div>
+        <a mat-button href="{{ GetMailToForAllMembers() }}">
+            <mat-icon>email</mat-icon>&nbsp;&nbsp;
+            <span>{{ leagueMembersService.EmailAllMembers[state.LangID]}}</span>
+        </a>
+        <br>
+        <a mat-button href="{{ GetMailToForAllActiveMembers() }}">
+            <mat-icon>email</mat-icon>&nbsp;&nbsp;
+            <span>{{ leagueMembersService.EmailAllActiveMembers[state.LangID]}}</span>
+        </a>
+        <br><br>
+        <div>
+            <h2>{{ leagueMembersService.Active[state.LangID] }} </h2>
+        </div>
+        <div *ngFor="let player of state.PlayerList">
+            <div *ngIf="GetIsActive(player.ContactID)">
+                <a mat-button href="{{ GetMailTo(player) }}">
+                    <mat-icon>email</mat-icon>
+                </a>
+                <span>
+                    {{ player.LastName }}, {{ player.FirstName }}
+                    <span *ngIf="player.Initial"> {{ player.Initial }}.</span>
+                </span>
+            </div>
+        </div>
+        <div *ngIf="InactiveExist()">
+            <br><br>
+            <div>
+                <h2>{{ leagueMembersService.Inactive[state.LangID] }} </h2>
+            </div>
+            <div *ngFor="let player of state.PlayerList">
+                <div *ngIf="!GetIsActive(player.ContactID)">
+                    <a mat-button href="{{ GetMailTo(player) }}">
+                        <mat-icon>email</mat-icon>
+                    </a>
+                    <span>
+                        {{ player.LastName }}, {{ player.FirstName }}
+                        <span *ngIf="player.Initial"> {{ player.Initial }}.</span>
+                    </span>
                 </div>
             </div>
-        </mat-card-content>
-    </mat-card>
-</div>
+        </div>
+        <br>
+        <br>
+        <div *ngIf="UserIsAdminOfLeague()">
+            <p *ngIf="state.DemoVisible">
+                {{ demoDataService.DemoVersionRunning[state.LangID]}}
+                {{ demoDataService.ChangesWillNotBePermanantlySavedOnTheServer[state.LangID]}}
+            </p>
+
+            <div>
+                <strong>{{ leagueMembersService.Note[state.LangID] }}</strong>&nbsp;
+                {{ leagueMembersService.OneCannotRemoveItself[state.LangID] }}.
+                {{ leagueMembersService.YouNeedToAskAnotherAdministrator[state.LangID] }}.
+            </div>
+            <br><br>
+            <div>
+                <h2>{{ leagueMembersService.IncludeAnotherMember[state.LangID] }}</h2>
+                <br>
+                <mat-form-field>
+                    <input class="shortInput" (keyup)="Search(search.value)" placeholder="Search" matInput type="text" #search>
+                    <mat-hint>Ex: Phi Ca&nbsp;&nbsp;&nbsp;&nbsp;Ex: LeB gmail</mat-hint>
+                </mat-form-field>
+                <br><br>
+                <p>{{ leagueMembersService.SearchResultOnlyProvidesNamesNotAlreadyInLeague[state.LangID] }}</p>
+                <div *ngIf="state.SearchPlayerList.length">
+                    <mat-selection-list>
+                        <mat-list-option (click)="AddPlayerToLeague(player)" *ngFor="let player of state.SearchPlayerList">
+                            <div>
+                                {{ player.LastName }}, {{ player.FirstName }}
+                                <span *ngIf="player.Initial">
+                                    {{ player.Initial }}.
+                                </span>
+                                <br>
+                                <div class="small">{{ player.LoginEmail }}</div>
+                            </div>
+                        </mat-list-option>
+                    </mat-selection-list>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div>
+            <h2>{{ leagueMembersService.SelectedActive[state.LangID] }} </h2>
+        </div>
+        <mat-selection-list>
+            <mat-list-option (click)="SetPlayerActiveState(player.ContactID)" [disabled]="IsUser(player.ContactID)"
+                [selected]="GetIsActive(player.ContactID)" *ngFor="let player of state.PlayerList">
+                <span>
+                    {{ player.LastName }}, {{ player.FirstName }}
+                    <span *ngIf="player.Initial"> {{ player.Initial }}.</span>
+                </span>
+            </mat-list-option>
+        </mat-selection-list>
+    </div>
+</mat-expansion-panel>

@@ -12,4 +12,5 @@ public partial interface IContactController
     Task<ActionResult<Contact>> ModifyContactAsync(Contact contact);
     Task<ActionResult<Contact>> RegisterAsync(RegisterModel registerModel);
     Task<ActionResult<bool>> GenerateTempCodeAsync(LoginEmailModel loginEmailModel);
+    Task<ActionResult<List<Player>>> SearchContactsAsync(int LeagueID, string SearchTerms);
 }

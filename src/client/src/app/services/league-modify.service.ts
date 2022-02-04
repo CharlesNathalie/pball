@@ -12,6 +12,7 @@ import { League } from 'src/app/models/League.model';
 })
 export class LeagueModifyService {
   Cancel: string[] = ['Cancel', 'Annuler'];
+  Example: string[] = ['Example', 'Exemple'];
   LeagueIDIsRequired: string[] = ['League ID is required', 'L\'identité de ligue est requis'];
   LeagueModifySuccessful: string[] = ['League added successful', 'L\'ajout de la ligue réussie'];
   LeagueModifyTxt: string[] = ['Modify league', 'Modifier une ligue'];
@@ -123,7 +124,7 @@ export class LeagueModifyService {
     this.LeagueModifySuccess = false;
   }
 
-  SubmitForm(form: FormGroup) {
+  SubmitLeagueModifyForm(form: FormGroup) {
     if (form.valid) {
       let league: League = <League>{
         LeagueID: form.controls['LeagueID'].value,
@@ -160,6 +161,15 @@ export class LeagueModifyService {
     this.Working = false;
     this.Error = <HttpErrorResponse>{};
     this.LeagueModifySuccess = true;
+    for(let i = 0, count = this.state.LeagueList.length; i < count; i++)
+    {
+      if (this.state.LeagueList[i].LeagueID == league.LeagueID)
+      {
+        this.state.LeagueList[i] = league;
+        this.state.CurrentLeague = league;
+        break;
+      }
+    }
 
     console.debug(league);
   }

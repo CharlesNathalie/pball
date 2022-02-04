@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { Chart, registerables } from 'chart.js';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { ChartGamesPlayedService } from 'src/app/services/chart-games-played.service';
 
+import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
 @Component({

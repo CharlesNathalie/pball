@@ -102,6 +102,9 @@ export class ProgressService {
       if (localStorage.getItem('DemoHomeTabIndex') != null) {
         this.state.DemoHomeTabIndex = JSON.parse(localStorage.getItem('DemoHomeTabIndex') ?? '0');
       }
+      if (localStorage.getItem('DemoIsAdmin') != null) {
+        this.state.DemoIsAdmin = JSON.parse(localStorage.getItem('DemoIsAdmin') ?? 'false');
+      }
       if (localStorage.getItem('LeagueTabsIndex') != null) {
         this.state.LeagueTabsIndex = JSON.parse(localStorage.getItem('LeagueTabsIndex') ?? '0');
       }

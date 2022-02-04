@@ -13,13 +13,11 @@ export class ShellService {
   ChangeProfile: string[] = ['Change profile', 'Modifier votre profil'];
   English: string[] = ['English', "English"];
   Francais: string[] = ['Français', 'Français'];
-  HideDemo: string[] = ['Hide demo', 'Cacher demo'];
   Login: string[] = ['Login', 'Connexion'];
   Logoff: string[] = ['Logoff', 'Déconnexion'];
   Profile: string[] = ['Profile', 'Profil'];
   Register: string[] = ['Register', 'S\'inscrire'];
   ShellMenu: string[] = ['Shell Menu', 'Menu Shell'];
-  ShowDemo: string[] = ['Show demo', 'Montrer demo'];
 
   constructor(public state: AppStateService,
     public progressService: ProgressService) {

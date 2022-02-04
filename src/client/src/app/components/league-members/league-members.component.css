@@ -1,0 +1,11 @@
+.small {
+    font-size: small !important;
+}
+
+.shortInput {
+    width: 200px !important;
+}
+
+mat-form-field {
+    width: 200px !important;
+}

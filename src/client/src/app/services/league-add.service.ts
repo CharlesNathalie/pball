@@ -6,6 +6,8 @@ import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { Router } from '@angular/router';
 import { League } from 'src/app/models/League.model';
+import { LeagueContactAddService } from './league-contact-add.service';
+import { LeagueContact } from '../models/LeagueContact.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +15,6 @@ import { League } from 'src/app/models/League.model';
 export class LeagueAddService {
   AddingNewLeague: string[] = ['Adding new league', 'L\'ajout d\'une nouvelle ligue en cour'];
   Cancel: string[] = ['Cancel', 'Annuler'];
-  ChangesWillNotBePermanantlySavedOnTheServer: string[] = ['Changes will not be permanantly saved on the server.', 'Les changements ne seront pas sauvegardé de manière permanante au serveur.'];
-  DemoVersionRunning: string[] = ['Demo version running.', 'Version démo en cours.'];
   Example: string[] = ['Example', 'Exemple'];
   LeagueIDIsRequired: string[] = ['League ID is required', 'L\'identité de ligue est requis'];
   LeagueAddSuccessful: string[] = ['League added successful', 'L\'ajout de la ligue réussie'];
@@ -43,7 +43,8 @@ export class LeagueAddService {
 
   constructor(public state: AppStateService,
     public httpClient: HttpClient,
-    public router: Router) {
+    public router: Router,
+    public leagueContactAddService: LeagueContactAddService) {
   }
 
   LeagueAdd(league: League) {
@@ -162,7 +163,18 @@ export class LeagueAddService {
     this.Working = false;
     this.Error = <HttpErrorResponse>{};
     this.LeagueAddSuccess = true;
+    this.state.LeagueID = league.LeagueID;
 
+    let leagueContact: LeagueContact = <LeagueContact>{
+      LeagueContactID: 0,
+      LeagueID: league.LeagueID,
+      ContactID: this.state.DemoVisible ? this.state.DemoUser.ContactID : this.state.User.ContactID,
+      IsLeagueAdmin: true,
+      Active: true,
+      PlayingToday: true
+    };
+    this.leagueContactAddService.LeagueContactAdd(leagueContact);
+    
     console.debug(league);
   }
 

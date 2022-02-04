@@ -38,11 +38,11 @@ export class ChartGamesPlayedService {
     let Percentile25List: ChartXYTextNumberModel[] = [];
 
     for (let i = 0, count = this.state.DatePlayerStatModelList.length; i < count; i++) {
-      labelList.push(moment(this.state.DatePlayerStatModelList[i].Date).format('yyyy-MM-DD'));
+      labelList.push(moment(this.state.DatePlayerStatModelList[i].Date).format('YYYY-MM-DD'));
     }
 
     for (let i = 0, count = this.state.DatePlayerStatModelList.length - 1; i < count; i++) {
-      let Dt = moment(this.state.DatePlayerStatModelList[i].Date).format('yyyy-MM-DD');
+      let Dt = moment(this.state.DatePlayerStatModelList[i].Date).format('YYYY-MM-DD');
       if (this.state.DemoVisible) {
         GamesPlayedList.push({ x: Dt, y: this.state.DatePlayerStatModelList[i].PlayerStatModelList.find(c => c.PlayerID = this.state.DemoUser.ContactID)?.GamesPlayed ?? 0 });
       }
@@ -79,16 +79,6 @@ export class ChartGamesPlayedService {
         },
         responsive: true,
         maintainAspectRatio: false,
-        scales: {
-          y: {
-            type: 'linear',
-            display: true,
-            position: 'left',
-          },
-          xAxes: [{
-            type: 'time',
-          }]
-        }
       }
     };
   }
