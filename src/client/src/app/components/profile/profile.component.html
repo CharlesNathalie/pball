@@ -2,41 +2,41 @@
     <mat-card>
         <mat-card-header>
             <mat-card-title>
-                {{ profileService.ChangingProfile[state.LangID ?? languageEnum.en]}}
+                {{ profileService.ChangingProfile[state.LangID]}}
             </mat-card-title>
         </mat-card-header>
         <form (ngSubmit)="SubmitProfileForm()" [formGroup]="profileForm">
             <mat-error>* {{ profileService.required[state.LangID] }}</mat-error>
-            <input type="hidden" formControlName="ContactID">
+            <input type="hidden" name="ProfileContactID" formControlName="ContactID">
             <mat-card-content>
                 <div class="center">
                     <mat-form-field>
                         <mat-label>{{ profileService.LoginEmail[state.LangID] }}</mat-label>
-                        <input matInput type="email" placeholder="john@gmail.com" formControlName="LoginEmail">
+                        <input matInput name="ProfileLoginEmail" type="email" placeholder="john@gmail.com" formControlName="LoginEmail">
                         <mat-error *ngIf="GetHasError('LoginEmail')">{{GetErrorMessage("LoginEmail")}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>{{ profileService.FirstName[state.LangID] }}</mat-label>
-                        <input matInput placeholder="john" formControlName="FirstName">
+                        <input matInput name="ProfileFirstName" placeholder="john" formControlName="FirstName">
                         <mat-error *ngIf="GetHasError('FirstName')">{{GetErrorMessage("FirstName")}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>{{ profileService.Initial[state.LangID] }}</mat-label>
-                        <input matInput placeholder="j" formControlName="Initial">
+                        <input matInput name="ProfileInitial" placeholder="j" formControlName="Initial">
                         <mat-error *ngIf="GetHasError('Initial')">{{GetErrorMessage("Initial")}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>{{ profileService.LastName[state.LangID] }}</mat-label>
-                        <input matInput placeholder="Doe" formControlName="LastName">
+                        <input matInput name="ProfileLastName" placeholder="Doe" formControlName="LastName">
                         <mat-error *ngIf="GetHasError('LastName')">{{GetErrorMessage("LastName")}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>{{ profileService.PlayerLevel[state.LangID] }}</mat-label>
-                        <input matInput type="number" step="0.1" max="5" min="1" formControlName="PlayerLevel">
+                        <input matInput name="ProfilePlayerLevel" type="number" step="0.1" max="5" min="1" formControlName="PlayerLevel">
                         <mat-error *ngIf="GetHasError('PlayerLevel')">{{GetErrorMessage("PlayerLevel")}}</mat-error>
                     </mat-form-field>
                     <mat-error *ngIf="profileService.Error?.error">

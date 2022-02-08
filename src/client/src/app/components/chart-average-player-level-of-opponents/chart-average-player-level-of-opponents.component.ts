@@ -25,7 +25,8 @@ export class ChartAveragePlayerLevelOfOpponentsComponent implements OnInit, Afte
   }
 
   ngAfterViewInit(): void {
-    this.myChart = this.chartAveragePlayerLevelOfOpponentsService.DrawAveragePlayerLevelOfOpponentsChart(this.chartRef);
+    this.chartAveragePlayerLevelOfOpponentsService.SetChartRef(this.chartRef);
+    this.myChart = this.chartAveragePlayerLevelOfOpponentsService.DrawAveragePlayerLevelOfOpponentsChart();
   }
 
   ngOnDestroy(): void {

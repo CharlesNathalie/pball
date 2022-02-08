@@ -8,6 +8,9 @@ import { Router } from '@angular/router';
 import { League } from 'src/app/models/League.model';
 import { LeagueContactAddService } from './league-contact-add.service';
 import { LeagueContact } from '../models/LeagueContact.model';
+import { HighlightSpanKind } from 'typescript';
+import { DemoDataService } from './demo-data.service';
+import { ChartGamesPlayedService } from './chart-games-played.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +23,7 @@ export class LeagueAddService {
   LeagueAddSuccessful: string[] = ['League added successful', 'L\'ajout de la ligue réussie'];
   LeagueAddTxt: string[] = ['Add league', 'Ajoute une ligue'];
   LeagueName: string[] = ['League name', 'Nom de la ligue'];
+  LeagueNameAlreadyExist: string[] = ['League name already exist', 'Nom de la ligue existe déjà'];
   LeagueNameIsRequired: string[] = ['League name is required', 'Nom de la ligue est requis'];
   PercentPointsFactor: string[] = ['Percent points factor', 'Facteur pourcentage points'];
   PercentPointsFactorIsRequired: string[] = ['Percent points factor is required', 'Facteur pourcentage points est requis'];
@@ -44,17 +48,69 @@ export class LeagueAddService {
   constructor(public state: AppStateService,
     public httpClient: HttpClient,
     public router: Router,
-    public leagueContactAddService: LeagueContactAddService) {
+    public leagueContactAddService: LeagueContactAddService,
+    public demoDataService: DemoDataService,
+    public chartGamesPlayedService: ChartGamesPlayedService) {
   }
 
   LeagueAdd(league: League) {
+    if (this.state.DemoVisible) {
+      for (let i = 0, count = this.state.LeagueList.length; i < count; i++) {
+        if (this.state.LeagueList[i].LeagueName == league.LeagueName) {
+          this.Error = <HttpErrorResponse>{
+            message: this.LeagueNameAlreadyExist[this.state.LangID]
+          }
+          return;
+        }
+      }
 
-    this.Status = `${this.AddingNewLeague[this.state.LangID]} - ${league.LeagueName}`;
-    this.Working = true;
-    this.Error = <HttpErrorResponse>{};
+      let maxLeagueID: number = 0;
+      for (let i = 0, count = this.state.LeagueList.length; i < count; i++) {
+        if (maxLeagueID < this.state.LeagueList[i].LeagueID) {
+          maxLeagueID = this.state.LeagueList[i].LeagueID;
+        }
+      }
 
-    this.sub ? this.sub.unsubscribe() : null;
-    this.sub = this.DoLeagueAdd(league).subscribe();
+      league.LeagueID = maxLeagueID + 1;
+      this.state.LeagueList.push(league);
+      this.state.DemoLeagueID = league.LeagueID;
+
+      let leagueContact: LeagueContact = <LeagueContact>{
+        LeagueContactID: 1,
+        LeagueID: league.LeagueID,
+        ContactID: this.state.DemoUser.ContactID,
+        IsLeagueAdmin: true,
+        Active: true,
+        PlayingToday: true,
+        Removed: false,
+      };
+
+      this.state.LeagueContactList = [];
+      this.state.LeagueContactList.push(leagueContact);
+
+      this.state.GameList = [];
+      this.state.PlayerGameModelList = [];
+      this.state.PlayerList = [];
+      this.state.PlayerList.push(this.state.DemoUser)
+
+      this.state.DatePlayerStatModelList = [];
+      this.state.CurrentDatePlayerStatModelList = [];
+      this.state.CurrentPlayerDateID = 0;
+
+      this.demoDataService.GenerateDemoDataDemoExtraPlayerList();
+
+      this.chartGamesPlayedService.DrawGamesPlayedChart();
+
+      return;
+    }
+    else {
+      this.Status = `${this.AddingNewLeague[this.state.LangID]} - ${league.LeagueName}`;
+      this.Working = true;
+      this.Error = <HttpErrorResponse>{};
+
+      this.sub ? this.sub.unsubscribe() : null;
+      this.sub = this.DoLeagueAdd(league).subscribe();
+    }
   }
 
   GetErrorMessage(fieldName: 'LeagueID' | 'LeagueName' | 'PointsToWinners' | 'PointsToLosers' | 'PlayerLevelFactor' | 'PercentPointsFactor', form: FormGroup): string {
@@ -174,7 +230,7 @@ export class LeagueAddService {
       PlayingToday: true
     };
     this.leagueContactAddService.LeagueContactAdd(leagueContact);
-    
+
     console.debug(league);
   }
 

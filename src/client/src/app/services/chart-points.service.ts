@@ -16,12 +16,19 @@ Chart.register(...registerables);
 export class ChartPointsService {
   Points: string[] = ['Points', 'Points'];
 
+  chartRef: ElementRef = <ElementRef>{};
+
   constructor(public state: AppStateService,
     public sortService: SortService,
     public dataHelperService: DataHelperService) {
   }
 
-  public DrawPointsChart(chartRef: ElementRef): Chart {
+  public SetChartRef(chartRef: ElementRef)
+  {
+    this.chartRef = chartRef;
+  }
+
+  public DrawPointsChart(): Chart {
     let chartTitle = this.Points[this.state.LangID];
 
     let labelList: string[] = [];
@@ -61,7 +68,7 @@ export class ChartPointsService {
     data = this.GetPointsData(labelList, PointsList, Percentile75List, Percentile25List);
     config = this.GetPointsConfig(data, chartTitle);
 
-    return new Chart(<HTMLCanvasElement>chartRef.nativeElement, <ChartConfiguration>config);
+    return new Chart(<HTMLCanvasElement>this.chartRef.nativeElement, <ChartConfiguration>config);
   }
 
   private GetPointsConfig(data: any, chartTitle: string) {

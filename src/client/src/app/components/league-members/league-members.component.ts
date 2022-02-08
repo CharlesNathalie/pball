@@ -14,9 +14,6 @@ import { SearchPlayersService } from 'src/app/services/search-players.service';
   styleUrls: ['./league-members.component.css']
 })
 export class LeagueMembersComponent implements OnInit, OnDestroy {
-  playerSearchControl = new FormControl();
-  playerSearchList: Player[] = [];
-  isLoading = false;
 
   languageEnum = GetLanguageEnum();
 

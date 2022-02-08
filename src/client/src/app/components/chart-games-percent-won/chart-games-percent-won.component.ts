@@ -25,7 +25,8 @@ export class ChartGamesPercentWonComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngAfterViewInit(): void {
-    this.myChart = this.chartGamesPercentWonService.DrawGamesPercentWonChart(this.chartRef);
+    this.chartGamesPercentWonService.SetChartRef(this.chartRef);
+    this.myChart = this.chartGamesPercentWonService.DrawGamesPercentWonChart();
   }
 
   ngOnDestroy(): void {

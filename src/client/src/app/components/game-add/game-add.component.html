@@ -1,0 +1,99 @@
+<div class="formcenter">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                {{ gameAddService.GameAddTxt[state.LangID]}}
+            </mat-card-title>
+            <mat-card-subtitle *ngIf="state.DemoVisible">
+                {{ demoDataService.DemoVersionRunning[state.LangID]}}
+                {{ demoDataService.ChangesWillNotBePermanantlySavedOnTheServer[state.LangID]}}
+            </mat-card-subtitle>
+        </mat-card-header>
+        <form (ngSubmit)="SubmitGameAddForm()" [formGroup]="gameAddForm">
+            <mat-error>* {{ gameAddService.required[state.LangID] }}</mat-error>
+            <input type="hidden" name="GameAddGameID" formControlName="GameID">
+            <input type="hidden" name="GameAddLeagueID" formControlName="LeagueID">
+            <input type="hidden" name="Team1Player1" formControlName="Team1Player1">
+            <mat-card-content>
+                <div class="center">
+                    <mat-form-field>
+                        <mat-label>{{ gameAddService.Team1Player1[state.LangID] }}</mat-label>
+                        <input matInput type="text" [disabled]="true"  value="{{ dataHelperService.GetPlayerFullName(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID) }}">
+                        <mat-error *ngIf="GetHasError('Team1Player1')">{{GetErrorMessage("Team1Player1")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ gameAddService.Team1Player2[state.LangID] }}</mat-label>
+                        <mat-select formControlName="Team1Player2">
+                            <ng-container *ngFor="let player of state.PlayerList">
+                                <mat-option *ngIf="GetIsPlayingToday(player.ContactID)" [value]="player.ContactID">
+                                    {{ dataHelperService.GetPlayerFullName(player.ContactID) }}
+                                </mat-option>
+                            </ng-container>
+                        </mat-select>
+                        <mat-error *ngIf="GetHasError('Team1Player2')">{{GetErrorMessage("Team1Player2")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ gameAddService.Team2Player1[state.LangID] }}</mat-label>
+                        <mat-select formControlName="Team2Player1">
+                            <ng-container *ngFor="let player of state.PlayerList">
+                                <mat-option *ngIf="GetIsPlayingToday(player.ContactID)" [value]="player.ContactID">
+                                    {{ dataHelperService.GetPlayerFullName(player.ContactID) }}
+                                </mat-option>
+                            </ng-container>
+                        </mat-select>
+                        <mat-error *ngIf="GetHasError('Team2Player1')">{{GetErrorMessage("Team2Player1")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ gameAddService.Team2Player2[state.LangID] }}</mat-label>
+                        <mat-select formControlName="Team2Player2">
+                            <ng-container *ngFor="let player of state.PlayerList">
+                                <mat-option *ngIf="GetIsPlayingToday(player.ContactID)" [value]="player.ContactID">
+                                    {{ dataHelperService.GetPlayerFullName(player.ContactID) }}
+                                </mat-option>
+                            </ng-container>
+                        </mat-select>
+                        <mat-error *ngIf="GetHasError('Team2Player2')">{{GetErrorMessage("Team2Player2")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ gameAddService.Team1Scores[state.LangID] }}</mat-label>
+                        <input matInput name="GameAddTeam1Scores" type="number" min="0" step="1"
+                            placeholder="{{ gameAddService.Team1Scores[state.LangID] }}" formControlName="Team1Scores">
+                        <mat-error *ngIf="GetHasError('Team1Scores')">{{GetErrorMessage("Team1Scores")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ gameAddService.Team2Scores[state.LangID] }}</mat-label>
+                        <input matInput name="GameAddTeam2Scores" type="number" min="0" step="1"
+                            placeholder="{{ gameAddService.Team2Scores[state.LangID] }}" formControlName="Team2Scores">
+                        <mat-error *ngIf="GetHasError('Team2Scores')">{{GetErrorMessage("Team2Scores")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>{{ gameAddService.GameDate[state.LangID] }}</mat-label>
+                        <input matInput name="GameAddGameDate" type="text"
+                        placeholder="{{ gameAddService.GameDate[state.LangID] }}" formControlName="GameDate" [matDatepicker]="picker">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error *ngIf="GetHasError('GameDate')">{{GetErrorMessage("GameDate")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-error *ngIf="gameAddService.Error?.error">
+                        <h3 *ngFor="let e of gameAddService.Error?.error?.ErrList">{{ e }}</h3>
+                        <br>
+                    </mat-error>
+                    <button mat-raised-button *ngIf="GetFormValid()">{{ gameAddService.GameAddTxt[state.LangID]
+                        }}</button>
+                    <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
+                        gameAddService.PleaseEnterRequiredInformation[state.LangID] }}</button>
+                    <br><br>
+                    <button mat-raised-button (click)="ReturnToPreviousPage()">{{
+                        gameAddService.Cancel[state.LangID] }}</button>
+                </div>
+            </mat-card-content>
+        </form>
+    </mat-card>
+</div>

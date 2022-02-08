@@ -13,6 +13,7 @@ import { ChartPointsComponent } from './components/chart-points/chart-points.com
 import { ChartTotalNumberOfOpponentsComponent } from './components/chart-total-number-of-opponents/chart-total-number-of-opponents.component';
 import { ChartTotalNumberOfPartnersComponent } from './components/chart-total-number-of-partners/chart-total-number-of-partners.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { GameAddComponent } from './components/game-add/game-add.component';
 import { HomeComponent } from './components/home/home.component';
 import { LeagueAddComponent } from './components/league-add/league-add.component';
 import { LeagueAdminsComponent } from './components/league-admins/league-admins.component';
@@ -20,6 +21,8 @@ import { LeagueFactorsExampleComponent } from './components/league-factors-examp
 import { LeagueMembersComponent } from './components/league-members/league-members.component';
 import { LeagueModifyComponent } from './components/league-modify/league-modify.component';
 import { LeagueTabsComponent } from './components/league-tabs/league-tabs.component';
+import { LeagueTodayShuffleComponent } from './components/league-today-shuffle/league-today-shuffle.component';
+import { LeagueTodayComponent } from './components/league-today/league-today.component';
 import { LeagueComponent } from './components/league/league.component';
 import { LoginComponent } from './components/login/login.component';
 import { NoDataForUserComponent } from './components/no-data-for-user/no-data-for-user.component';
@@ -45,6 +48,7 @@ import { TablePlayerGamesComponent } from './components/table-player-games/table
     ChartTotalNumberOfOpponentsComponent,
     ChartTotalNumberOfPartnersComponent,
     ForgotPasswordComponent,
+    GameAddComponent,
     HomeComponent,
     LeagueComponent,
     LeagueAddComponent,
@@ -53,6 +57,8 @@ import { TablePlayerGamesComponent } from './components/table-player-games/table
     LeagueMembersComponent,
     LeagueModifyComponent,
     LeagueTabsComponent,
+    LeagueTodayComponent,
+    LeagueTodayShuffleComponent,
     LoginComponent,
     NoDataForUserComponent,
     PageNotFoundComponent,
@@ -91,6 +97,7 @@ import { TablePlayerGamesComponent } from './components/table-player-games/table
     ChartTotalNumberOfOpponentsComponent,
     ChartTotalNumberOfPartnersComponent,
     ForgotPasswordComponent,
+    GameAddComponent,
     HomeComponent,
     LeagueComponent,
     LeagueAddComponent,
@@ -99,6 +106,8 @@ import { TablePlayerGamesComponent } from './components/table-player-games/table
     LeagueMembersComponent,
     LeagueModifyComponent,
     LeagueTabsComponent,
+    LeagueTodayComponent,
+    LeagueTodayShuffleComponent,
     LoginComponent,  
     NoDataForUserComponent,
     PageNotFoundComponent,

@@ -16,12 +16,19 @@ Chart.register(...registerables);
 export class ChartAveragePlayerLevelOfPartnersService {
   AveragePlayerLevelOfPartners: string[] = ['Average player level of partners', 'Moyenne du niveau de joueur comme partenaire'];
 
+  chartRef: ElementRef = <ElementRef>{};
+
   constructor(public state: AppStateService,
     public sortService: SortService,
     public dataHelperService: DataHelperService) {
   }
 
-  public DrawAveragePlayerLevelOfPartnersChart(chartRef: ElementRef): Chart {
+  public SetChartRef(chartRef: ElementRef)
+  {
+    this.chartRef = chartRef;
+  }
+
+  public DrawAveragePlayerLevelOfPartnersChart(): Chart {
     let chartTitle = this.AveragePlayerLevelOfPartners[this.state.LangID];
 
     let labelList: string[] = [];
@@ -61,7 +68,7 @@ export class ChartAveragePlayerLevelOfPartnersService {
     data = this.GetAveragePlayerLevelOfPartnersData(labelList, AveragePlayerLevelOfPartnersList, Percentile75List, Percentile25List);
     config = this.GetAveragePlayerLevelOfPartnersConfig(data, chartTitle);
 
-    return new Chart(<HTMLCanvasElement>chartRef.nativeElement, <ChartConfiguration>config);
+    return new Chart(<HTMLCanvasElement>this.chartRef.nativeElement, <ChartConfiguration>config);
   }
 
   private GetAveragePlayerLevelOfPartnersConfig(data: any, chartTitle: string) {

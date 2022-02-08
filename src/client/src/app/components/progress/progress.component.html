@@ -52,7 +52,7 @@
                 <h3 [ngClass]="GetDataTimeHighlight('between')">
                     <span (click)="pickerStart.open()">
                         <mat-icon>calendar_today</mat-icon>
-                        <input style="opacity: 0; height: 1px !important; width: 1px !important" #startDate
+                        <input name="StartDate" style="opacity: 0; height: 1px !important; width: 1px !important" #startDate
                             (dateChange)="ChangedStartDate(startDate)" [matDatepicker]="pickerStart">
                         <mat-datepicker #pickerStart></mat-datepicker>
                         {{ state.StartDate | date: 'yyyy/MM/dd' }}
@@ -60,7 +60,7 @@
                     <span> --- </span>
                     <span (click)="pickerEnd.open()">
                         {{ state.EndDate | date: 'yyyy/MM/dd' }}
-                        <input style="opacity: 0; height: 1px !important; width: 1px !important" #endDate
+                        <input name="EndDate" style="opacity: 0; height: 1px !important; width: 1px !important" #endDate
                             (dateChange)="ChangedEndDate(endDate)" [matDatepicker]="pickerEnd">
                         <mat-datepicker #pickerEnd></mat-datepicker>
                         <mat-icon>calendar_today</mat-icon>

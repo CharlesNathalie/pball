@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ContactService } from './contact.service';
 import { DataPlayerGamesService } from './data-player-games.service';
 import { DataDatePlayerStatService } from './data-date-player-stat.service';
+import { ChartGamesPlayedService } from './chart-games-played.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,36 +28,26 @@ export class LeagueService {
     public httpClient: HttpClient,
     public router: Router,
     public contactService: ContactService,
-    //public dataLeagueStatService: DataLeagueStatService,
     public dataPlayerGamesService: DataPlayerGamesService,
-    public dataDatePlayerStatService: DataDatePlayerStatService) {
+    public dataDatePlayerStatService: DataDatePlayerStatService,
+    public chartGamesPlayedService: ChartGamesPlayedService) {
   }
 
   SetLeagueID(LeagueID: number) {
-    this.state.LeagueID = LeagueID;
-    if (this.state.DemoVisible)
-    {
+    if (this.state.DemoVisible) {
+      this.state.DemoLeagueID = LeagueID;
       localStorage.setItem('DemoLeagueID', JSON.stringify(this.state.DemoLeagueID));
-    }
-    else{
-      localStorage.setItem('LeagueID', JSON.stringify(this.state.LeagueID));
-    }
-
-    if (!this.state.DemoVisible) {
-      this.contactService.GetAllPlayersForLeague();
-    }
-    else {
-      //this.dataLeagueStatService.Run();
       this.dataPlayerGamesService.Run();
       this.dataDatePlayerStatService.Run();
-    }
-
-    if (this.state.DemoVisible)
-    {
       this.state.CurrentLeague = this.state.LeagueList.filter(c => c.LeagueID == this.state.DemoLeagueID)[0];
     }
-    else{
+    else {
+      this.state.LeagueID = LeagueID;
+      localStorage.setItem('LeagueID', JSON.stringify(this.state.LeagueID));
+      this.contactService.GetAllPlayersForLeague();
       this.state.CurrentLeague = this.state.LeagueList.filter(c => c.LeagueID == this.state.LeagueID)[0];
     }
+
+    this.chartGamesPlayedService.DrawGamesPlayedChart();
   }
 }

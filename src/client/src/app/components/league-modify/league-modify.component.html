@@ -55,38 +55,38 @@
 
         <form (ngSubmit)="SubmitLeagueModifyForm()" [formGroup]="leagueModifyForm">
             <mat-error>* {{ leagueModifyService.required[state.LangID] }}</mat-error>
-            <input type="hidden" formControlName="LeagueID">
+            <input type="hidden" name="LeagueModifyLeagueID" formControlName="LeagueID">
             <mat-card-content>
                 <div class="center">
                     <mat-form-field>
                         <mat-label>{{ leagueModifyService.LeagueName[state.LangID] }}</mat-label>
-                        <input matInput type="text" placeholder="Name of league" formControlName="LeagueName">
+                        <input matInput name="LeagueModifyLeagueName" type="text" placeholder="Name of league" formControlName="LeagueName">
                         <mat-error *ngIf="GetHasError('LeagueName')">{{GetErrorMessage("LeagueName")}}</mat-error>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ leagueModifyService.PointsToWinners[state.LangID] }}</mat-label>
-                        <input matInput type="number" step="0.1" max="10" min="0" placeholder="Points to winners"
+                        <input matInput name="LeagueModifyPointsToWinners" type="number" step="0.1" max="10" min="0" placeholder="Points to winners"
                             formControlName="PointsToWinners">
                         <mat-error *ngIf="GetHasError('PointsToWinners')">{{GetErrorMessage("PointsToWinners")}}
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ leagueModifyService.PointsToLosers[state.LangID] }}</mat-label>
-                        <input matInput type="number" step="0.1" max="10" min="0" placeholder="Points to losers"
+                        <input matInput name="LeagueModifyPointsToLosers" type="number" step="0.1" max="10" min="0" placeholder="Points to losers"
                             formControlName="PointsToLosers">
                         <mat-error *ngIf="GetHasError('PointsToLosers')">{{GetErrorMessage("PointsToLosers")}}
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ leagueModifyService.PlayerLevelFactor[state.LangID] }}</mat-label>
-                        <input matInput type="number" step="0.1" max="10" min="0" placeholder="Player level factor"
+                        <input matInput name="LeagueModifyPlayerLevelFactor" type="number" step="0.1" max="10" min="0" placeholder="Player level factor"
                             formControlName="PlayerLevelFactor">
                         <mat-error *ngIf="GetHasError('PlayerLevelFactor')">{{GetErrorMessage("PlayerLevelFactor")}}
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ leagueModifyService.PercentPointsFactor[state.LangID] }}</mat-label>
-                        <input matInput type="number" step="0.1" max="10" min="0" placeholder="Percent points factor"
+                        <input matInput name="LeagueModifyPercentPointsFactor" type="number" step="0.1" max="10" min="0" placeholder="Percent points factor"
                             formControlName="PercentPointsFactor">
                         <mat-error *ngIf="GetHasError('PercentPointsFactor')">{{GetErrorMessage("PercentPointsFactor")}}
                         </mat-error>

@@ -1,0 +1,40 @@
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        {{ leagueTodayShuffleService.HelperToRandomChoices[state.LangID] }}
+    </mat-expansion-panel-header>
+    <div>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                {{ leagueTodayShuffleService.PlayingThisTime[state.LangID] }}
+            </mat-expansion-panel-header>
+            <mat-selection-list>
+                <ng-container *ngFor="let player of state.PlayerList">
+                    <mat-list-option (click)="SetPlayingThisTime(player.ContactID)"
+                        *ngIf="GetIsPlayingToday(player.ContactID)">
+                        {{ player.LastName }}, {{ player.FirstName }}
+                        <span *ngIf="player.Initial"> {{ player.Initial }}.</span>
+                    </mat-list-option>
+                </ng-container>
+            </mat-selection-list>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                {{ leagueTodayShuffleService.ListToRandomlyPickFrom[state.LangID] }}
+            </mat-expansion-panel-header>
+            <mat-form-field>
+                <input matInput name="NumberOfPlayersToSelect" type="number" class="shortInput"
+                    placeholder="{{ leagueTodayShuffleService.NumberOfPlayersToSelect[state.LangID] }}"
+                    #numberOfPlayersToSelect>
+            </mat-form-field>
+            <mat-selection-list>
+                <ng-container *ngFor="let player of state.PlayerList">
+                    <mat-list-option (click)="SetPlayingThisTime(player.ContactID)"
+                        *ngIf="GetIsPlayingToday(player.ContactID)">
+                        {{ player.LastName }}, {{ player.FirstName }}
+                        <span *ngIf="player.Initial"> {{ player.Initial }}.</span>
+                    </mat-list-option>
+                </ng-container>
+            </mat-selection-list>
+        </mat-expansion-panel>
+    </div>
+</mat-expansion-panel>

@@ -62,7 +62,7 @@
                 <h2>{{ leagueMembersService.IncludeAnotherMember[state.LangID] }}</h2>
                 <br>
                 <mat-form-field>
-                    <input class="shortInput" (keyup)="Search(search.value)" placeholder="Search" matInput type="text" #search>
+                    <input matInput name="LeagueMembersSearch" class="shortInput" (keyup)="Search(search.value)" placeholder="Search" type="text" #search>
                     <mat-hint>Ex: Phi Ca&nbsp;&nbsp;&nbsp;&nbsp;Ex: LeB gmail</mat-hint>
                 </mat-form-field>
                 <br><br>

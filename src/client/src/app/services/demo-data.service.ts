@@ -237,6 +237,8 @@ export class DemoDataService {
     for (let j = 0; j < this.NumberOfLeagues; j++) {
       for (let i = 0; i < this.NumberOfPlayersPerLeague; i++) {
         let done: boolean = false;
+        let Active: boolean = Math.floor(Math.random() * 10) > 3;
+        let PlayingToday: boolean = Math.floor(Math.random() * 10) > 3;
         while (!done) {
           let ContactID: number = this.state.PlayerList[Math.floor(Math.random() * this.state.PlayerList.length)].ContactID;
           let count = this.state.LeagueContactList.filter(c => c.ContactID == ContactID && c.LeagueID == this.state.LeagueList[j].LeagueID).length;
@@ -246,8 +248,8 @@ export class DemoDataService {
                 LeagueContactID: leagueContactID,
                 ContactID: ContactID,
                 IsLeagueAdmin: IsLeagueAdmin,
-                Active: true,
-                PlayingToday: true,
+                Active: Active,
+                PlayingToday: Active ? PlayingToday : false,
                 LeagueID: this.state.LeagueList[j].LeagueID,
                 Removed: false,
                 LastUpdateContactID: ContactID,

@@ -16,12 +16,19 @@ Chart.register(...registerables);
 export class ChartTotalNumberOfPartnersService {
   TotalNumberOfPartners: string[] = ['Total number of partners', 'Nombre total de partenaires'];
 
+  chartRef: ElementRef = <ElementRef>{};
+
   constructor(public state: AppStateService,
     public sortService: SortService,
     public dataHelperService: DataHelperService) {
   }
 
-  public DrawTotalNumberOfPartnersChart(chartRef: ElementRef): Chart {
+  public SetChartRef(chartRef: ElementRef)
+  {
+    this.chartRef = chartRef;
+  }
+
+  public DrawTotalNumberOfPartnersChart(): Chart {
     let chartTitle = this.TotalNumberOfPartners[this.state.LangID];
 
     let labelList: string[] = [];
@@ -61,7 +68,7 @@ export class ChartTotalNumberOfPartnersService {
     data = this.GetTotalNumberOfPartnersData(labelList, TotalNumberOfPartnersList, Percentile75List, Percentile25List);
     config = this.GetTotalNumberOfPartnersConfig(data, chartTitle);
 
-    return new Chart(<HTMLCanvasElement>chartRef.nativeElement, <ChartConfiguration>config);
+    return new Chart(<HTMLCanvasElement>this.chartRef.nativeElement, <ChartConfiguration>config);
   }
 
   private GetTotalNumberOfPartnersConfig(data: any, chartTitle: string) {

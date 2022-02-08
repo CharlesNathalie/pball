@@ -11,13 +11,13 @@
                 <div class="center">
                     <mat-form-field>
                         <mat-label>{{ loginService.LoginEmail[state.LangID] }}</mat-label>
-                        <input matInput type="email" placeholder="john@gmail.com" formControlName="LoginEmail">
+                        <input matInput name="LoginLoginEmail" type="email" placeholder="john@gmail.com" formControlName="LoginEmail">
                         <mat-error *ngIf="GetHasError('LoginEmail')">{{GetErrorMessage("LoginEmail")}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>{{ loginService.Password[state.LangID] }}</mat-label>
-                        <input matInput type="password" formControlName="Password">
+                        <input matInput name="LoginPassword" type="password" formControlName="Password">
                         <mat-error *ngIf="GetHasError('Password')">{{GetErrorMessage("Password")}}</mat-error>
                     </mat-form-field>
                     <br>

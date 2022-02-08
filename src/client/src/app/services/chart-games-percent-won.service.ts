@@ -16,12 +16,19 @@ Chart.register(...registerables);
 export class ChartGamesPercentWonService {
   GamesPercentWon: string[] = ['Games % won', 'Parties % gagnées'];
 
+  chartRef: ElementRef = <ElementRef>{};
+
   constructor(public state: AppStateService,
     public sortService: SortService,
     public dataHelperService: DataHelperService) {
   }
 
-  public DrawGamesPercentWonChart(chartRef: ElementRef): Chart {
+  public SetChartRef(chartRef: ElementRef)
+  {
+    this.chartRef = chartRef;
+  }
+
+  public DrawGamesPercentWonChart(): Chart {
     let chartTitle = this.GamesPercentWon[this.state.LangID];
 
     let labelList: string[] = [];
@@ -78,7 +85,7 @@ export class ChartGamesPercentWonService {
     data = this.GetGamesPercentWonData(labelList, GamesPercentWonList, Percentile75List, Percentile25List);
     config = this.GetGamesPercentWonConfig(data, chartTitle);
 
-    return new Chart(<HTMLCanvasElement>chartRef.nativeElement, <ChartConfiguration>config);
+    return new Chart(<HTMLCanvasElement>this.chartRef.nativeElement, <ChartConfiguration>config);
   }
 
   private GetGamesPercentWonConfig(data: any, chartTitle: string) {

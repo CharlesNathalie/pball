@@ -25,7 +25,8 @@ export class ChartTotalNumberOfOpponentsComponent implements OnInit, AfterViewIn
   }
 
   ngAfterViewInit(): void {
-    this.myChart = this.chartTotalNumberOfOpponentsService.DrawTotalNumberOfOpponentsChart(this.chartRef);
+    this.chartTotalNumberOfOpponentsService.SetChartRef(this.chartRef);
+    this.myChart = this.chartTotalNumberOfOpponentsService.DrawTotalNumberOfOpponentsChart();
   }
 
   ngOnDestroy(): void {

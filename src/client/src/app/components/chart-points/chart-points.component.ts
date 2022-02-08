@@ -25,7 +25,8 @@ export class ChartPointsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.myChart = this.chartPointsService.DrawPointsChart(this.chartRef);
+    this.chartPointsService.SetChartRef(this.chartRef);
+    this.myChart = this.chartPointsService.DrawPointsChart();
   }
 
   ngOnDestroy(): void {

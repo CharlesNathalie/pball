@@ -1,0 +1,16 @@
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        {{ leagueTodayService.PlayingToday[state.LangID] }}
+    </mat-expansion-panel-header>
+    <div>
+        <mat-selection-list>
+            <mat-list-option (click)="SetPlayerPlayingTodayState(player.ContactID)"
+                [selected]="GetIsPlayingToday(player.ContactID)" *ngFor="let player of state.PlayerList">
+                <span>
+                    {{ player.LastName }}, {{ player.FirstName }}
+                    <span *ngIf="player.Initial"> {{ player.Initial }}.</span>
+                </span>
+            </mat-list-option>
+        </mat-selection-list>
+    </div>
+</mat-expansion-panel>

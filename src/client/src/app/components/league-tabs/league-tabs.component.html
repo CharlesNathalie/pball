@@ -1,13 +1,19 @@
 <mat-tab-group [selectedIndex]="state.LeagueTabsIndex" (selectedTabChange)="LeagueTabSelectedChanged($event)" mat-align-tabs="start">
-    <mat-tab label="Members">
+    <mat-tab label="{{ leagueTabsService.Members[state.LangID] }}">
         <div class="div-container">
             <app-league-admins></app-league-admins>
             <app-league-members></app-league-members>
         </div>
     </mat-tab>
-    <mat-tab label="Another">
+    <mat-tab label="{{ leagueTabsService.Today[state.LangID] }}">
         <div class="div-container">
-            Something else
+            <app-league-today></app-league-today>
+            <app-league-today-shuffle></app-league-today-shuffle>
+        </div>
+    </mat-tab>
+    <mat-tab label="{{ leagueTabsService.Games[state.LangID] }}">
+        <div class="div-container">
+            <app-game-add></app-game-add>
         </div>
     </mat-tab>
 </mat-tab-group>
