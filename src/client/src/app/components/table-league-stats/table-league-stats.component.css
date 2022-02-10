@@ -18,9 +18,9 @@
   table {
     width: 100%;
   }
-/* 
-  th.mat-header-cell {
-    text-align: center !important;
-  }
 
-   */
+  
+.mat-cell {
+  font-size: smaller !important;
+}
+  

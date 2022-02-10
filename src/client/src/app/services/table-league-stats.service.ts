@@ -8,6 +8,7 @@ import { SortService } from 'src/app/services/sort.service';
 export class TableLeagueStatsService {
   Games: string[] = ['Games', 'Parties'];
   Name: string[] = ['Name', 'Nom'];
+  Points: string[] = ['Points', 'Points'];
   Rank: string[] = ['Rank', 'No.'];
   stats: string[] = ['stats', 'statistiques'];
   Wins: string[] = ['Wins', 'Victoires'];

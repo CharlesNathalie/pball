@@ -11,8 +11,10 @@
                 <ng-container *ngFor="let player of state.PlayerList">
                     <mat-list-option (click)="SetPlayingThisTime(player.ContactID)"
                         *ngIf="GetIsPlayingToday(player.ContactID)">
-                        {{ player.LastName }}, {{ player.FirstName }}
-                        <span *ngIf="player.Initial"> {{ player.Initial }}.</span>
+                        <div>
+                            {{ player.LastName }}, {{ player.FirstName }}
+                            <span *ngIf="player.Initial"> {{ player.Initial }}.</span>
+                        </div>
                     </mat-list-option>
                 </ng-container>
             </mat-selection-list>
@@ -30,8 +32,10 @@
                 <ng-container *ngFor="let player of state.PlayerList">
                     <mat-list-option (click)="SetPlayingThisTime(player.ContactID)"
                         *ngIf="GetIsPlayingToday(player.ContactID)">
-                        {{ player.LastName }}, {{ player.FirstName }}
-                        <span *ngIf="player.Initial"> {{ player.Initial }}.</span>
+                        <div>
+                            {{ player.LastName }}, {{ player.FirstName }}
+                            <span *ngIf="player.Initial"> {{ player.Initial }}.</span>
+                        </div>
                     </mat-list-option>
                 </ng-container>
             </mat-selection-list>

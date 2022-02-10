@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { ContactService } from './contact.service';
 import { DataPlayerGamesService } from './data-player-games.service';
 import { DataDatePlayerStatService } from './data-date-player-stat.service';
-import { ChartGamesPlayedService } from './chart-games-played.service';
+import { ChartAllService } from './chart-all.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class LeagueService {
     public contactService: ContactService,
     public dataPlayerGamesService: DataPlayerGamesService,
     public dataDatePlayerStatService: DataDatePlayerStatService,
-    public chartGamesPlayedService: ChartGamesPlayedService) {
+    public chartAAllService: ChartAllService) {
   }
 
   SetLeagueID(LeagueID: number) {
@@ -48,6 +48,6 @@ export class LeagueService {
       this.state.CurrentLeague = this.state.LeagueList.filter(c => c.LeagueID == this.state.LeagueID)[0];
     }
 
-    this.chartGamesPlayedService.DrawGamesPlayedChart();
+    this.chartAAllService.RedrawDrawAllCharts();
   }
 }

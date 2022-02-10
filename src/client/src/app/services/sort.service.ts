@@ -39,6 +39,11 @@ export class SortService {
             numbOrText = arr[i].GamesPlayed;
           }
           break;
+        case 'Points':
+          {
+            numbOrText = arr[i].Points;
+          }
+          break;
         case 'GamesWon':
           {
             numbOrText = arr[i].GamesWon;

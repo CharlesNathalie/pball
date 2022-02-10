@@ -36,6 +36,7 @@ import { StateJsonComponent } from './components/state-json/state-json.component
 import { TableLeagueFactorExampleComponent } from './components/table-league-factor-example/table-league-factor-example.component';
 import { TableLeagueStatsComponent } from './components/table-league-stats/table-league-stats.component';
 import { TablePlayerGamesComponent } from './components/table-player-games/table-player-games.component';
+import { TablePlayerHeadToHeadComponent } from './components/table-player-head-to-head/table-player-head-to-head.component';
 
 @NgModule({
   declarations: [
@@ -69,8 +70,9 @@ import { TablePlayerGamesComponent } from './components/table-player-games/table
     ShellComponent,
     StateJsonComponent,
     TableLeagueFactorExampleComponent,
-    TableLeagueStatsComponent,
+    TableLeagueStatsComponent,   
     TablePlayerGamesComponent,
+    TablePlayerHeadToHeadComponent,
   ],
   imports: [
     CommonModule,
@@ -120,6 +122,7 @@ import { TablePlayerGamesComponent } from './components/table-player-games/table
     TableLeagueFactorExampleComponent,
     TableLeagueStatsComponent,
     TablePlayerGamesComponent,
+    TablePlayerHeadToHeadComponent,
   ]
 })
 export class SharedModule { }

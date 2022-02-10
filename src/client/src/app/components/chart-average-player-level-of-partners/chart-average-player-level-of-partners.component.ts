@@ -25,8 +25,7 @@ export class ChartAveragePlayerLevelOfPartnersComponent implements OnInit, After
   }
 
   ngAfterViewInit(): void {
-    this.chartAveragePlayerLevelOfPartnersService.SetChartRef(this.chartRef);
-    this.myChart = this.chartAveragePlayerLevelOfPartnersService.DrawAveragePlayerLevelOfPartnersChart();
+    this.myChart = this.chartAveragePlayerLevelOfPartnersService.SetChartRef(this.chartRef);
   }
 
   ngOnDestroy(): void {

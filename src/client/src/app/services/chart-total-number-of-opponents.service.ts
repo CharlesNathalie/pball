@@ -23,9 +23,10 @@ export class ChartTotalNumberOfOpponentsService {
     public dataHelperService: DataHelperService) {
   }
 
-  public SetChartRef(chartRef: ElementRef)
+  public SetChartRef(chartRef: ElementRef): Chart
   {
     this.chartRef = chartRef;
+    return this.DrawTotalNumberOfOpponentsChart();
   }
 
   public DrawTotalNumberOfOpponentsChart(): Chart {

@@ -2,7 +2,7 @@
     <app-no-data-for-user></app-no-data-for-user>
     <div *ngIf="state.CurrentDatePlayerStatModelList?.length">
         <br>
-        <h2>{{ GetCurrentLeagueName() }} {{ tableLeagueStatsService.stats[state.LangID]}}</h2>
+        <h2 class="center">{{ GetCurrentLeagueName() }} {{ tableLeagueStatsService.stats[state.LangID]}}</h2>
         <p class="center">
             <button mat-button *ngIf="this.state.CurrentPlayerDateID > 0"
                 (click)="SetCurrentStatDate(this.state.CurrentPlayerDateID - 1)">
@@ -52,10 +52,18 @@
                     (click)="DoSortLeagueStats('WinningPercentage')">% {{ tableLeagueStatsService.Win[state.LangID] }}
                 </th>
                 <td mat-cell *matCellDef="let item">
-                    <span *ngIf="state.LangID == 0">{{ (100*item?.GamesWon/item?.GamesPlayed) | number:'1.1-1':'en-CA'}}
-                        %</span>
-                    <span *ngIf="state.LangID == 1">{{ (100*item?.GamesWon/item?.GamesPlayed) | number:'1.1-1':'fr-CA'}}
-                        %</span>
+                    <span *ngIf="state.LangID == 0">{{ (100*item?.GamesWon/item?.GamesPlayed) | number:'1.1-1':'en-CA'}}</span>
+                    <span *ngIf="state.LangID == 1">{{ (100*item?.GamesWon/item?.GamesPlayed) | number:'1.1-1':'fr-CA'}}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Points">
+                <th mat-header-cell [ngClass]="GetSortingClass('Points')" *matHeaderCellDef
+                    (click)="DoSortLeagueStats('Points')">{{ tableLeagueStatsService.Points[state.LangID] }}
+                </th>
+                <td mat-cell *matCellDef="let item">
+                    <span *ngIf="state.LangID == 0">{{ item?.Points | number:'1.1-1':'en-CA'}}</span>
+                    <span *ngIf="state.LangID == 1">{{ item?.Points | number:'1.1-1':'fr-CA'}}</span>
                 </td>
             </ng-container>
 

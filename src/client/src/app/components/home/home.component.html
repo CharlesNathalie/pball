@@ -2,37 +2,49 @@
     (selectedTabChange)="HomeTabSelectedChanged($event)" mat-align-tabs="start">
     <mat-tab label="{{ homeService.Home[state.LangID] }}">
         <div class="div-container">
-            <div>
-                <p>&nbsp;</p>
-                <button mat-button *ngIf="!state.DemoVisible" (click)="ShowDemoAsNormalUser()">
-                    {{ homeService.ShowDemoAsNormalUser[state.LangID] }}
-                </button>
-                <button mat-button *ngIf="!state.DemoVisible" (click)="ShowDemoAsLeagueAdmin()">
-                    {{ homeService.ShowDemoAsLeagueAdmin[state.LangID] }}
-                </button>
-                <button mat-button *ngIf="state.DemoVisible" (click)="HideDemo()">
-                    {{ homeService.HideDemo[state.LangID] }}
-                </button>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
+            <div class="center">
+                <div *ngIf="!state.DemoVisible">
+                    <br><br>
+                    <button mat-button (click)="ShowDemoAsNormalUser()">
+                        {{ homeService.ShowDemoAsNormalUser[state.LangID] }}
+                    </button>
+                    <br><br>
+                    <button mat-button (click)="ShowDemoAsLeagueAdmin()">
+                        {{ homeService.ShowDemoAsLeagueAdmin[state.LangID] }}
+                    </button>
+                    <br><br>
+                </div>
+                <div *ngIf="state.DemoVisible">
+                    <br><br>
+                    <div>{{ homeService.CurrentlyInDemoMode[state.LangID] }}</div>
+                    <br>
+                    <div>
+                        <span *ngIf="!state.DemoIsAdmin">{{ homeService.YouAreANormalUser[state.LangID] }}:</span>
+                        <span *ngIf="state.DemoIsAdmin">{{ homeService.YouAreAnAdministrator[state.LangID] }}:</span>
+                        <br>
+                        <span>
+                            <strong>({{ state.DemoUser.FirstName }} {{ state.DemoUser.LastName }}
+                                <span *ngIf="state.DemoUser.Initial.length"> {{ state.DemoUser.FirstName }}. </span>)
+                            </strong>
+                        </span>
+                    </div>
+                    <br><br>
+                    <button mat-button (click)="HideDemo()">
+                        {{ homeService.HideDemo[state.LangID] }}
+                    </button>
+                    <br><br>
+                </div>
+                <div *ngIf="state.DemoVisible ? !state.DemoUser.ContactID : !state.User.ContactID">
+                    <button mat-button routerLink="/{{ state.Culture }}/login">
+                        <mat-icon>login</mat-icon>
+                        {{ homeService.Login[state.LangID] }}
+                    </button>
+                    <button mat-button routerLink="/{{ state.Culture }}/register">
+                        <mat-icon>person_add</mat-icon>
+                        {{ homeService.Register[state.LangID] }}
+                    </button>
+                </div>
             </div>
-
-            <div *ngIf="!(state.DemoVisible ? state.DemoUser?.ContactID : state.User?.ContactID)">
-                <button mat-button routerLink="/{{ state.Culture }}/login">
-                    <mat-icon>login</mat-icon>
-                    {{ homeService.Login[state.LangID] }}
-                </button>
-                <button mat-button routerLink="/{{ state.Culture }}/register">
-                    <mat-icon>person_add</mat-icon>
-                    {{ homeService.Register[state.LangID] }}
-                </button>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-            </div>
-
-     
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
         </div>
     </mat-tab>
     <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)"
@@ -43,7 +55,7 @@
         label="{{ homeService.Progress[state.LangID] }}">
         <app-progress></app-progress>
     </mat-tab>
-    <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)" label="Json">
+    <!-- <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)" label="Json">
         <app-state-json></app-state-json>
-    </mat-tab>
+    </mat-tab> -->
 </mat-tab-group>

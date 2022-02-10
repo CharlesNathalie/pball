@@ -60,11 +60,6 @@ export class GameAddComponent implements OnInit, OnDestroy {
     //this.router.navigate([`/${ this.state.Culture }/home`]);
   }
 
-  ReturnToPreviousPage()
-  {
-    this.router.navigate([this.state.ReturnToPage]);
-  }
-
    GetIsPlayingToday(ContactID: number): boolean {
     return this.state.LeagueContactList.find(c => c.ContactID == ContactID)?.PlayingToday ?? false;
   }

@@ -10,6 +10,7 @@ import { Player } from '../models/Player.model';
 import { GamePoints } from '../models/GamePoints.model';
 import { PlayerPlayerListModel } from '../models/PlayerPlayerListModel.model';
 import { Router } from '@angular/router';
+import { ChartAllService } from './chart-all.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,8 @@ export class DataDatePlayerStatService {
     public dateService: DateService,
     public sortService: SortService,
     public dataHelperService: DataHelperService,
-    public router: Router) {
+    public router: Router,
+    public chartAllService: ChartAllService) {
   }
 
   Run(): void {
@@ -132,58 +134,46 @@ export class DataDatePlayerStatService {
           }
 
           // T1P1
-          if (!(PlayerPartnerList.find(c => c.PlayerID == T1P1.ContactID)?.PlayerList.find(c => c.ContactID == T1P2.ContactID)))
-          {
+          if (!(PlayerPartnerList.find(c => c.PlayerID == T1P1.ContactID)?.PlayerList.find(c => c.ContactID == T1P2.ContactID))) {
             PlayerPartnerList.find(c => c.PlayerID == T1P1.ContactID)?.PlayerList.push(T1P2);
           }
-          if (!(PlayerOpponentList.find(c => c.PlayerID == T1P1.ContactID)?.PlayerList.find(c => c.ContactID == T2P1.ContactID)))
-          {
+          if (!(PlayerOpponentList.find(c => c.PlayerID == T1P1.ContactID)?.PlayerList.find(c => c.ContactID == T2P1.ContactID))) {
             PlayerOpponentList.find(c => c.PlayerID == T1P1.ContactID)?.PlayerList.push(T2P1);
           }
-          if (!(PlayerOpponentList.find(c => c.PlayerID == T1P1.ContactID)?.PlayerList.find(c => c.ContactID == T2P2.ContactID)))
-          {
+          if (!(PlayerOpponentList.find(c => c.PlayerID == T1P1.ContactID)?.PlayerList.find(c => c.ContactID == T2P2.ContactID))) {
             PlayerOpponentList.find(c => c.PlayerID == T1P1.ContactID)?.PlayerList.push(T2P2);
           }
 
           // T1P2
-          if (!(PlayerPartnerList.find(c => c.PlayerID == T1P2.ContactID)?.PlayerList.find(c => c.ContactID == T1P1.ContactID)))
-          {
+          if (!(PlayerPartnerList.find(c => c.PlayerID == T1P2.ContactID)?.PlayerList.find(c => c.ContactID == T1P1.ContactID))) {
             PlayerPartnerList.find(c => c.PlayerID == T1P2.ContactID)?.PlayerList.push(T1P1);
           }
-          if (!(PlayerOpponentList.find(c => c.PlayerID == T1P2.ContactID)?.PlayerList.find(c => c.ContactID == T2P1.ContactID)))
-          {
+          if (!(PlayerOpponentList.find(c => c.PlayerID == T1P2.ContactID)?.PlayerList.find(c => c.ContactID == T2P1.ContactID))) {
             PlayerOpponentList.find(c => c.PlayerID == T1P2.ContactID)?.PlayerList.push(T2P1);
           }
-          if (!(PlayerOpponentList.find(c => c.PlayerID == T1P2.ContactID)?.PlayerList.find(c => c.ContactID == T2P2.ContactID)))
-          {
+          if (!(PlayerOpponentList.find(c => c.PlayerID == T1P2.ContactID)?.PlayerList.find(c => c.ContactID == T2P2.ContactID))) {
             PlayerOpponentList.find(c => c.PlayerID == T1P2.ContactID)?.PlayerList.push(T2P2);
           }
 
           // T2P1
-          if (!(PlayerPartnerList.find(c => c.PlayerID == T2P1.ContactID)?.PlayerList.find(c => c.ContactID == T2P2.ContactID)))
-          {
+          if (!(PlayerPartnerList.find(c => c.PlayerID == T2P1.ContactID)?.PlayerList.find(c => c.ContactID == T2P2.ContactID))) {
             PlayerPartnerList.find(c => c.PlayerID == T2P1.ContactID)?.PlayerList.push(T2P2);
           }
-          if (!(PlayerOpponentList.find(c => c.PlayerID == T2P1.ContactID)?.PlayerList.find(c => c.ContactID == T1P1.ContactID)))
-          {
+          if (!(PlayerOpponentList.find(c => c.PlayerID == T2P1.ContactID)?.PlayerList.find(c => c.ContactID == T1P1.ContactID))) {
             PlayerOpponentList.find(c => c.PlayerID == T2P1.ContactID)?.PlayerList.push(T1P1);
           }
-          if (!(PlayerOpponentList.find(c => c.PlayerID == T2P1.ContactID)?.PlayerList.find(c => c.ContactID == T1P2.ContactID)))
-          {
+          if (!(PlayerOpponentList.find(c => c.PlayerID == T2P1.ContactID)?.PlayerList.find(c => c.ContactID == T1P2.ContactID))) {
             PlayerOpponentList.find(c => c.PlayerID == T2P1.ContactID)?.PlayerList.push(T1P2);
           }
 
           // T2P2
-          if (!(PlayerPartnerList.find(c => c.PlayerID == T2P2.ContactID)?.PlayerList.find(c => c.ContactID == T2P1.ContactID)))
-          {
+          if (!(PlayerPartnerList.find(c => c.PlayerID == T2P2.ContactID)?.PlayerList.find(c => c.ContactID == T2P1.ContactID))) {
             PlayerPartnerList.find(c => c.PlayerID == T2P2.ContactID)?.PlayerList.push(T2P1);
           }
-          if (!(PlayerOpponentList.find(c => c.PlayerID == T2P2.ContactID)?.PlayerList.find(c => c.ContactID == T1P1.ContactID)))
-          {
+          if (!(PlayerOpponentList.find(c => c.PlayerID == T2P2.ContactID)?.PlayerList.find(c => c.ContactID == T1P1.ContactID))) {
             PlayerOpponentList.find(c => c.PlayerID == T2P2.ContactID)?.PlayerList.push(T1P1);
           }
-          if (!(PlayerOpponentList.find(c => c.PlayerID == T2P2.ContactID)?.PlayerList.find(c => c.ContactID == T1P2.ContactID)))
-          {
+          if (!(PlayerOpponentList.find(c => c.PlayerID == T2P2.ContactID)?.PlayerList.find(c => c.ContactID == T1P2.ContactID))) {
             PlayerOpponentList.find(c => c.PlayerID == T2P2.ContactID)?.PlayerList.push(T1P2);
           }
 
@@ -239,8 +229,10 @@ export class DataDatePlayerStatService {
       }
     }
 
-    this.state.CurrentPlayerDateID = this.state.DatePlayerStatModelList.length - 1; 
-    this.state.CurrentDatePlayerStatModelList =  this.sortService.SortPlayerStatModelList(this.state.DatePlayerStatModelList[this.state.DatePlayerStatModelList.length - 1].PlayerStatModelList); 
+    this.state.CurrentPlayerDateID = this.state.DatePlayerStatModelList.length - 1;
+    this.state.CurrentDatePlayerStatModelList = this.sortService.SortPlayerStatModelList(this.state.DatePlayerStatModelList[this.state.DatePlayerStatModelList.length - 1].PlayerStatModelList);
+
+    this.chartAllService.RedrawDrawAllCharts();
 
     this.Status = '';
     this.Working = false;

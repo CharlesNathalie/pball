@@ -5,7 +5,6 @@ import { SortService } from 'src/app/services/sort.service';
 import { TableLeagueStatsService } from '../../services/table-league-stats.service';
 import { DataDatePlayerStatService } from 'src/app/services/data-date-player-stat.service';
 import { DataHelperService } from 'src/app/services/data-helper.service';
-import { DateService } from 'src/app/services/date.service';
 
 @Component({
   selector: 'app-table-league-stats',
@@ -22,12 +21,21 @@ export class TableLeagueStatsComponent implements OnInit, OnDestroy {
   }
 
   ascDescEnum = GetAscDescEnum();
-  displayedColumns: string[] = ['Rank', 'FullName', 'GamesPlayed', 'GamesWon', 'WinningPercentage'];
+  displayedColumns: string[] = ['Rank', 'FullName', 'GamesPlayed', 'GamesWon', 'WinningPercentage', 'Points'];
 
   ngOnInit(): void {
-    if (this.state.LeagueID > 0) {
-      if (this.state.DatePlayerStatModelList.length == 0) {
-        this.dataDatePlayerStatService.Run();
+    if (this.state.DemoVisible) {
+      if (this.state.DemoLeagueID > 0) {
+        if (this.state.PlayerGameModelList.length == 0) {
+          //this.dataPlayerGamesService.Run();
+        }
+      }
+    }
+    else {
+      if (this.state.LeagueID > 0) {
+        if (this.state.PlayerGameModelList.length == 0) {
+          //this.dataPlayerGamesService.Run();
+        }
       }
     }
   }
@@ -35,7 +43,7 @@ export class TableLeagueStatsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  DoSortLeagueStats(prop: 'FullName' | 'GamesPlayed' | 'GamesWon' | 'WinningPercentage') {
+  DoSortLeagueStats(prop: 'FullName' | 'GamesPlayed' | 'GamesWon' | 'WinningPercentage' | 'Points') {
     if (this.state.PlayerStatModelSortProp == prop) {
       if (this.state.PlayerStatModelSortAscDesc == AscDescEnum.Ascending) {
         this.state.PlayerStatModelSortAscDesc = AscDescEnum.Descending;
@@ -48,7 +56,7 @@ export class TableLeagueStatsComponent implements OnInit, OnDestroy {
     this.state.CurrentDatePlayerStatModelList = this.sortService.SortPlayerStatModelList(this.state.DatePlayerStatModelList[this.state.CurrentPlayerDateID].PlayerStatModelList);
   }
 
-  GetSortingClass(prop: 'FullName' | 'GamesPlayed' | 'GamesWon' | 'WinningPercentage') {
+  GetSortingClass(prop: 'FullName' | 'GamesPlayed' | 'GamesWon' | 'WinningPercentage' | 'Points') {
     if (this.state.PlayerStatModelSortProp == prop) {
       switch (prop) {
         case 'FullName':
@@ -58,6 +66,8 @@ export class TableLeagueStatsComponent implements OnInit, OnDestroy {
         case 'GamesWon':
           return this.state.PlayerStatModelSortAscDesc == this.ascDescEnum.Ascending ? 'sortedAsc' : 'sortedDesc';
         case 'WinningPercentage':
+          return this.state.PlayerStatModelSortAscDesc == this.ascDescEnum.Ascending ? 'sortedAsc' : 'sortedDesc';
+        case 'Points':
           return this.state.PlayerStatModelSortAscDesc == this.ascDescEnum.Ascending ? 'sortedAsc' : 'sortedDesc';
         default:
           return '';
@@ -108,10 +118,10 @@ export class TableLeagueStatsComponent implements OnInit, OnDestroy {
     if (CurrentPlayerDateID < 0) {
       this.state.CurrentPlayerDateID = 0;
     }
-    else    if (CurrentPlayerDateID > this.state.DatePlayerStatModelList.length - 1) {
+    else if (CurrentPlayerDateID > this.state.DatePlayerStatModelList.length - 1) {
       this.state.CurrentPlayerDateID = this.state.DatePlayerStatModelList.length - 1;
     }
-    else{
+    else {
       this.state.CurrentPlayerDateID = CurrentPlayerDateID;
     }
 

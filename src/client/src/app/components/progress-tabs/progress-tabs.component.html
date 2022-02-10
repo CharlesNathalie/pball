@@ -20,7 +20,7 @@
             </app-chart-average-player-level-of-opponents>
         </div>
     </mat-tab>
-    <mat-tab label="Tables">
+    <mat-tab label="Leaders">
         <div class="div-container">
             <app-table-league-stats></app-table-league-stats>
         </div>
@@ -30,9 +30,10 @@
             <app-table-player-games></app-table-player-games>
         </div>
     </mat-tab>
-    <mat-tab label="Head 2 Head">
+    <mat-tab label="Head to Head">
         <div class="div-container">
-            <app-table-player-games></app-table-player-games>
+            <h2 class="center">To do</h2>
+            <app-table-player-head-to-head *ngIf="false"></app-table-player-head-to-head>
         </div>
     </mat-tab>
 </mat-tab-group>

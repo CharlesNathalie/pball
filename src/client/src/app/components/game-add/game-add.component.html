@@ -11,6 +11,7 @@
         </mat-card-header>
         <form (ngSubmit)="SubmitGameAddForm()" [formGroup]="gameAddForm">
             <mat-error>* {{ gameAddService.required[state.LangID] }}</mat-error>
+            <br>            
             <input type="hidden" name="GameAddGameID" formControlName="GameID">
             <input type="hidden" name="GameAddLeagueID" formControlName="LeagueID">
             <input type="hidden" name="Team1Player1" formControlName="Team1Player1">
@@ -89,9 +90,6 @@
                         }}</button>
                     <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
                         gameAddService.PleaseEnterRequiredInformation[state.LangID] }}</button>
-                    <br><br>
-                    <button mat-raised-button (click)="ReturnToPreviousPage()">{{
-                        gameAddService.Cancel[state.LangID] }}</button>
                 </div>
             </mat-card-content>
         </form>

@@ -7,7 +7,6 @@ import { PlayerStatModel } from '../models/PlayerStatModel.model';
 import { SortService } from './sort.service';
 import { AscDescEnum } from '../enums/AscDescEnum';
 import { DataHelperService } from './data-helper.service';
-import { DataDatePlayerStatService } from './data-date-player-stat.service';
 
 Chart.register(...registerables);
 
@@ -21,16 +20,15 @@ export class ChartGamesPlayedService {
 
   constructor(public state: AppStateService,
     public sortService: SortService,
-    public dataHelperService: DataHelperService,
-    public dataDatePlayerStatService: DataDatePlayerStatService) {
+    public dataHelperService: DataHelperService) {
   }
 
-  public SetChartRef(chartRef: ElementRef)
-  {
+  public SetChartRef(chartRef: ElementRef): Chart {
     this.chartRef = chartRef;
+    return this.DrawGamesPlayedChart();
   }
 
-  public DrawGamesPlayedChart(): Chart {  
+  public DrawGamesPlayedChart(): Chart {
     let chartTitle = this.GamesPlayed[this.state.LangID];
 
     let labelList: string[] = [];

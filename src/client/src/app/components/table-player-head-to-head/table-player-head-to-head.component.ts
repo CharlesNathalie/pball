@@ -2,22 +2,22 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { AscDescEnum, GetAscDescEnum } from 'src/app/enums/AscDescEnum';
 import { DataHelperService } from 'src/app/services/data-helper.service';
-import { DataPlayerGamesService } from 'src/app/services/data-player-games.service';
 import { SortService } from 'src/app/services/sort.service';
-import { TablePlayerGamesService } from '../../services/table-player-games.service';
+import { TablePlayerHeadToHeadService } from '../../services/table-player-head-to-head.service';
+import { DataPlayerGamesService } from 'src/app/services/data-player-games.service';
 
 @Component({
-  selector: 'app-table-player-games',
-  templateUrl: './table-player-games.component.html',
-  styleUrls: ['./table-player-games.component.css']
+  selector: 'app-table-player-head-to-head',
+  templateUrl: './table-player-head-to-head.component.html',
+  styleUrls: ['./table-player-head-to-head.component.css']
 })
-export class TablePlayerGamesComponent implements OnInit, OnDestroy {
+export class TablePlayerHeadToHeadComponent implements OnInit, OnDestroy {
 
   constructor(public state: AppStateService,
-    public tablePlayerGamesService: TablePlayerGamesService,
+    public tablePlayerHeadToHeadService: TablePlayerHeadToHeadService,
     public sortService: SortService,
     public dataPlayerGamesService: DataPlayerGamesService,
-    public dataHelperService: DataHelperService) {
+   public dataHelperService: DataHelperService) {
   }
 
   ascDescEnum = GetAscDescEnum();
@@ -27,14 +27,14 @@ export class TablePlayerGamesComponent implements OnInit, OnDestroy {
     if (this.state.DemoVisible) {
       if (this.state.DemoLeagueID > 0) {
         if (this.state.PlayerGameModelList.length == 0) {
-          this.dataPlayerGamesService.Run();
+          //this.dataPlayerGamesService.Run();
         }
       }
     }
     else {
       if (this.state.LeagueID > 0) {
         if (this.state.PlayerGameModelList.length == 0) {
-          this.dataPlayerGamesService.Run();
+          //this.dataPlayerGamesService.Run();
         }
       }
     }

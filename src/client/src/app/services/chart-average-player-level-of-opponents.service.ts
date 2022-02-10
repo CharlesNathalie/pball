@@ -7,6 +7,7 @@ import { PlayerStatModel } from '../models/PlayerStatModel.model';
 import { SortService } from './sort.service';
 import { AscDescEnum } from '../enums/AscDescEnum';
 import { DataHelperService } from './data-helper.service';
+import { HighlightSpanKind } from 'typescript';
 
 Chart.register(...registerables);
 
@@ -23,9 +24,10 @@ export class ChartAveragePlayerLevelOfOpponentsService {
     public dataHelperService: DataHelperService) {
   }
 
-  public SetChartRef(chartRef: ElementRef)
+  public SetChartRef(chartRef: ElementRef): Chart
   {
     this.chartRef = chartRef;
+    return this.DrawAveragePlayerLevelOfOpponentsChart();
   }
 
   public DrawAveragePlayerLevelOfOpponentsChart(): Chart {
