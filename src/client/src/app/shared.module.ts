@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/app-material.module';
+import { AdminComponent } from './components/admin/admin.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { ChartAveragePlayerLevelOfOpponentsComponent } from './components/chart-average-player-level-of-opponents/chart-average-player-level-of-opponents.component';
 import { ChartAveragePlayerLevelOfPartnersComponent } from './components/chart-average-player-level-of-partners/chart-average-player-level-of-partners.component';
 import { ChartGamesPercentWonComponent } from './components/chart-games-percent-won/chart-games-percent-won.component';
@@ -37,9 +39,12 @@ import { TableLeagueFactorExampleComponent } from './components/table-league-fac
 import { TableLeagueStatsComponent } from './components/table-league-stats/table-league-stats.component';
 import { TablePlayerGamesComponent } from './components/table-player-games/table-player-games.component';
 import { TablePlayerHeadToHeadComponent } from './components/table-player-head-to-head/table-player-head-to-head.component';
+import { UsersRequestingTempCodeComponent } from './components/users-requesting-temp-code/users-requesting-temp-code.component';
 
 @NgModule({
   declarations: [
+    AdminComponent,
+    ChangePasswordComponent,
     ChartAveragePlayerLevelOfPartnersComponent,
     ChartAveragePlayerLevelOfOpponentsComponent,
     ChartGamesPlayedComponent,
@@ -73,6 +78,7 @@ import { TablePlayerHeadToHeadComponent } from './components/table-player-head-t
     TableLeagueStatsComponent,   
     TablePlayerGamesComponent,
     TablePlayerHeadToHeadComponent,
+    UsersRequestingTempCodeComponent,
   ],
   imports: [
     CommonModule,
@@ -90,6 +96,8 @@ import { TablePlayerHeadToHeadComponent } from './components/table-player-head-t
     ReactiveFormsModule,
     RouterModule,
 
+    AdminComponent,
+    ChangePasswordComponent,
     ChartAveragePlayerLevelOfPartnersComponent,
     ChartAveragePlayerLevelOfOpponentsComponent,
     ChartGamesPlayedComponent,
@@ -123,6 +131,7 @@ import { TablePlayerHeadToHeadComponent } from './components/table-player-head-t
     TableLeagueStatsComponent,
     TablePlayerGamesComponent,
     TablePlayerHeadToHeadComponent,
+    UsersRequestingTempCodeComponent,
   ]
 })
 export class SharedModule { }

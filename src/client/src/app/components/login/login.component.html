@@ -39,6 +39,14 @@
                         <mat-icon>password</mat-icon>&nbsp;
                         {{ loginService.ForgotYourPassword[state.LangID] }}
                     </button>
+                    <br>
+                    <hr width="30%">
+                    <span>{{ loginService.GotACode[state.LangID] }}</span>
+                    <br>
+                    <button mat-button routerLink="/{{ state.Culture }}/changepassword">
+                        <mat-icon>password</mat-icon>&nbsp;
+                        {{ loginService.ChangeYourPasswordWithCode[state.LangID] }}
+                    </button>
                 </div>
             </mat-card-content>
         </form>

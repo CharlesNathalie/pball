@@ -17,9 +17,20 @@
             <input type="hidden" name="Team1Player1" formControlName="Team1Player1">
             <mat-card-content>
                 <div class="center">
-                    <mat-form-field>
+                    <!-- <mat-form-field>
                         <mat-label>{{ gameAddService.Team1Player1[state.LangID] }}</mat-label>
                         <input matInput type="text" [disabled]="true"  value="{{ dataHelperService.GetPlayerFullName(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID) }}">
+                        <mat-error *ngIf="GetHasError('Team1Player1')">{{GetErrorMessage("Team1Player1")}}</mat-error>
+                    </mat-form-field> -->
+                    <mat-form-field>
+                        <mat-label>{{ gameAddService.Team1Player1[state.LangID] }}</mat-label>
+                        <mat-select formControlName="Team1Player1">
+                            <ng-container *ngFor="let player of state.PlayerList">
+                                <mat-option *ngIf="GetIsPlayingToday(player.ContactID)" [value]="player.ContactID">
+                                    {{ dataHelperService.GetPlayerFullName(player.ContactID) }}
+                                </mat-option>
+                            </ng-container>
+                        </mat-select>
                         <mat-error *ngIf="GetHasError('Team1Player1')">{{GetErrorMessage("Team1Player1")}}</mat-error>
                     </mat-form-field>
                     <br>

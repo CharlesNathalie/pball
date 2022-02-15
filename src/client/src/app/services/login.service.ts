@@ -13,8 +13,10 @@ import { User } from 'src/app/models/User.model';
   providedIn: 'root'
 })
 export class LoginService {
-  ForgotYourPassword: string[] = ['Forgot your password?', 'Oubliez votre mot de passe'];
+  GotACode: string[] = ['Got a code', 'Reçu un code'];
+  ChangeYourPasswordWithCode: string[] = ['Change your password with code', 'Changer votre mot de passe avec code'];
   CheckingEmailExist: string[] = ['Checking email exist', 'Vérification si courriel existe'];
+  ForgotYourPassword: string[] = ['Forgot your password?', 'Oubliez votre mot de passe'];
   InvalidLoginEmail: string[] = ['Invalid login email', 'Courriel de connexion est invalide'];
   LoginEmail: string[] = ['Login email', 'Courriel de connexion'];
   LoginSuccessful: string[] = ['Login successful', 'Connexion réussie'];
@@ -142,7 +144,7 @@ export class LoginService {
 
     this.getPlayerLeaguesService.Run();
     console.debug(user);
-    this.router.navigate([`/${ this.state.Culture }/home`]);
+    this.router.navigate([`/${this.state.Culture}/home`]);
   }
 
   private DoErrorForLogin(e: HttpErrorResponse) {

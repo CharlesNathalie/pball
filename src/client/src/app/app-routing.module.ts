@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminComponent } from './components/admin/admin.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { HomeComponent } from './components/home/home.component';
 import { LeagueAddComponent } from './components/league-add/league-add.component';
@@ -17,6 +19,8 @@ const routes: Routes = [
     path: 'en-CA', component: ShellComponent,
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'home' },
+      { path: 'admin', component: AdminComponent },
+      { path: 'changepassword', component: ChangePasswordComponent },
       { path: 'forgotpassword', component: ForgotPasswordComponent },
       { path: 'home', component: HomeComponent },
       { path: 'login', component: LoginComponent },
@@ -31,6 +35,8 @@ const routes: Routes = [
     path: 'fr-CA', component: ShellComponent,
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'home' },
+      { path: 'admin', component: AdminComponent },
+      { path: 'changepassword', component: ChangePasswordComponent },
       { path: 'forgotpassword', component: ForgotPasswordComponent },
       { path: 'home', component: HomeComponent },
       { path: 'login', component: LoginComponent },

@@ -40,6 +40,23 @@ public partial class HelperService : ControllerBase, IHelperService
 
                             return await Task.FromResult(true);
                         }
+
+                        contact = (from c in db.Contacts
+                                   where c.LoginEmail == LoginEmail
+                                   && c.Token == token
+                                   select c).FirstOrDefault();
+
+                        if (contact != null)
+                        {
+                            if (UserService != null)
+                            {
+                                UserService.User = contact;
+                            }
+
+                            LoggedInService.LoggedInContactList.Add(contact);
+
+                            return await Task.FromResult(true);
+                        }
                     }
                 }
             }

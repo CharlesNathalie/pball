@@ -6,6 +6,7 @@ public partial interface IContactService
     Task<ActionResult<Contact>> DeleteContactAsync(int ContactID);
     Task<ActionResult<bool>> GenerateTempCodeAsync(LoginEmailModel loginEmailModel);
     Task<ActionResult<List<Player>>> GetAllPlayersForLeagueAsync(int LeagueID);
+    Task<ActionResult<List<ChangePasswordModel>>> GetChangePasswordRequestListAsync();
     Task<ActionResult<bool>> GetFullNameExistAsync(FullNameModel fullNameModel);
     Task<ActionResult<bool>> GetLoginEmailExistAsync(LoginEmailModel loginEmailModel);
     Task<ActionResult<Contact>> LoginAsync(LoginModel loginModel);

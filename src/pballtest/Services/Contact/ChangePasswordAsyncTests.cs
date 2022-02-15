@@ -43,6 +43,7 @@ public partial class ContactServiceTests : BaseServiceTests
                         ChangePasswordModel changePasswordModel = new ChangePasswordModel()
                         {
                             LoginEmail = contact.LoginEmail,
+                            FirstName = contact.FirstName,
                             Password = "NewPassword",
                             TempCode = TempCode,
                         };
@@ -83,6 +84,7 @@ public partial class ContactServiceTests : BaseServiceTests
                             changePasswordModel = new ChangePasswordModel()
                             {
                                 LoginEmail = contact.LoginEmail,
+                                FirstName = contact.FirstName,
                                 Password = contact.LastName,
                                 TempCode = TempCode,
                             };
@@ -110,6 +112,7 @@ public partial class ContactServiceTests : BaseServiceTests
         ChangePasswordModel changePasswordModel = new ChangePasswordModel()
         {
             LoginEmail = "",
+            FirstName = "SomeName",
             Password = "SomePassword",
             TempCode = TempCode,
         };
@@ -157,6 +160,7 @@ public partial class ContactServiceTests : BaseServiceTests
                     ChangePasswordModel changePasswordModel = new ChangePasswordModel()
                     {
                         LoginEmail = contact.LoginEmail,
+                        FirstName = contact.FirstName,
                         Password = "",
                         TempCode = TempCode,
                     };

@@ -1,0 +1,17 @@
+<div class="formcenter">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{
+                adminService.WelcomeToTheAdminManagementPage[state.LangID] }}
+            </mat-card-title>
+        </mat-card-header>
+        <mat-list>
+            <mat-list-item *ngFor="let changePass of state.ChangePasswordRequestList">
+                <a mat-button href="{{ GetMailTo(changePass) }}">
+                    <mat-icon>email</mat-icon>
+                    {{ changePass.LoginEmail }} 
+                </a>
+            </mat-list-item>
+        </mat-list>
+    </mat-card>
+</div>

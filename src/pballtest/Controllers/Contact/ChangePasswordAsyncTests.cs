@@ -41,6 +41,7 @@ public partial class ContactControllerTests : BaseControllerTests
                         ChangePasswordModel changePasswordModel = new ChangePasswordModel()
                         {
                             LoginEmail = contact.LoginEmail,
+                            FirstName = contact.FirstName,
                             Password = contact.LastName + "New",
                             TempCode = TempCode,
                         };
@@ -133,6 +134,7 @@ public partial class ContactControllerTests : BaseControllerTests
                         ChangePasswordModel changePasswordModel = new ChangePasswordModel()
                         {
                             LoginEmail = contact.LoginEmail,
+                            FirstName = contact.FirstName,
                             Password = contact.LastName + "New",
                             TempCode = "121a", // will create an error
                         };

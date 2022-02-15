@@ -1,0 +1,78 @@
+<div class="formcenter" *ngIf="!forgotPasswordService.forgotPasswordSuccess">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{
+                forgotPasswordService.SendInYourEmailAndACodeWillBeSentToYouToChangeYourPassword[state.LangID] }}
+            </mat-card-title>
+        </mat-card-header>
+        <form (ngSubmit)="SubmitUsersRequestingTempCodeForm()" [formGroup]="forgotPasswordForm">
+            <mat-error>* {{ forgotPasswordService.required[state.LangID] }}</mat-error>
+            <mat-card-content>
+                <div class="center">
+                    <mat-form-field>
+                        <mat-label>{{ forgotPasswordService.LoginEmail[state.LangID] }}</mat-label>
+                        <input matInput name="UsersRequestingTempCodeLoginEmail" type="email" placeholder="john@gmail.com" formControlName="LoginEmail">
+                        <mat-error *ngIf="GetHasError('LoginEmail')">{{GetErrorMessage("LoginEmail")}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-error *ngIf="forgotPasswordService.Error?.error">
+                        <h3 *ngFor="let e of forgotPasswordService.Error?.error?.ErrList">{{ e }}</h3>
+                        <br>
+                    </mat-error>
+                    <br>
+                    <button mat-raised-button *ngIf="GetFormValid()">{{
+                        forgotPasswordService.SendMeTheCode[state.LangID]
+                        }}</button>
+                    <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
+                        forgotPasswordService.Please_enter_required_information[state.LangID] }}</button>
+                    <br><br>
+                    <button mat-button routerLink="/{{ state.Culture }}/home">
+                        <mat-icon>home</mat-icon>&nbsp;
+                        {{ forgotPasswordService.ReturnHome[state.LangID] }}
+                    </button>
+                    <br>
+                    <button mat-button routerLink="/{{ state.Culture }}/login">
+                        <mat-icon>login</mat-icon>&nbsp;
+                        {{ forgotPasswordService.ReturnToLogin[state.LangID] }}
+                    </button>
+                    <br>
+                    <button mat-button routerLink="/{{ state.Culture }}/register">
+                        <mat-icon>person_add</mat-icon>&nbsp;
+                        {{ forgotPasswordService.ReturnToRegister[state.LangID] }}
+                    </button>
+                </div>
+            </mat-card-content>
+        </form>
+    </mat-card>
+</div>
+
+<div class="formcenter" *ngIf="forgotPasswordService.forgotPasswordSuccess">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                <h3 class="success">{{ forgotPasswordService.YourRequestForACodeWasSuccessful[state.LangID] }}</h3>
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="center">
+                <h3 class="success">{{ forgotPasswordService.AnEmailWillBeSentTo[state.LangID] }} </h3>
+                <h3>{{ this.forgotPasswordForm.controls["LoginEmail"].value }} </h3>
+                <p><strong>{{ forgotPasswordService.Note[state.LangID] }}:</strong></p>
+                <p>
+                    {{ forgotPasswordService.AtThisTimeYourCodeWillBeSentByTheAdministrator[state.LangID] }}.
+                    {{ forgotPasswordService.PleaseBePatientAsItCouldTakeAFewHoursOrDays[state.LangID] }}.
+                    {{ forgotPasswordService.InTheFutureAllTheseRequestsWillBeDoneAutomatically[state.LangID] }}
+                    {{ forgotPasswordService.allowingYouToReceiveYourCodeWithoutDelay[state.LangID] }}.
+                    {{
+                    forgotPasswordService.IfThisIsOfUrgentMatersYouCanAlwaysEmailOneOfYourLeagueAdministrators[state.LangID]
+                    }}.
+                </p>
+
+                <br><br>
+                <button mat-button routerLink="/{{ state.Culture }}/home">
+                    <mat-icon>home</mat-icon>&nbsp;{{ forgotPasswordService.ReturnHome[state.LangID] }}
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
