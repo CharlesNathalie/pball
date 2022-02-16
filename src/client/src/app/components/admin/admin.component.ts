@@ -31,11 +31,11 @@ export class AdminComponent implements OnInit, OnDestroy {
 %0d%0a%0d%0a
 ${ this.adminService.YourTemporaryCodeIs[this.state.LangID]} ${changePasswordModel.TempCode}
 %0d%0a%0d%0a
-${this.state.BaseApiUrl.replace('api/', '')}${this.languageEnum[this.state.Language]}-CA/changepassword;
+${this.state.BaseApiUrl.replace('api/', '')}${this.languageEnum[this.state.Language]}-CA/changepassword
 %0d%0a%0d%0a
 ${this.state.User.FirstName} ${this.state.User.LastName}
 %0d%0a%0d%0a
-    `
+    `;
     let to: string = changePasswordModel.LoginEmail;
     return `mailto:${to}?subject=${subject}&body=${body}`;
   }

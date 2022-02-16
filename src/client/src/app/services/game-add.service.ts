@@ -12,9 +12,11 @@ import { DemoDataService } from './demo-data.service';
   providedIn: 'root'
 })
 export class GameAddService {
+  AddAnotherGame: string[] = ['Add another game', 'Ajouter une autre partie'];
   AddingNewGame: string[] = ['Adding new game', 'L\'ajout d\'une nouvelle partie en cour'];
   Cancel: string[] = ['Cancel', 'Annuler'];
   Example: string[] = ['Example', 'Exemple'];
+  GameAddedSuccessful: string[] = ['Game added successful', 'Partie ajoutée avec succès'];
   GameAddSuccessful: string[] = ['Game added successful', 'L\'ajout de la partie réussie'];
   GameAddTxt: string[] = ['Add game', 'Ajoute une partie'];
   GameIDIsRequired: string[] = ['Game ID is required', 'L\'identité de la partie est requis'];
@@ -65,6 +67,8 @@ export class GameAddService {
       game.GameID = maxGameID + 1;
 
       this.state.GameList.push(game);
+
+      this.GameAddSuccess = true;
 
       return;
     }

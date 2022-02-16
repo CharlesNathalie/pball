@@ -42,6 +42,7 @@
                     <mat-error *ngIf="profileService.Error?.error">
                         <h3 *ngFor="let e of profileService.Error?.error?.ErrList">{{ e }}</h3>
                     </mat-error>
+                    <br>
                     <button mat-raised-button *ngIf="GetFormValid()">{{ profileService.UpdateProfile[state.LangID]
                         }}</button>
                     <button mat-raised-button disabled="disabled" *ngIf="!GetFormValid()">{{
@@ -50,12 +51,12 @@
                     <div *ngIf="profileService.profileSuccess">
                         <h2>{{ profileService.Success[state.LangID] }}</h2>
                     </div>
-                    <p>&nbsp;</p>
+                    <br><br>
                     <button mat-button routerLink="/{{ state.Culture }}/home">
                         <mat-icon>home</mat-icon>
                         {{ profileService.ReturnHome[state.LangID] }}
                     </button>
-                    <br><br>
+                    <br>
                 </div>
             </mat-card-content>
         </form>

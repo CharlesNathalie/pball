@@ -1,4 +1,4 @@
-<div class="formcenter">
+<div class="formcenter" *ngIf="!gameAddService.GameAddSuccess">
     <mat-card>
         <mat-card-header>
             <mat-card-title>
@@ -11,7 +11,7 @@
         </mat-card-header>
         <form (ngSubmit)="SubmitGameAddForm()" [formGroup]="gameAddForm">
             <mat-error>* {{ gameAddService.required[state.LangID] }}</mat-error>
-            <br>            
+            <br>
             <input type="hidden" name="GameAddGameID" formControlName="GameID">
             <input type="hidden" name="GameAddLeagueID" formControlName="LeagueID">
             <input type="hidden" name="Team1Player1" formControlName="Team1Player1">
@@ -87,7 +87,8 @@
                     <mat-form-field>
                         <mat-label>{{ gameAddService.GameDate[state.LangID] }}</mat-label>
                         <input matInput name="GameAddGameDate" type="text"
-                        placeholder="{{ gameAddService.GameDate[state.LangID] }}" formControlName="GameDate" [matDatepicker]="picker">
+                            placeholder="{{ gameAddService.GameDate[state.LangID] }}" formControlName="GameDate"
+                            [matDatepicker]="picker">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                         <mat-error *ngIf="GetHasError('GameDate')">{{GetErrorMessage("GameDate")}}</mat-error>
@@ -104,5 +105,21 @@
                 </div>
             </mat-card-content>
         </form>
+    </mat-card>
+</div>
+<div class="formcenter" *ngIf="gameAddService.GameAddSuccess">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                {{ gameAddService.GameAddedSuccessful[state.LangID] }}
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="center">
+                <br>
+                <button mat-raised-button (click)="AddAnotherGame()">{{ gameAddService.AddAnotherGame[state.LangID]
+                    }}</button>
+            </div>
+        </mat-card-content>
     </mat-card>
 </div>

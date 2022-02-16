@@ -3,7 +3,7 @@
     <div *ngIf="state.CurrentDatePlayerStatModelList?.length">
         <br>
         <h2 class="center">{{ GetCurrentLeagueName() }} {{ tableLeagueStatsService.stats[state.LangID]}}</h2>
-        <p class="center">
+        <!-- <p class="center">
             <button mat-button *ngIf="this.state.CurrentPlayerDateID > 0"
                 (click)="SetCurrentStatDate(this.state.CurrentPlayerDateID - 1)">
                 <mat-icon>navigate_before</mat-icon>
@@ -14,7 +14,7 @@
                 (click)="SetCurrentStatDate(this.state.CurrentPlayerDateID + 1)">
                 <mat-icon>navigate_next</mat-icon>
             </button>
-        </p>
+        </p> -->
         <table mat-table [dataSource]="state.CurrentDatePlayerStatModelList" class="mat-elevation-z8">
 
             <ng-container matColumnDef="Rank">

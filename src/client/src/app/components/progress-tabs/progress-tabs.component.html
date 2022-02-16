@@ -1,9 +1,20 @@
 <mat-tab-group [selectedIndex]="state.ProgressTabsIndex" (selectedTabChange)="ProgressTabSelectedChanged($event)"
     mat-align-tabs="start">
+    <mat-tab label="Leaders">
+        <div class="div-container">
+            <app-table-league-stats></app-table-league-stats>
+        </div>
+    </mat-tab>
+    <mat-tab label="Games">
+        <div class="div-container">
+            <app-table-player-games></app-table-player-games>
+        </div>
+    </mat-tab>
     <mat-tab label="Charts">
         <div class="div-container">
             <app-no-data-for-user></app-no-data-for-user>
-            <app-chart-games-played>
+            <h2 class="center">To do</h2>
+            <!-- <app-chart-games-played>
             </app-chart-games-played>
             <app-chart-points>
             </app-chart-points>
@@ -18,17 +29,7 @@
             <app-chart-average-player-level-of-partners>                
             </app-chart-average-player-level-of-partners>
             <app-chart-average-player-level-of-opponents>                
-            </app-chart-average-player-level-of-opponents>
-        </div>
-    </mat-tab>
-    <mat-tab label="Leaders">
-        <div class="div-container">
-            <app-table-league-stats></app-table-league-stats>
-        </div>
-    </mat-tab>
-    <mat-tab label="Games">
-        <div class="div-container">
-            <app-table-player-games></app-table-player-games>
+            </app-chart-average-player-level-of-opponents> -->
         </div>
     </mat-tab>
     <mat-tab label="Head to Head">

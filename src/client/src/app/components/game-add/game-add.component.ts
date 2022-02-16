@@ -57,11 +57,15 @@ export class GameAddComponent implements OnInit, OnDestroy {
 
   SubmitGameAddForm(): void {
     this.gameAddService.SubmitGameAddForm(this.gameAddForm);
-    //this.router.navigate([`/${ this.state.Culture }/home`]);
   }
 
    GetIsPlayingToday(ContactID: number): boolean {
     return this.state.LeagueContactList.find(c => c.ContactID == ContactID)?.PlayingToday ?? false;
   }
 
+  AddAnotherGame()
+  {
+    this.gameAddService.ResetLocals();
+    this.gameAddForm.reset();
+  }
 }
