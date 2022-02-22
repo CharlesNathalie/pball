@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProgressTabsComponent } from 'src/app/components/progress-tabs/progress-tabs.component';
+import { ResultsTabsComponent } from 'src/app/components/results-tabs/results-tabs.component';
 
-describe('ProgressTabsComponent', () => {
-  let component: ProgressTabsComponent;
-  let fixture: ComponentFixture<ProgressTabsComponent>;
+describe('ResultsTabsComponent', () => {
+  let component: ResultsTabsComponent;
+  let fixture: ComponentFixture<ResultsTabsComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProgressTabsComponent ]
+      declarations: [ ResultsTabsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProgressTabsComponent);
+    fixture = TestBed.createComponent(ResultsTabsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

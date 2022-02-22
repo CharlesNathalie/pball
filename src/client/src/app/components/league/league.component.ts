@@ -43,4 +43,8 @@ export class LeagueComponent implements OnInit, OnDestroy {
     this.state.ReturnToPage = this.router.url;
     this.router.navigate([`/${ this.state.Culture }/leagueadd`]);
   }
+
+  GetIsAdmin(ContactID: number): boolean {
+    return this.state.LeagueContactList.find(c => c.ContactID == ContactID)?.IsLeagueAdmin ?? false;
+  }
 }

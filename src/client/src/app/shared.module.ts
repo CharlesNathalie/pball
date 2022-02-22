@@ -30,16 +30,16 @@ import { LoginComponent } from './components/login/login.component';
 import { NoDataForUserComponent } from './components/no-data-for-user/no-data-for-user.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { ProgressTabsComponent } from './components/progress-tabs/progress-tabs.component';
-import { ProgressComponent } from './components/progress/progress.component';
+import { ResultsTabsComponent } from './components/results-tabs/results-tabs.component';
+import { ResultsComponent } from './components/results/results.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ShellComponent } from './components/shell/shell.component';
 import { StateJsonComponent } from './components/state-json/state-json.component';
 import { TableLeagueFactorExampleComponent } from './components/table-league-factor-example/table-league-factor-example.component';
 import { TableLeagueStatsComponent } from './components/table-league-stats/table-league-stats.component';
 import { TablePlayerGamesComponent } from './components/table-player-games/table-player-games.component';
-import { TablePlayerHeadToHeadComponent } from './components/table-player-head-to-head/table-player-head-to-head.component';
 import { UsersRequestingTempCodeComponent } from './components/users-requesting-temp-code/users-requesting-temp-code.component';
+import { TablePartnerWinsComponent } from './components/table-partner-wins/table-partner-wins.component';
 
 @NgModule({
   declarations: [
@@ -69,15 +69,15 @@ import { UsersRequestingTempCodeComponent } from './components/users-requesting-
     NoDataForUserComponent,
     PageNotFoundComponent,
     ProfileComponent,
-    ProgressComponent,
-    ProgressTabsComponent,
+    ResultsComponent,
+    ResultsTabsComponent,
     RegisterComponent,
     ShellComponent,
     StateJsonComponent,
     TableLeagueFactorExampleComponent,
     TableLeagueStatsComponent,   
     TablePlayerGamesComponent,
-    TablePlayerHeadToHeadComponent,
+    TablePartnerWinsComponent,
     UsersRequestingTempCodeComponent,
   ],
   imports: [
@@ -122,15 +122,15 @@ import { UsersRequestingTempCodeComponent } from './components/users-requesting-
     NoDataForUserComponent,
     PageNotFoundComponent,
     ProfileComponent,
-    ProgressComponent,
-    ProgressTabsComponent,
+    ResultsComponent,
+    ResultsTabsComponent,
     RegisterComponent,
     ShellComponent,
     StateJsonComponent,
     TableLeagueFactorExampleComponent,
     TableLeagueStatsComponent,
     TablePlayerGamesComponent,
-    TablePlayerHeadToHeadComponent,
+    TablePartnerWinsComponent,
     UsersRequestingTempCodeComponent,
   ]
 })

@@ -20,8 +20,11 @@
             <br><br>
             <button mat-raised-button (click)="AddANewLeague()">{{ leagueService.AddANewLeague[state.LangID]}}</button>
             <br><br>
+            <div *ngIf="GetIsAdmin(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)">
             <button mat-raised-button (click)="ModifyTheLeague()">{{
                 leagueService.ModifyTheLeague[state.LangID]}}</button>
+                <br><br>
+            </div>
         </div>
     </mat-expansion-panel>
     <app-league-tabs></app-league-tabs>

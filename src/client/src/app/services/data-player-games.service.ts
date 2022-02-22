@@ -6,6 +6,8 @@ import { PlayerGameModel } from 'src/app/models/PlayerGameModel';
 import { DateService } from './date.service';
 import { SortService } from './sort.service';
 import { DataHelperService } from './data-helper.service';
+import { AscDescEnum } from '../enums/AscDescEnum';
+import { PartnerWinsModel } from '../models/PartnerWins.model';
 
 @Injectable({
   providedIn: 'root'
@@ -57,7 +59,9 @@ export class DataPlayerGamesService {
         }
       }
     }
+
     let PlayerGameModelList: PlayerGameModel[] = [];
+    let PartnerWinsModelList: PartnerWinsModel[] = [];
     if (tempGameList.length > 0) {
       for (let i = 0, count = tempGameList.length; i < count; i++) {
         let playerGameModel: PlayerGameModel = <PlayerGameModel>{};
@@ -122,6 +126,31 @@ export class DataPlayerGamesService {
       }
     }
 
+    for (let i = 0, count1 = PlayerGameModelList.length; i < count1; i++) {
+      let found: boolean = false;
+      for (let j = 0, count2 = PartnerWinsModelList.length; j < count2; j++) {
+        if (PartnerWinsModelList[j].PartnerID == PlayerGameModelList[i].PartnerID) {
+          PartnerWinsModelList[j].Games += 1;
+          PartnerWinsModelList[j].Wins += PlayerGameModelList[i].Scores > PlayerGameModelList[i].OpponentScores ? 1 : 0;
+          PartnerWinsModelList[j].PlusMinus += PlayerGameModelList[i].Scores;
+          PartnerWinsModelList[j].PlusMinus -= PlayerGameModelList[i].OpponentScores;
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        PartnerWinsModelList.push({
+          PartnerID: PlayerGameModelList[i].PartnerID,
+          Partner: PlayerGameModelList[i].PartnerFullName,
+          Games: 1,
+          Wins: PlayerGameModelList[i].Scores > PlayerGameModelList[i].OpponentScores ? 1 : 0,
+          PlusMinus: PlayerGameModelList[i].Scores - PlayerGameModelList[i].OpponentScores,
+        });
+      }
+    }
+
+    this.state.PartnerWinsModelList = this.sortService.SortPartnerWinsModelList(PartnerWinsModelList);
     this.state.PlayerGameModelList = this.sortService.SortPlayerGameModelList(PlayerGameModelList);
 
     this.Status = '';

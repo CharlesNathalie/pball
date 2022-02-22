@@ -10,7 +10,7 @@ import { DataDatePlayerStatService } from './data-date-player-stat.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ProgressService {
+export class ResultsService {
   all: string[] = ['all', 'tout'];
   AnalyseResultsFrom: string[] = ['Analyse results from:', 'Analyse les résultats à partir de:'];
   between: string[] = ['between', 'entre'];
@@ -30,11 +30,11 @@ export class ProgressService {
   ProduceTablesOfResults: string[] = ['Produce tables of results', 'Produire les tableaux de résultats'];
   Profile: string[] = ['Profile', 'Profil'];
   Register: string[] = ['Register', 'S\'inscrire'];
-  Progress: string[] = ['Progress', 'Progrès'];
+  Results: string[] = ['Results', 'Progrès'];
   ScrollToViewResults: string[] = ['Scroll to view results', 'Faites défiler pour voir les résultats'];
   Start: string[] = ['Start', 'Débuter'];
   StartDate: string[] = ['Start Date', 'Date de début'];
-  ShowProgressFor: string[] = ['Show progress for', 'Montrer progrès pour'];
+  ShowResultsFor: string[] = ['Show results for', 'Montrer résultats pour'];
   ToDo: string[] = ['To do', 'A faire'];
   week: string[] = ['week', 'semaine'];
   WelcomeTo: string[] = ['Welcome to', 'Bienvenue au'];
@@ -45,7 +45,7 @@ export class ProgressService {
   Working: boolean = false;
   Error: HttpErrorResponse = <HttpErrorResponse>{};
 
-  ProgressSuccess: boolean = false;
+  ResultsSuccess: boolean = false;
 
   private sub: Subscription = new Subscription();
 
@@ -108,8 +108,8 @@ export class ProgressService {
       if (localStorage.getItem('LeagueTabsIndex') != null) {
         this.state.LeagueTabsIndex = JSON.parse(localStorage.getItem('LeagueTabsIndex') ?? '0');
       }
-      if (localStorage.getItem('ProgressTabsIndex') != null) {
-        this.state.ProgressTabsIndex = JSON.parse(localStorage.getItem('ProgressTabsIndex') ?? '0');
+      if (localStorage.getItem('ResultsTabsIndex') != null) {
+        this.state.ResultsTabsIndex = JSON.parse(localStorage.getItem('ResultsTabsIndex') ?? '0');
       }
     }
     else {
@@ -134,8 +134,8 @@ export class ProgressService {
       if (localStorage.getItem('LeagueTabsIndex') != null) {
         this.state.LeagueTabsIndex = JSON.parse(localStorage.getItem('LeagueTabsIndex') ?? '0');
       }
-      if (localStorage.getItem('ProgressTabsIndex') != null) {
-        this.state.ProgressTabsIndex = JSON.parse(localStorage.getItem('ProgressTabsIndex') ?? '0');
+      if (localStorage.getItem('ResultsTabsIndex') != null) {
+        this.state.ResultsTabsIndex = JSON.parse(localStorage.getItem('ResultsTabsIndex') ?? '0');
       }
     }
   }
@@ -172,10 +172,8 @@ export class ProgressService {
       localStorage.setItem('StartDate', JSON.stringify(this.state.StartDate));
       localStorage.setItem('EndDate', JSON.stringify(this.state.EndDate));
       }
-    //this.dataLeagueStatService.Run();
     this.dataPlayerGamesService.Run();
     this.dataDatePlayerStatService.Run();
   }
-
 
 }

@@ -3,7 +3,7 @@
     <div *ngIf="state.PlayerGameModelList?.length">
         <br>
         <h2 class="center">{{ GetLoggedInPlayerFullName() }}&nbsp;&nbsp;(<span class="highlight">{{
-                tablePlayerGamesService.GamesWon[state.LangID] }}</span>)</h2>
+                tablePlayerGamesService.Wins[state.LangID] }}</span>)</h2>
         <table mat-table [dataSource]="state.PlayerGameModelList" class="mat-elevation-z8">
 
             <ng-container matColumnDef="Rank">

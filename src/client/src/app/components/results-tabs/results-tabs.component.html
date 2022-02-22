@@ -1,18 +1,24 @@
-<mat-tab-group [selectedIndex]="state.ProgressTabsIndex" (selectedTabChange)="ProgressTabSelectedChanged($event)"
+<mat-tab-group [selectedIndex]="state.ResultsTabsIndex" (selectedTabChange)="ResultsTabSelectedChanged($event)"
     mat-align-tabs="start">
-    <mat-tab label="Leaders">
+    <mat-tab label="{{ resultsTabsService.Leaders[state.LangID] }}">
         <div class="div-container">
             <app-table-league-stats></app-table-league-stats>
         </div>
     </mat-tab>
-    <mat-tab label="Games">
+    <mat-tab label="{{ resultsTabsService.Games[state.LangID] }}">
         <div class="div-container">
             <app-table-player-games></app-table-player-games>
         </div>
     </mat-tab>
-    <mat-tab label="Charts">
+    <mat-tab label="{{ resultsTabsService.Partners[state.LangID] }}">
+        <div class="div-container">
+            <app-table-partner-wins></app-table-partner-wins>
+        </div>
+    </mat-tab>
+    <mat-tab label="{{ resultsTabsService.Charts[state.LangID] }}">
         <div class="div-container">
             <app-no-data-for-user></app-no-data-for-user>
+            <br><br>
             <h2 class="center">To do</h2>
             <!-- <app-chart-games-played>
             </app-chart-games-played>
@@ -30,12 +36,6 @@
             </app-chart-average-player-level-of-partners>
             <app-chart-average-player-level-of-opponents>                
             </app-chart-average-player-level-of-opponents> -->
-        </div>
-    </mat-tab>
-    <mat-tab label="Head to Head">
-        <div class="div-container">
-            <h2 class="center">To do</h2>
-            <app-table-player-head-to-head *ngIf="false"></app-table-player-head-to-head>
         </div>
     </mat-tab>
 </mat-tab-group>

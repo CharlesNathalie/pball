@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { DemoDataService } from 'src/app/services/demo-data.service';
 import { GetPlayerLeaguesService } from 'src/app/services/get-player-leagues.service';
-import { ShellService } from '../../services/shell.service';
 import { HomeService } from '../../services/home.service';
 
 @Component({
@@ -16,7 +15,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(public state: AppStateService,
     public homeService: HomeService,
     public getPlayerLeaguesService: GetPlayerLeaguesService,
-    //public shellService: ShellService,
     public demoDataService: DemoDataService,
     public router: Router) {
   }
@@ -69,5 +67,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.state.HomeTabIndex = event.index;
       localStorage.setItem('HomeTabIndex', JSON.stringify(this.state.HomeTabIndex));
     }
+  }
+
+  ViewResultsTab()
+  {
+    this.HomeTabSelectedChanged({ index: 1 });
+  }
+
+  ViewLeaguesTab()
+  {
+    this.HomeTabSelectedChanged({ index: 2 });
   }
 }

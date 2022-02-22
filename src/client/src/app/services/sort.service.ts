@@ -8,6 +8,7 @@ import { Player } from 'src/app/models/Player.model';
 import { Game } from 'src/app/models/Game.model';
 import { PlayerStatModel } from 'src/app/models/PlayerStatModel.model';
 import { DataHelperService } from 'src/app/services/data-helper.service';
+import { PartnerWinsModel } from '../models/PartnerWins.model';
 
 @Injectable({
   providedIn: 'root'
@@ -160,6 +161,65 @@ export class SortService {
     }
 
     return PlayerGameModelSorted;
+  }
+
+  SortPartnerWinsModelList(arr: PartnerWinsModel[]): PartnerWinsModel[] {
+    if (typeof (arr) == "undefined" || !arr || arr?.length == 0 || arr == null) return [];
+
+    let PartnerWinsModelSorted: PartnerWinsModel[] = [];
+    let arr2: IDNumbOrTextSort[] = [];
+    let sortable: IDNumbOrTextSort[] = [];
+
+    for (let i = 0, count = arr?.length; i < count; i++) {
+      let numbOrText: number | string = '';
+      switch (this.state.PartnerWinsModelSortProp) {
+        case 'Partner':
+          {
+            numbOrText = `${arr[i].Partner}`;
+          }
+          break;
+        case 'Games':
+          {
+            numbOrText = arr[i].Games;
+          }
+          break;
+        case 'Wins':
+          {
+            numbOrText = arr[i].Wins;
+          }
+          break;
+        case 'PlusMinus':
+          {
+            numbOrText = arr[i].PlusMinus;
+          }
+          break;
+        default:
+          break;
+      }
+
+      sortable.push(<IDNumbOrTextSort>{
+        ID: arr[i].PartnerID,
+        NumbOrText: numbOrText,
+      });
+    }
+
+    if (this.state.PartnerWinsModelSortAscDesc === AscDescEnum.Ascending) {
+      arr2 = sortable.sort(this.PredicateAscBy('NumbOrText'));
+    }
+    else {
+      arr2 = sortable.sort(this.PredicateDescBy('NumbOrText'));
+    }
+
+    for (let i = 0, count = sortable?.length; i < count; i++) {
+      for (let j = 0; j < arr?.length; j++) {
+        if (arr2[i].ID == arr[j].PartnerID) {
+          PartnerWinsModelSorted.push(arr[j]);
+          break;
+        }
+      }
+    }
+
+    return PartnerWinsModelSorted;
   }
 
   SortPlayerList(arr: Player[]): Player[] {

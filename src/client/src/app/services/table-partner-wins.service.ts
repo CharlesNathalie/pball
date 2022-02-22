@@ -5,12 +5,11 @@ import { SortService } from 'src/app/services/sort.service';
 @Injectable({
   providedIn: 'root'
 })
-export class TablePlayerHeadToHeadService {
+export class TablePartnerWinsService {
   Partner: string[] = ['Partner', 'Partenaire'];
-  Opponents: string[] = ['Opponents', 'Adversaire'];
-  GameDate: string[] = ['Game date', 'Date de la partie'];
-  Scores: string[] = ['Scores', 'Pointages'];
-  GamesWon: string[] = ['Games won', 'parties gagnées'];
+  Games: string[] = ['Games', 'Parties'];
+  Wins: string[] = ['Wins', 'Victoire'];
+  PlusMinus: string[] = ['+/-', '+/-'];
   
   constructor(public state: AppStateService,
     public sortService: SortService) {

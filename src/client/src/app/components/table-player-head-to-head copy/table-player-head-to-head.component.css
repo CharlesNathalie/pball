@@ -1,0 +1,25 @@
+.highlight{
+  background-color: #ccffcc !important;
+}
+
+.sortedAsc {
+  font-weight: bold;
+}
+
+.sortedDesc {
+  font-weight: bold;
+  font-style: italic;
+}
+
+div {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-cell {
+  font-size: smaller !important;
+}
+  

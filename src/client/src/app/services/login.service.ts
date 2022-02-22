@@ -140,7 +140,7 @@ export class LoginService {
     localStorage.setItem('DemoVisible', JSON.stringify(this.state.DemoVisible));
     localStorage.setItem('HomeTabIndex', JSON.stringify(this.state.HomeTabIndex));
     localStorage.setItem('LeagueTabsIndex', JSON.stringify(this.state.LeagueTabsIndex));
-    localStorage.setItem('ProgressTabsIndex', JSON.stringify(this.state.ProgressTabsIndex));
+    localStorage.setItem('ResultsTabsIndex', JSON.stringify(this.state.ResultsTabsIndex));
 
     this.getPlayerLeaguesService.Run();
     console.debug(user);

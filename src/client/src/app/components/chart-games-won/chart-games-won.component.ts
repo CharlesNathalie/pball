@@ -25,7 +25,9 @@ export class ChartGamesWonComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit(): void {
-    this.myChart = this.chartWonService.SetChartRef(this.chartRef);
+    setTimeout(() => {
+      this.myChart = this.chartWonService.SetChartRef(this.chartRef);
+    }, 0);
   }
 
   ngOnDestroy(): void {

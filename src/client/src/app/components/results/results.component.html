@@ -4,47 +4,47 @@
             {{ dataHelperService.GetDateFormat(state.StartDate)}} - {{ dataHelperService.GetDateFormat(state.EndDate)}}
             &nbsp; &nbsp;
             <span *ngIf="GetDataTimeSelected('day')">
-                ({{ progressService.day[state.LangID]}})
+                ({{ resultsService.day[state.LangID]}})
             </span>
             <span *ngIf="GetDataTimeSelected('week')">
-                ({{ progressService.week[state.LangID]}})
+                ({{ resultsService.week[state.LangID]}})
             </span>
             <span *ngIf="GetDataTimeSelected('month')">
-                ({{ progressService.month[state.LangID]}})
+                ({{ resultsService.month[state.LangID]}})
             </span>
             <span *ngIf="GetDataTimeSelected('year')">
-                ({{ progressService.year[state.LangID]}})
+                ({{ resultsService.year[state.LangID]}})
             </span>
             <span *ngIf="GetDataTimeSelected('all')">
-                ({{ progressService.all[state.LangID]}})
+                ({{ resultsService.all[state.LangID]}})
             </span>
             <span *ngIf="GetDataTimeSelected('between')">
-                ({{ progressService.between[state.LangID]}})
+                ({{ resultsService.between[state.LangID]}})
             </span>
         </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="center">
         <div *ngIf="(state.DemoVisible ? state.DemoUser?.ContactID : state.User?.ContactID)">
             <div>
-                <h2>{{ progressService.ShowProgressFor[state.LangID] }}:</h2>
+                <h2>{{ resultsService.ShowResultsFor[state.LangID] }}:</h2>
                 <button mat-raised-button (click)="Period('day')" [ngClass]="GetDataTimeHighlight('day')">
-                    {{ progressService.day[state.LangID] }}
+                    {{ resultsService.day[state.LangID] }}
                 </button>
                 &nbsp;&nbsp;&nbsp;
                 <button mat-raised-button (click)="Period('week')" [ngClass]="GetDataTimeHighlight('week')">
-                    {{ progressService.week[state.LangID] }}
+                    {{ resultsService.week[state.LangID] }}
                 </button>
                 &nbsp;&nbsp;&nbsp;
                 <button mat-raised-button (click)="Period('month')" [ngClass]="GetDataTimeHighlight('month')">
-                    {{ progressService.month[state.LangID] }}
+                    {{ resultsService.month[state.LangID] }}
                 </button>
                 <br><br>
                 <button mat-raised-button (click)="Period('year')" [ngClass]="GetDataTimeHighlight('year')">
-                    {{ progressService.year[state.LangID] }}
+                    {{ resultsService.year[state.LangID] }}
                 </button>
                 &nbsp;&nbsp;&nbsp;
                 <button mat-raised-button (click)="Period('all')" [ngClass]="GetDataTimeHighlight('all')">
-                    {{ progressService.all[state.LangID] }}
+                    {{ resultsService.all[state.LangID] }}
                 </button>
             </div>
             <div>
@@ -70,4 +70,4 @@
         </div>
     </div>
 </mat-expansion-panel> -->
-<app-progress-tabs></app-progress-tabs>
+<app-results-tabs></app-results-tabs>

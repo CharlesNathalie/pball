@@ -29,8 +29,18 @@
                         </span>
                     </div>
                     <br><br>
-                    <button mat-button (click)="HideDemo()">
+                    <button mat-raised-button (click)="HideDemo()">
                         {{ homeService.HideDemo[state.LangID] }}
+                    </button>
+                </div>
+                <div *ngIf="state.DemoUser.ContactID || state.User.ContactID">
+                    <br><br>
+                    <button mat-raised-button (click)="ViewResultsTab()">
+                        {{ homeService.ViewResults[state.LangID] }}
+                    </button>
+                    <br><br>
+                    <button mat-raised-button (click)="ViewLeaguesTab()">
+                        {{ homeService.ViewLeaguesInformation[state.LangID] }}
                     </button>
                     <br><br>
                 </div>
@@ -48,12 +58,12 @@
         </div>
     </mat-tab>
     <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)"
-        label="{{ homeService.Leagues[state.LangID] }}">
-        <app-league></app-league>
+        label="{{ homeService.Results[state.LangID] }}">
+        <app-results></app-results>
     </mat-tab>
     <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)"
-        label="{{ homeService.Progress[state.LangID] }}">
-        <app-progress></app-progress>
+        label="{{ homeService.Leagues[state.LangID] }}">
+        <app-league></app-league>
     </mat-tab>
     <!-- <mat-tab *ngIf="(state.DemoVisible ? state.DemoUser.ContactID : state.User.ContactID)" label="Json">
         <app-state-json></app-state-json>

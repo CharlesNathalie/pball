@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GetLanguageEnum } from 'src/app/enums/LanguageEnum';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { GameAddService } from '../../services/game-add.service';
@@ -16,17 +16,7 @@ export class GameAddComponent implements OnInit, OnDestroy {
 
   languageEnum = GetLanguageEnum();
 
-  gameAddForm = this.formBuilder.group({
-    GameID: ['0', [Validators.required]],
-    LeagueID: [this.state.DemoVisible ? this.state.DemoLeagueID : this.state.LeagueID, [Validators.required]],
-    Team1Player1: [this.state.DemoVisible ? this.state.DemoUser.ContactID : this.state.User.ContactID, [Validators.required]],
-    Team1Player2: ['', [Validators.required]],
-    Team2Player1: ['', [Validators.required]],
-    Team2Player2: ['', [Validators.required]],
-    Team1Scores: ['5', [Validators.required]],
-    Team2Scores: ['5', [Validators.required]],
-    GameDate: ['', [Validators.required]],
-  });
+  gameAddForm: FormGroup = this.InitNewGame();
 
   constructor(public state: AppStateService,
     public formBuilder: FormBuilder,
@@ -59,13 +49,27 @@ export class GameAddComponent implements OnInit, OnDestroy {
     this.gameAddService.SubmitGameAddForm(this.gameAddForm);
   }
 
-   GetIsPlayingToday(ContactID: number): boolean {
+  GetIsPlayingToday(ContactID: number): boolean {
     return this.state.LeagueContactList.find(c => c.ContactID == ContactID)?.PlayingToday ?? false;
   }
 
-  AddAnotherGame()
-  {
+  AddAnotherGame() {
     this.gameAddService.ResetLocals();
-    this.gameAddForm.reset();
+    //this.gameAddForm.reset();
+    this.InitNewGame();
+  }
+
+  InitNewGame(): FormGroup {
+    return this.formBuilder.group({
+      GameID: ['0', [Validators.required]],
+      LeagueID: [this.state.DemoVisible ? this.state.DemoLeagueID : this.state.LeagueID, [Validators.required]],
+      Team1Player1: [this.state.DemoVisible ? this.state.DemoUser.ContactID : this.state.User.ContactID, [Validators.required]],
+      Team1Player2: ['', [Validators.required]],
+      Team2Player1: ['', [Validators.required]],
+      Team2Player2: ['', [Validators.required]],
+      Team1Scores: ['5', [Validators.required]],
+      Team2Scores: ['5', [Validators.required]],
+      GameDate: ['', [Validators.required]],
+    })
   }
 }

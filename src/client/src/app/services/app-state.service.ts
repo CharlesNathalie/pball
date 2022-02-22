@@ -7,7 +7,7 @@ import { Game } from '../models/Game.model';
 import { League } from '../models/League.model';
 import { LeagueContact } from '../models/LeagueContact.model';
 import { LeaguePointExampleModel } from '../models/LeaguePointExampleModel.model';
-//import { LeagueStatsModel } from '../models/LeagueStatsModel';
+import { PartnerWinsModel } from '../models/PartnerWins.model';
 import { Player } from '../models/Player.model';
 import { PlayerGameModel } from '../models/PlayerGameModel';
 import { PlayerStatModel } from '../models/PlayerStatModel.model';
@@ -19,7 +19,7 @@ import { User } from '../models/User.model';
 export class AppStateService {
   Version: string[] = ['Version: alpha-1.0.0.0', 'Version: alpha-1.0.0.0'];
 
-  BaseApiUrl = 'https://pball.azurewebsites.net/api/'; 
+  BaseApiUrl = 'https://pball.azurewebsites.net/api/';
   //BaseApiUrl = 'https://localhost:7072/api/';
 
   languageEnum = GetLanguageEnum();
@@ -36,7 +36,7 @@ export class AppStateService {
   DemoStartDate: Date = new Date(2020, 1, 1);
   DemoUser: User = <User>{};
   DemoIsAdmin: boolean = true;
-  
+
   // Reality var
   EndDate: Date = new Date();
   LeagueID: number = 0;
@@ -46,12 +46,16 @@ export class AppStateService {
   CurrentLeague: League = <League>{};
   LeagueTabsIndex: number = 0;
 
-  ProgressTabsIndex: number = 0;
+  ResultsTabsIndex: number = 0;
 
   ReturnToPage: string = '';
   ReturnToPage2: string = '';
 
   GameList: Game[] = [];
+  PartnerWinsModelList: PartnerWinsModel[] = [];
+  PartnerWinsModelSortProp: 'Partner' | 'Games' | 'Wins' | 'PlusMinus' = 'Partner';
+  PartnerWinsModelSortAscDesc: AscDescEnum = AscDescEnum.Ascending;
+  
   LeagueContactList: LeagueContact[] = [];
   LeagueList: League[] = [];
   PlayerGameModelList: PlayerGameModel[] = [];
@@ -62,7 +66,7 @@ export class AppStateService {
   PlayerListSortAscDesc: AscDescEnum = AscDescEnum.Ascending;
 
   DemoExtraPlayerList: Player[] = [];
-  
+
   DemoVisible: boolean = false;
   DataTime: 'day' | 'week' | 'month' | 'year' | 'all' | 'between' = 'year';
 
@@ -76,14 +80,14 @@ export class AppStateService {
   CurrentPlayerDateID: number = 0;
 
   PlayerStatModelSortAscDesc: AscDescEnum = AscDescEnum.Descending;
-  PlayerStatModelSortProp: 'FullName' | 'GamesPlayed' | 'Points' | 'GamesWon' 
-  | 'WinningPercentage' | 'TotalNumberOfPartners' | 'TotalNumberOfOpponents'
-  | 'AveragePlayerLevelOfPartners' | 'AveragePlayerLevelOfOpponents' | '' = '';
+  PlayerStatModelSortProp: 'FullName' | 'GamesPlayed' | 'Points' | 'GamesWon'
+    | 'WinningPercentage' | 'TotalNumberOfPartners' | 'TotalNumberOfOpponents'
+    | 'AveragePlayerLevelOfPartners' | 'AveragePlayerLevelOfOpponents' | '' = '';
 
   SearchPlayerList: Player[] = [];
-  
+
   ChangePasswordRequestList: ChangePasswordModel[] = [];
-  
+
   constructor() {
 
   }
@@ -97,7 +101,7 @@ export class AppStateService {
     localStorage.removeItem('DemoHomeTabIndex');
     localStorage.removeItem('DemoIsAdmin');
     localStorage.removeItem('LeagueTabsIndex');
-    localStorage.removeItem('ProgressTabsIndex');
+    localStorage.removeItem('ResultsTabsIndex');
   }
 
   ClearLocalStorage() {
@@ -108,7 +112,7 @@ export class AppStateService {
     localStorage.removeItem('EndDate');
     localStorage.removeItem('HomeTabIndex');
     localStorage.removeItem('LeagueTabsIndex');
-    localStorage.removeItem('ProgressTabsIndex');
+    localStorage.removeItem('ResultsTabsIndex');
   }
 
   ClearDemoData() {

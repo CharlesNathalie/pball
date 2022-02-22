@@ -1,17 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { DataHelperService } from 'src/app/services/data-helper.service';
-import { ProgressService } from 'src/app/services/progress.service';
+import { ResultsService } from 'src/app/services/results.service';
 
 @Component({
-  selector: 'app-progress',
-  templateUrl: './progress.component.html',
-  styleUrls: ['./progress.component.css']
+  selector: 'app-results',
+  templateUrl: './results.component.html',
+  styleUrls: ['./results.component.css']
 })
-export class ProgressComponent implements OnInit, OnDestroy {
+export class ResultsComponent implements OnInit, OnDestroy {
 
   constructor(public state: AppStateService,
-    public progressService: ProgressService,
+    public resultsService: ResultsService,
     public dataHelperService: DataHelperService) {
   }
 
@@ -22,16 +22,16 @@ export class ProgressComponent implements OnInit, OnDestroy {
   }
 
   Period(time: 'day' | 'week' | 'month' | 'year' | 'all' | 'between') {
-    this.progressService.Period(time);
+    this.resultsService.Period(time);
   }
 
   ChangedStartDate(startDate: HTMLInputElement) {
-    this.progressService.ChangedStartDate(startDate)
+    this.resultsService.ChangedStartDate(startDate)
     this.state.DataTime = 'between';
   }
 
   ChangedEndDate(endDate: HTMLInputElement) {
-    this.progressService.ChangedEndDate(endDate);
+    this.resultsService.ChangedEndDate(endDate);
     this.state.DataTime = 'between';
   }
 

@@ -8,7 +8,7 @@ import { Player } from 'src/app/models/Player.model';
 import { User } from 'src/app/models/User.model';
 import * as moment from 'moment';
 import { SortService } from './sort.service';
-import { ProgressService } from './progress.service';
+import { ResultsService } from './results.service';
 
 @Injectable({
   providedIn: 'root'
@@ -60,7 +60,7 @@ export class DemoDataService {
 
   constructor(public state: AppStateService,
     public sortService: SortService,
-    public progressService: ProgressService) {
+    public resultsService: ResultsService) {
   }
 
   GenerateDemoData() {
@@ -96,7 +96,7 @@ export class DemoDataService {
     localStorage.setItem('DemoHomeTabIndex', JSON.stringify(this.state.DemoHomeTabIndex));
     localStorage.setItem('DemoIsAdmin', JSON.stringify(this.state.DemoIsAdmin));
   
-    this.progressService.Period('year');
+    this.resultsService.Period('year');
   }
 
   GenerateDemoDataGameList() {
