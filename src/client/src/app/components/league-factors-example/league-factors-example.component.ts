@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LeaguePointExampleModel } from 'src/app/models/LeaguePointExampleModel.model';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { LeagueFactorsExampleService } from 'src/app/services/league-factors-example.service';
+import { TableLeagueFactorExampleService } from 'src/app/services/table-league-factor-example.service';
 
 @Component({
   selector: 'app-league-factors-example',
@@ -15,13 +16,16 @@ export class LeagueFactorsExampleComponent implements OnInit, OnDestroy {
   Team1Player2Level: number = 3;
   Team2Player1Level: number = 2;
   Team2Player2Level: number = 1;
-  PointsToWinners: number = 3;
-  PointsToLosers: number = 1;
-  PlayerLevelFactor: number = 0.5;
-  PercentPointsFactor: number = 0.5;
+  PointsToWinners: number = 2.0;
+  PointsToLosers: number = 1.5;
+  PlayerLevelFactor: number = 0.2;
+  PercentPointsFactor: number = 0.2;
+
+  displayedColumns: string[] = ['Team1Scores', 'Team2Scores', 'Team1Points', 'Team2Points'];
 
   constructor(public state: AppStateService,
     public leagueFactorsExampleService: LeagueFactorsExampleService,
+    public tableLeagueFactorExampleService: TableLeagueFactorExampleService,
     public router: Router) {
   }
 
@@ -91,36 +95,37 @@ export class LeagueFactorsExampleComponent implements OnInit, OnDestroy {
       default:
         break;
     }
-
   }
 
   private Recalculate() {
     this.state.LeaguePointExampleModelList = [];
+
     for (let team2scores = 0; team2scores < 10; team2scores++) {
       let leaguePointExampleModel: LeaguePointExampleModel = {
         Team1Scores: 11,
         Team2Scores: team2scores,
-        Team1Player1Points: this.PointsToWinners + this.GetPointsFromPlayerLevelFactor('T1P1') + this.GetPointsFromPercentPointsFactor('T1P1', 11, team2scores),
-        Team1Player2Points: this.PointsToWinners + this.GetPointsFromPlayerLevelFactor('T1P2') + this.GetPointsFromPercentPointsFactor('T1P2', 11, team2scores),
-        Team2Player1Points: this.PointsToLosers + this.GetPointsFromPlayerLevelFactor('T2P1') + this.GetPointsFromPercentPointsFactor('T2P1', 11, team2scores),
-        Team2Player2Points: this.PointsToLosers + this.GetPointsFromPlayerLevelFactor('T2P2') + this.GetPointsFromPercentPointsFactor('T2P2', 11, team2scores),
+        Team1Player1Points: parseFloat('' + this.PointsToWinners) + this.GetPointsFromPlayerLevelFactor('T1P1') + this.GetPointsFromPercentPointsFactor('T1P1', 11, team2scores),
+        Team1Player2Points: parseFloat('' + this.PointsToWinners) + this.GetPointsFromPlayerLevelFactor('T1P2') + this.GetPointsFromPercentPointsFactor('T1P2', 11, team2scores),
+        Team2Player1Points: parseFloat('' + this.PointsToLosers) + this.GetPointsFromPlayerLevelFactor('T2P1') + this.GetPointsFromPercentPointsFactor('T2P1', 11, team2scores),
+        Team2Player2Points: parseFloat('' + this.PointsToLosers) + this.GetPointsFromPlayerLevelFactor('T2P2') + this.GetPointsFromPercentPointsFactor('T2P2', 11, team2scores),
       };
 
-      this.state.LeaguePointExampleModelList.push(leaguePointExampleModel);
+        this.state.LeaguePointExampleModelList.push(leaguePointExampleModel);
     }
 
     for (let team1scores = 9; team1scores > -1; team1scores--) {
       let leaguePointExampleModel: LeaguePointExampleModel = {
         Team1Scores: team1scores,
         Team2Scores: 11,
-        Team1Player1Points: this.PointsToLosers + this.GetPointsFromPlayerLevelFactor('T1P1') + this.GetPointsFromPercentPointsFactor('T1P1', team1scores, 11),
-        Team1Player2Points: this.PointsToLosers + this.GetPointsFromPlayerLevelFactor('T1P2') + this.GetPointsFromPercentPointsFactor('T1P2', team1scores, 11),
-        Team2Player1Points: this.PointsToWinners + this.GetPointsFromPlayerLevelFactor('T2P1') + this.GetPointsFromPercentPointsFactor('T2P1', team1scores, 11),
-        Team2Player2Points: this.PointsToWinners + this.GetPointsFromPlayerLevelFactor('T2P2') + this.GetPointsFromPercentPointsFactor('T2P2', team1scores, 11),
+        Team1Player1Points: parseFloat('' + this.PointsToLosers) + this.GetPointsFromPlayerLevelFactor('T1P1') + this.GetPointsFromPercentPointsFactor('T1P1', team1scores, 11),
+        Team1Player2Points: parseFloat('' + this.PointsToLosers) + this.GetPointsFromPlayerLevelFactor('T1P2') + this.GetPointsFromPercentPointsFactor('T1P2', team1scores, 11),
+        Team2Player1Points: parseFloat('' + this.PointsToWinners) + this.GetPointsFromPlayerLevelFactor('T2P1') + this.GetPointsFromPercentPointsFactor('T2P1', team1scores, 11),
+        Team2Player2Points: parseFloat('' + this.PointsToWinners) + this.GetPointsFromPlayerLevelFactor('T2P2') + this.GetPointsFromPercentPointsFactor('T2P2', team1scores, 11),
       };
 
-      this.state.LeaguePointExampleModelList.push(leaguePointExampleModel);
+        this.state.LeaguePointExampleModelList.push(leaguePointExampleModel);
     }
+  
   }
 
   private GetPointsFromPlayerLevelFactor(player: 'T1P1' | 'T1P2' | 'T2P1' | 'T2P2'): number {

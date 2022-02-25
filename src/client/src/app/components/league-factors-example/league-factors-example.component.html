@@ -45,7 +45,7 @@
                     <mat-label>
                         {{ leagueFactorsExampleService.PointsToWinners[state.LangID] }}
                     </mat-label>
-                    <input matInput name="LeagueFactorsExamplePointsToWinners" type="number" min="0" max="10" step="1" [value]="PointsToWinners"
+                    <input matInput name="LeagueFactorsExamplePointsToWinners" type="number" min="0" max="10" step="0.1" [value]="PointsToWinners"
                         (change)="ValueChanged('PointsToWinners', $event)">
                 </mat-form-field>
                 <br>
@@ -53,7 +53,7 @@
                     <mat-label>
                         {{ leagueFactorsExampleService.PointsToLosers[state.LangID] }}
                     </mat-label>
-                    <input matInput name="LeagueFactorsExamplePointsToLosers" type="number" min="0" max="10" step="1" [value]="PointsToLosers"
+                    <input matInput name="LeagueFactorsExamplePointsToLosers" type="number" min="0" max="10" step="0.1" [value]="PointsToLosers"
                         (change)="ValueChanged('PointsToLosers', $event)">
                 </mat-form-field>
                 <br>
